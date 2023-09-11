@@ -8,7 +8,7 @@ private:
     ChainNode<T>* next;
 public:
 
-    ChainNode(T nodeData){
+    ChainNode(const T &nodeData){
         this->nodeData = nodeData;
         next = NULL;
     }
@@ -54,8 +54,31 @@ public:
         }
         return 1;
     }
+    virtual int doInsert(int i,const T &data){
+        if(i > length){
+            return 0;
+        }
 
-    virtual int doInsert(T &data){
+        ChainNode<T>* tmp = head, * node = new ChainNode<T>(data);
+        if(i == 0){
+            node->setNext(head);
+            head = node;
+        }
+        if(i == length){
+            rear->setNext(node);
+            rear = node;
+        }
+        while(i > 1){
+            tmp = tmp->getNext();
+            i--;
+        }
+        node->setNext(tmp->getNext());
+        tmp->setNext(node);
+        if(tmp->getNext() == NULL){
+            rear = tmp;
+        }
+    }
+    virtual int doInsert(const T &data){
         ChainNode<T>* node = new ChainNode<T>(data);
         if(head == NULL){
             head = node;
@@ -67,7 +90,27 @@ public:
         length++;
         return 1;
     }
-    virtual int doDelete(){
+    virtual int doDelete(int i){
+        if(length == 0 || i >= length){
+            return 0;
+        }
+        ChainNode<T>* tmp1 = head, * tmp2;
+        if(i == 0){
+            head = head->getNext();
+            delete tmp1;
+        }
+        while(i > 1){
+            tmp1 = tmp1->getNext();
+            i--;
+        }
+        tmp2 = tmp1->getNext();
+        tmp1->setNext(tmp2->getNext());
+        delete tmp2;
+        if(tmp1->getNext() == NULL){
+            rear = tmp1;
+        }
+
+        return 1;
     }
 
     ChainNode<T>* doReverse(ChainNode<T>* head){
@@ -84,12 +127,13 @@ public:
     }
 };
 
-
 int main(){
     ChainList<int> list1;
     for(int i = 0; i < 10; i++){
         list1.doInsert(i);
     }
+    list1.doInsert(3, 233);
+    list1.doDelete(4);
     cout<<(*list1.getHead()).getData()<<endl;
     cout<<(*list1.getRear()).getData()<<endl;
     list1.printAll();
