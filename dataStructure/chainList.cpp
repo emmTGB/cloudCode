@@ -77,6 +77,7 @@ public:
         if(tmp->getNext() == NULL){
             rear = tmp;
         }
+        return 1;
     }
     virtual int doInsert(const T &data){
         ChainNode<T>* node = new ChainNode<T>(data);
