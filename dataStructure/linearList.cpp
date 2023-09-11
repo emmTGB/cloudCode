@@ -3,13 +3,13 @@
 using namespace std;
 
 template <class T>
-class sqlList{
+class SqlList{
 private:
     T* elem;
     int length;
     int maxSize;
 public:
-    sqlList(int maxSize){
+    SqlList(int maxSize){
         this->maxSize = maxSize;
         elem = new T[maxSize];
         length = 0;
@@ -82,11 +82,11 @@ public:
     int doReverse();
 
     template<class T1>
-    friend sqlList<T1> operator+(sqlList<T1> &, sqlList<T1> &);
+    friend SqlList<T1> operator+(SqlList<T1> &, SqlList<T1> &);
 };
 
 template<class T>
-sqlList<T> operator+(sqlList<T> &al, sqlList<T> &bl){
+SqlList<T> operator+(SqlList<T> &al, SqlList<T> &bl){
     unordered_map<T, int> map;
     if(al.getLength() == 0 || bl.getLength() == 0){
         return al.getLength() ? al : bl;
@@ -97,7 +97,7 @@ sqlList<T> operator+(sqlList<T> &al, sqlList<T> &bl){
         for(int j = 0; j < bl.getLength(); j++){
             map.insert(pair<T, int>(bl.getElem(j), 1));
         }
-        sqlList<T> cl(2 * (al.getLength() + bl.getLength()));
+        SqlList<T> cl(2 * (al.getLength() + bl.getLength()));
         for(auto it = map.begin(); it != map.end(); it++){
             cl.doInsert(it->first);
         }
@@ -106,7 +106,7 @@ sqlList<T> operator+(sqlList<T> &al, sqlList<T> &bl){
 }
 
 template<class T>
-int sqlList<T>::doReverse(){
+int SqlList<T>::doReverse(){
     int start = 0, end = length - 1;
     int ret = 0;
     while(start < end){
@@ -120,12 +120,12 @@ int sqlList<T>::doReverse(){
 
 
 int main(){
-    sqlList<int> sql1(100), sql2(100);
+    SqlList<int> sql1(100), sql2(100);
     for(int i = 0;i < 10; i++){
         sql1.doInsert(i);
         sql2.doInsert(i * 2);
     }
-    sqlList<int> sql3 = sql1 + sql2;
+    SqlList<int> sql3 = sql1 + sql2;
     sql3.printElems();
     sql3.doReverse();
     sql3.printElems();
