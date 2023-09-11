@@ -5,13 +5,7 @@
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
-      "args": [
-        "-fdiagnostics-color=always",
-        "-g",
-        "${file}",
-        "-o",
-        "${fileDirname}/bin/${fileBasenameNoExtension}"
-      ],
+      "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
       "cwd": "/workspaces/cloudCode/dataStructure",

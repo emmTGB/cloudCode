@@ -50,7 +50,7 @@ public:
             return 0;
         }
     }
-    virtual int __delete(int i, T &e){
+    virtual int doDelete(int i, T &e){
         if(i >= 0 && i < length){
             e = elem[i];
             length--;
@@ -62,7 +62,7 @@ public:
             return 0;
         }
     }
-    virtual int __insert(T e){
+    virtual int doInsert(T e){
         if(length <= maxSize){
             elem[length] = e;
             length++;
@@ -70,7 +70,7 @@ public:
         }
         return 0;
     }
-    int __print(){
+    int printElems(){
         if(length > 0){
             for(int i = 0; i < length; i++){
                 cout<<elem[i]<<endl;
@@ -79,7 +79,7 @@ public:
         }
         return 0;
     }
-    int Reverse();
+    int doReverse();
 
     template<class T1>
     friend sqlList<T1> operator+(sqlList<T1> &, sqlList<T1> &);
@@ -99,19 +99,34 @@ sqlList<T> operator+(sqlList<T> &al, sqlList<T> &bl){
         }
         sqlList<T> cl(2 * (al.getLength() + bl.getLength()));
         for(auto it = map.begin(); it != map.end(); it++){
-            cl.__insert(it->first);
+            cl.doInsert(it->first);
         }
         return cl;
     }
+}
+
+template<class T>
+int sqlList<T>::doReverse(){
+    int start = 0, end = length - 1;
+    int ret = 0;
+    while(start < end){
+        swap(elem[start], elem [end]);
+        start++;
+        end--;
+        ret = 1;
+    }
+    return ret;
 }
 
 
 int main(){
     sqlList<int> sql1(100), sql2(100);
     for(int i = 0;i < 10; i++){
-        sql1.__insert(i);
-        sql2.__insert(i * 2);
+        sql1.doInsert(i);
+        sql2.doInsert(i * 2);
     }
     sqlList<int> sql3 = sql1 + sql2;
-    sql3.__print();
+    sql3.printElems();
+    sql3.doReverse();
+    sql3.printElems();
 }
