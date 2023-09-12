@@ -1,17 +1,18 @@
 #include<iostream>
 #include<unordered_map>
+#include<algorithm>
 using namespace std;
 
 template <class T>
 class SqlList{
-private:
+protected:
     T* elem;
     int length;
     int maxSize;
 public:
     SqlList(int maxSize){
         this->maxSize = maxSize;
-        elem = new T[maxSize];
+        elem = new T[maxSize + 1];
         length = 0;
     }
 
@@ -34,7 +35,18 @@ public:
     int getLength(){
         return length;
     }
-    virtual int __insert(int i, T e){
+    T* getStart(){
+        return elem;
+    }
+    T* getEnd(){
+        if(length){
+            return &elem[length];
+        }else{
+            return NULL;
+        }
+    }
+
+    virtual int doInsert(int i, T e){
         if(i >= 0 && i <= length && length <= maxSize){
             if(i == length){
                 elem[i] = e;
@@ -118,6 +130,25 @@ int SqlList<T>::doReverse(){
     return ret;
 }
 
+template<class T>
+class SortedSql:public SqlList<T>{
+protected:
+public:
+    SortedSql(int length):SqlList<T>(length){
+    }
+    SortedSql(SqlList<T>& list):SqlList<T>(list){
+        sort(SqlList<T>::getStart(), SqlList<T>::getEnd());
+    }
+
+    int doInsert(T &elem){
+        if(SqlList<T>::length >= SqlList<T>::maxSize){
+            return 0;
+        }
+        this->elem[SqlList<T>::length] = elem;
+        SqlList<T>::length++;
+        sort(SqlList<T>::getStart(), SqlList<T>::getEnd());
+    }
+};
 
 int main(){
     SqlList<int> sql1(100), sql2(100);
@@ -129,4 +160,8 @@ int main(){
     sql3.printElems();
     sql3.doReverse();
     sql3.printElems();
+    SortedSql<int> ss1(19), ss2(sql3);
+    ss2.printElems();
+    sql3.printElems();
+    return 0;
 }
