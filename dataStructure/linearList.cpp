@@ -129,5 +129,4 @@ int main(){
     sql3.printElems();
     sql3.doReverse();
     sql3.printElems();
-    return 0;
 }
