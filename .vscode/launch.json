@@ -1,6 +1,6 @@
 {
-  "version":"0.2.0",
-  "configurations":[
+  "version": "0.2.0",
+  "configurations": [
     {
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/root/vscode/cloudCode/dataStructure",
-      "program": "/root/vscode/cloudCode/dataStructure/build/Debug/outDebug",
+      "cwd": "/root/vscode/cloudCode/java/javaCourse",
+      "program": "/root/vscode/cloudCode/java/javaCourse/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
@@ -18,8 +18,6 @@
           "text": "-enable-pretty-printing",
           "ignoreFailures": true
         }
-      ],
-      "configurations": [
       ]
     }
   ]
