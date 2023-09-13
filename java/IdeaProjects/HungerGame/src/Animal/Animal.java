@@ -3,8 +3,6 @@ package Animal;
 import field.Location;
 
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.SimpleTimeZone;
 
 public abstract class Animal {
     private int age;

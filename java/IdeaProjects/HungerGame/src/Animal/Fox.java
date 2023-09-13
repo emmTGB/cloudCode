@@ -2,9 +2,7 @@ package Animal;
 
 import cell.Cell;
 
-import javax.lang.model.element.AnnotationMirror;
 import java.awt.*;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 
 public class Fox extends Animal implements Cell {//实现Cell接口，并要求override接口中的函数
