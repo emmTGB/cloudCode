@@ -118,6 +118,6 @@ public class RabbitAndFox {
 
     public static void main(String[] args){
         RabbitAndFox rabbitAndFox = new RabbitAndFox(50);
-//        rabbitAndFox.start();
+        rabbitAndFox.start();
     }
 }
