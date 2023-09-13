@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/root/vscode/cloudCode/java/javaCourse",
-      "program": "/root/vscode/cloudCode/java/javaCourse/build/Debug/outDebug",
+      "cwd": "/root/vscode/cloudCode/java",
+      "program": "/root/vscode/cloudCode/java/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
