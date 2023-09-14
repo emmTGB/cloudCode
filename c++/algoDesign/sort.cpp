@@ -34,8 +34,8 @@ void maxHeap(T* heap, int start, int end){
         if(son + 1 < end && heap[son] < heap[son + 1]){
             son++;
         }
-        if(heap[son] > heap[start]){
-            swap(heap[son], heap[start]);
+        if(heap[start] < heap[son]){
+            swap(heap[start], heap[son]);
             start = son;
             son = son * 2 + 1;
         }else{
@@ -48,21 +48,21 @@ template<class T>
 int heapSort(T* heap, int length){
     int root = 0;
     for(int i = length / 2 - 1; i >= root; i--){
-        maxHeap<T>(heap, i, length);
+        maxHeap(heap, i, length);
     }
-    for(int i = length - 1; i >= root; i--){
+    for(int i = length - 1; i > root; i--){
         swap(heap[root], heap[i]);
-        maxHeap<T>(heap, root, i - 1);
+        maxHeap(heap, root, i);
     }
-    return 1;
+    return 0;
 }
 
 int main(){
-    int a[10] = {
-        1,22,31,433,51,60,17,82,90,11110
+    int a[16] = {
+        1,22,31,433,114,514,1919,810,2004,227,51,60,17,82,90,11110
     };
-    heapSort<int>(a, 10);
-    for(int i = 0; i < 10; i++){
+    quickSort<int>(a, 0, 15);
+    for(int i = 0; i < 16; i++){
         cout<<a[i]<<"\t";
     }
 }
