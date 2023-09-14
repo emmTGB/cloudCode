@@ -12,7 +12,7 @@ int quickSortPivot(T* arr, int start, int end){
         }
     }
     swap(arr[pivot], arr[j - 1]);
-    pivot = j - 1; 
+    pivot = j - 1;
     return pivot;
 }
 

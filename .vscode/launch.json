@@ -2,14 +2,27 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "Launch Java Program",
+      "request": "launch",
+      "mainClass": ""
+    },
+    {
+      "type": "java",
+      "name": "RabbitAndFox",
+      "request": "launch",
+      "mainClass": "HungerGame.RabbitAndFox",
+      "projectName": "cloudCode_fb1b94c5"
+    },
+    {
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
       "args": [],
       "stopAtEntry": false,
-      "externalConsole": false,
-      "cwd": "/root/vscode/cloudCode/java",
-      "program": "/root/vscode/cloudCode/java/build/Debug/outDebug",
+      "externalConsole": true,
+      "cwd": "c:/Users/lsg30/gits/cloudCode/c++",
+      "program": "c:/Users/lsg30/gits/cloudCode/c++/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
