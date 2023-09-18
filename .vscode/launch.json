@@ -8,13 +8,6 @@
       "mainClass": ""
     },
     {
-      "type": "java",
-      "name": "RabbitAndFox",
-      "request": "launch",
-      "mainClass": "HungerGame.RabbitAndFox",
-      "projectName": "cloudCode_fb1b94c5"
-    },
-    {
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
