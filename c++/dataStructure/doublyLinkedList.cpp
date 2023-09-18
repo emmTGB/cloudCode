@@ -1,5 +1,6 @@
 #include<iostream>
 using namespace std;
+#define ERROR -1
 
 template<class T>
 struct Node{
@@ -101,6 +102,9 @@ public:
     }
 
     Node<T>* setPivot(int idx){
+        if(length == 0){
+            return NULL;
+        }
         while(idx >= length){
             idx -= length;
         }
@@ -108,9 +112,7 @@ public:
             idx += length;
         }
         Node<T>* ret = pivot;
-        if(idx == 0){
-            return pivot;
-        }else if(idx > 0){
+        if(idx > 0){
             for(int i = 0; i < idx; i++){
                 pivot = pivot->next;
             }
@@ -143,12 +145,28 @@ public:
             doInsert(data);
             return;
         }
-        Node<T>*tmp = setPivot(idx);
+        Node<T>* tmp = setPivot(idx);
         doInsert(data);
         pivot = tmp;
     }
 
-    //TODO: doDelete()
+    T& doDelete(int idx){
+        if(length == 0){
+            return (T&)ERROR;
+        }
+        Node<T>* tmp = setPivot(idx);
+        pivot->prior->next = pivot->next;
+        pivot->next->prior = pivot->prior;
+        T ret = pivot->data;
+        delete pivot;
+        length--;
+        if(length == 0){
+            pivot = NULL;
+        }else{
+            pivot = tmp;
+        }
+        return data;
+    }
 };
 
 int main(){

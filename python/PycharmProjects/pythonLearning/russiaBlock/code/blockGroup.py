@@ -127,7 +127,7 @@ class BlockGroup(object):
 
     def checkAndSetPressedTime(self, key):
         ret = False
-        if getCurrentTime() - self.pressTime.get(key, 0) > 30:
+        if getCurrentTime() - self.pressTime.get(key, 0) > 50:
             ret = True
         self.pressTime[key] = getCurrentTime()
         return ret
