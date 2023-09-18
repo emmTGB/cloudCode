@@ -89,6 +89,68 @@ public:
     }
 };
 
+template<class T>
+class RoundedDoublyList{
+private:
+    Node<T>* pivot;
+    int length;
+public:
+    RoundedDoublyList(){
+        pivot = NULL;
+        length = 0;
+    }
+
+    Node<T>* setPivot(int idx){
+        while(idx >= length){
+            idx -= length;
+        }
+        while(-idx >= length){
+            idx += length;
+        }
+        Node<T>* ret = pivot;
+        if(idx == 0){
+            return pivot;
+        }else if(idx > 0){
+            for(int i = 0; i < idx; i++){
+                pivot = pivot->next;
+            }
+        }else{
+            for(int i = 0; i > idx; i--){
+                pivot = pivot->prior;
+            }
+        }
+        return ret;
+    }
+
+    void doInsert(T& data){
+        Node<T>* tmp = new Node<T>(data);
+        if(length == 0){
+            pivot = tmp;
+            pivot->next = pivot;
+            pivot->prior = pivot;
+            length++;
+            return;
+        }
+        tmp->next = pivot;
+        tmp->prior = pivot->prior;
+        pivot->prior->next = tmp;
+        pivot->prior = tmp;
+        length++;
+        return;
+    }
+    void doInsert(T& data, int idx){
+        if(length == 0){
+            doInsert(data);
+            return;
+        }
+        Node<T>*tmp = setPivot(idx);
+        doInsert(data);
+        pivot = tmp;
+    }
+
+    //TODO: doDelete()
+};
+
 int main(){
     DoublyLinkedList<int> list;
     for(int i = 0; i < 10; i++){
@@ -97,4 +159,9 @@ int main(){
     int i = 233;
     list.doInsert(i, 5);
     cout<<"hello"<<list.locateNode(i)<<endl;
+    RoundedDoublyList<int> rlist;
+    for(int i = 10; i < 20; i++){
+        rlist.doInsert(i);
+    }
+    rlist.doInsert(i, 6);
 }
