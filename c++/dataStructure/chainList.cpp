@@ -7,7 +7,6 @@ private:
     T nodeData;
     ChainNode<T>* next;
 public:
-
     ChainNode(const T &nodeData){
         this->nodeData = nodeData;
         next = NULL;
