@@ -88,6 +88,26 @@ public:
         }
         length++;
     }
+
+    T& doDelete(int idx){
+        if(idx < -1 || idx >=length){
+            return (T&)ERROR;
+        }
+        Node<T>* pivot = getNode(idx);
+        if(pivot->prior){
+            pivot->prior->next = pivot->next;
+        }else{
+            head = pivot->next;
+        }
+        if(pivot->next){
+            pivot->next->prior = pivot->prior;
+        }else{
+            rear = pivot->prior;
+        }
+        T ret = pivot->data;
+        delete pivot;
+        return ret;
+    }
 };
 
 template<class T>
