@@ -20,7 +20,7 @@ class Game(pygame.sprite.Sprite):
         self.scoreFont = pygame.font.Font(None, FONT_SIZE)
         self.score = 0
 
-        self.gameOverImage = pygame.image.load('../res/OVER.png')
+        self.gameOverImage = pygame.image.load('python/PycharmProjects/pythonLearning/russiaBlock/res/OVER.png')
         self.gameOverImage = pygame.transform.scale(self.gameOverImage, (5 * BLOCK_WIDTH, 5 * BLOCK_HEIGHT))
         self.isGameOver = False
 

@@ -33,13 +33,13 @@ class BlockGroupType:
 
 
 BLOCK_RES = {
-    BlockType.RED: "../res/0.jpg",
-    BlockType.ORANGE: "../res/1.jpg",
-    BlockType.YELLOW: "../res/2.jpg",
-    BlockType.GREEN: "../res/3.jpg",
-    BlockType.CYAN: "../res/4.jpg",
-    BlockType.BLUE: "../res/5.jpg",
-    BlockType.PURPLE: "../res/6.jpg"
+    BlockType.RED: "python/PycharmProjects/pythonLearning/russiaBlock/res/0.jpg",
+    BlockType.ORANGE: "python/PycharmProjects/pythonLearning/russiaBlock/res/1.jpg",
+    BlockType.YELLOW: "python/PycharmProjects/pythonLearning/russiaBlock/res/2.jpg",
+    BlockType.GREEN: "python/PycharmProjects/pythonLearning/russiaBlock/res/3.jpg",
+    BlockType.CYAN: "python/PycharmProjects/pythonLearning/russiaBlock/res/4.jpg",
+    BlockType.BLUE: "python/PycharmProjects/pythonLearning/russiaBlock/res/5.jpg",
+    BlockType.PURPLE: "python/PycharmProjects/pythonLearning/russiaBlock/res/6.jpg"
 }
 
 
