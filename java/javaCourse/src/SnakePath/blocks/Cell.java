@@ -23,6 +23,6 @@ public class Cell {
 
     public void draw(Graphics g){
         g.setColor(cellColor);
-        g.fillRect(col * GamePara.CELL_SIZE, row * GamePara.CELL_SIZE, GamePara.CELL_SIZE, GamePara.CELL_SIZE);
+        g.fillRect(col * GamePara.CELL_SIZE + 1, row * GamePara.CELL_SIZE + 1, GamePara.CELL_SIZE, GamePara.CELL_SIZE);
     }
 }

@@ -13,11 +13,12 @@ public class Snake {
     private final Deque<Cell> snakeBody;
     private Cell dot;
     private boolean gameOver;
-    
+
     public Snake(int startRow, int startCol){
         snakeBody = new LinkedList<>();
         direction = Direction.UP;
         snakeBody.addLast(new Cell(startRow, startCol, GamePara.ORANGE));
+        snakeBody.addLast(new Cell(startRow + 1, startCol, GamePara.ORANGE));
         generateDot();
         gameOver = false;
     }
@@ -58,20 +59,14 @@ public class Snake {
             default:
                 break;
         }
-
-        if(row == dot.getRow() && col == dot.getCol()){
-            dot.setCellColor(GamePara.ORANGE);
-            snakeBody.addFirst(dot);
+        
+        Cell newCell = generateHead(row, col);
+        
+        if(newCell.getRow() == dot.getRow() && newCell.getCol() == dot.getCol()){
+            snakeBody.addFirst(newCell);
             generateDot();
             return;
         }
-        Cell newCell = new Cell(row, col, GamePara.ORANGE);
-        if(isOutOfField(newCell)) {
-            snakeBody.getFirst().setCellColor(GamePara.GREEN);
-            gameOver = true;
-            return;
-        }
-
         snakeBody.removeLast();
         if(isInSnake(newCell)){
             gameOver = true;
@@ -89,8 +84,17 @@ public class Snake {
         }
         return ret;
     }
-    public boolean isOutOfField(Cell e){
-        return e.getRow() < 0 || e.getRow() >= GamePara.FIELD_HEIGHT || e.getCol() < 0 || e.getCol() >= GamePara.FIELD_WIDTH;
+    public Cell generateHead(int row, int col){
+        if(row < 0){
+            row = GamePara.FIELD_HEIGHT - 1;
+        }else if(row >= GamePara.FIELD_HEIGHT){
+            row = 0;
+        }else if(col < 0){
+            col = GamePara.FIELD_WIDTH - 1;
+        }else if(col >= GamePara.FIELD_WIDTH){
+            col = 0;
+        }
+        return new Cell(row, col, GamePara.ORANGE);
     }
     public int getLength(){
         return snakeBody.size();
