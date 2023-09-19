@@ -7,12 +7,11 @@ import SnakePath.field.View;
 import javax.swing.*;
 
 public class Game {
-    private View thisView;
-    private JFrame frame;
+    private final View thisView;
 
     public Game(){
         thisView = new View(new Snake(GamePara.FIELD_WIDTH / 2, GamePara.FIELD_HEIGHT / 2));
-        frame = new JFrame();
+        JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setTitle("snake_path");

@@ -5,7 +5,6 @@ import SnakePath.consts.GamePara;
 
 import java.awt.*;
 import java.util.Deque;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -23,15 +22,14 @@ public class Snake {
         gameOver = false;
     }
 
-    public boolean generateDot(){
+    public void generateDot(){
         if(getLength() >= GamePara.FIELD_WIDTH * GamePara.FIELD_HEIGHT){
-            return false;
+            return;
         }
         Random rand = new Random();
         do{
             dot = new Cell(rand.nextInt(GamePara.FIELD_HEIGHT), rand.nextInt(GamePara.FIELD_WIDTH), GamePara.RED);
         }while(isInSnake(dot));
-        return true;
     }
 
     public void setDirection(Direction dir){
@@ -80,7 +78,6 @@ public class Snake {
             newCell.setCellColor(GamePara.GREEN);
         }
         snakeBody.addFirst(newCell);
-        return;
     }
     public boolean isInSnake(Cell e){
         boolean ret = false;

@@ -4,11 +4,10 @@ import SnakePath.blocks.Snake;
 import SnakePath.consts.Direction;
 import SnakePath.consts.GamePara;
 
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
-
-import javax.swing.JPanel;
+import java.awt.event.KeyListener;
 
 public class View extends JPanel implements KeyListener {
     private final Snake thisSnake;
