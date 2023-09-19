@@ -1,10 +1,11 @@
 package SnakePath.blocks;
 
 import SnakePath.consts.Direction;
-import SnakePath.consts.FieldPara;
+import SnakePath.consts.GamePara;
 
 import java.awt.*;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -12,56 +13,74 @@ public class Snake {
     private Direction direction;
     private final Deque<Cell> snakeBody;
     private Cell dot;
+    private boolean gameOver;
     
-    public Snake(){
+    public Snake(int startRow, int startCol){
         snakeBody = new LinkedList<>();
         direction = Direction.UP;
-        snakeBody.addLast(new Cell(FieldPara.FILED_WIDTH / 2, FieldPara.FILED_HEIGHT / 2, FieldPara.ORANGE));
+        snakeBody.addLast(new Cell(startRow, startCol, GamePara.ORANGE));
+        generateDot();
+        gameOver = false;
     }
 
     public boolean generateDot(){
-        if(getLength() >= FieldPara.FILED_WIDTH * FieldPara.FILED_HEIGHT){
+        if(getLength() >= GamePara.FIELD_WIDTH * GamePara.FIELD_HEIGHT){
             return false;
         }
         Random rand = new Random();
         do{
-            dot = new Cell(rand.nextInt(FieldPara.FILED_WIDTH), rand.nextInt(FieldPara.FILED_HEIGHT), FieldPara.GREEN);
-        }while(!isInSnake(dot));
+            dot = new Cell(rand.nextInt(GamePara.FIELD_HEIGHT), rand.nextInt(GamePara.FIELD_WIDTH), GamePara.RED);
+        }while(isInSnake(dot));
         return true;
     }
 
     public void setDirection(Direction dir){
+        if(dir.ordinal() + direction.ordinal() == 3){
+            return;
+        }
         direction = dir;
     }
-    public boolean moveForward(){
+    public void moveForward(){
         Cell head = snakeBody.getFirst();
         int row = head.getRow();
         int col = head.getCol();
         switch(direction){
             case UP:
-                col -= 1;
+                row--;
+                break;
             case DOWN:
-                col += 1;
+                row++;
+                break;
             case LEFT:
-                row -= 1;
+                col--;
+                break;
             case RIGHT:
-                row += 1;
+                col++;
+                break;
             default:
                 break;
         }
-        Cell newCell = new Cell(row, col, FieldPara.ORANGE);
-        if(isOutOfField(newCell)){
-            snakeBody.getFirst().setColor(FieldPara.GREEN);
-            return true;
+
+        if(row == dot.getRow() && col == dot.getCol()){
+            dot.setCellColor(GamePara.ORANGE);
+            snakeBody.addFirst(dot);
+            generateDot();
+            return;
         }
-        boolean ret = false;
+        Cell newCell = new Cell(row, col, GamePara.ORANGE);
+        if(isOutOfField(newCell)) {
+            snakeBody.getFirst().setCellColor(GamePara.GREEN);
+            gameOver = true;
+            return;
+        }
+
         snakeBody.removeLast();
         if(isInSnake(newCell)){
-            ret = true;
-            newCell.setColor(FieldPara.GREEN);
+            gameOver = true;
+            newCell.setCellColor(GamePara.GREEN);
         }
         snakeBody.addFirst(newCell);
-        return ret;
+        return;
     }
     public boolean isInSnake(Cell e){
         boolean ret = false;
@@ -74,16 +93,21 @@ public class Snake {
         return ret;
     }
     public boolean isOutOfField(Cell e){
-        return e.getRow() < 0 || e.getRow() >= FieldPara.FILED_WIDTH || e.getCol() < 0 || e.getCol() >= FieldPara.FILED_HEIGHT;
+        return e.getRow() < 0 || e.getRow() >= GamePara.FIELD_HEIGHT || e.getCol() < 0 || e.getCol() >= GamePara.FIELD_WIDTH;
     }
     public int getLength(){
         return snakeBody.size();
     }
 
+    public boolean isGameOver(){return gameOver;}
+
     public void draw(Graphics g){
-        for(Cell c : snakeBody){
-            c.draw(g, c.getCol() * FieldPara.CELL_SIZE, c.getRow() * FieldPara.CELL_SIZE, FieldPara.CELL_SIZE);
+        for (Cell c : snakeBody) {
+            c.draw(g);
         }
-        dot.draw(g, dot.getCol() * FieldPara.CELL_SIZE, dot.getRow() * FieldPara.CELL_SIZE, FieldPara.CELL_SIZE);
+        dot.draw(g);
+        if(gameOver){
+            snakeBody.getFirst().draw(g);
+        }
     }
 }

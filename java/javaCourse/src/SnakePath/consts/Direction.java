@@ -1,5 +1,5 @@
 package SnakePath.consts;
 
 public enum Direction {
-    UP, DOWN, LEFT, RIGHT;
+    UP, LEFT, RIGHT, DOWN;
 }

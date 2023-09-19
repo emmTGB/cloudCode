@@ -1,5 +1,7 @@
 package SnakePath.blocks;
 
+import SnakePath.consts.GamePara;
+
 import java.awt.*;
 
 public class Cell {
@@ -15,12 +17,12 @@ public class Cell {
     public int getRow(){return row;}
     public int getCol(){return col;}
 
-    public void setColor(Color color){
+    public void setCellColor(Color color){
         cellColor = color;
     }
 
-    public void draw(Graphics g, int x, int y, int size){
+    public void draw(Graphics g){
         g.setColor(cellColor);
-        g.fillRect(x, y, size, size);
+        g.fillRect(col * GamePara.CELL_SIZE, row * GamePara.CELL_SIZE, GamePara.CELL_SIZE, GamePara.CELL_SIZE);
     }
 }
