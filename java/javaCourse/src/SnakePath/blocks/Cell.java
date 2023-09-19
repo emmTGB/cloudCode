@@ -1,6 +1,6 @@
 package SnakePath.blocks;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class Cell {
     protected final int row, col;
@@ -17,5 +17,10 @@ public class Cell {
 
     public void setColor(Color color){
         cellColor = color;
+    }
+
+    public void draw(Graphics g, int x, int y, int size){
+        g.setColor(cellColor);
+        g.fillRect(x, y, size, size);
     }
 }
