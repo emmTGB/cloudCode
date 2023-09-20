@@ -53,6 +53,18 @@ public:
         }
         return 1;
     }
+    virtual ChainNode<T>* getNode(int i){
+        if(i < 0 || i >= length){
+            return NULL;
+        }else{
+            ChainNode<T>* ret = head;
+            while(i){
+                ret = ret->getNext();
+                i--;
+            }
+            return ret;
+        }
+    }
     virtual int doInsert(int i,const T &data){
         if(i > length){
             return 0;
