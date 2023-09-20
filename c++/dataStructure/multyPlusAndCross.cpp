@@ -373,11 +373,11 @@ int main(){
     // plus->printElems();
     
     ChainList<int>* l = new ChainList<int>();
-    // int m;
-    // while(cin>>m){
-    //     l->doInsert(m);
-    // }
-    l->doInsert(0);
+    int m;
+    while(cin>>m){
+        l->doInsert(m);
+    }
+    // l->doInsert(0);
     doMultyDerive(l);
     l->printElems();
 }
