@@ -125,7 +125,7 @@ public:
 
     void printElems(){
         ChainNode<T>* tmp = head;
-        if(!tmp){
+        if(!tmp || !tmp->getNext()){
             cout<<0<<" "<<0;
         }
         while(tmp){
