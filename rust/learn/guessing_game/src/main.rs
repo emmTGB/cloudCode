@@ -17,7 +17,7 @@ fn main(){
         std::io::stdin().read_line(&mut guess).expect("cannot read");
         // io::Result   Ok Err
 
-        let guess:u32 = match guess.trim()/* delete spaces */.parse()/* transfer to other type */{
+        let guess: u32 = match guess.trim()/* delete spaces */.parse()/* transfer to other type */{
             Ok(num) => num,
             Err(_) => continue,
         };  // shadow
