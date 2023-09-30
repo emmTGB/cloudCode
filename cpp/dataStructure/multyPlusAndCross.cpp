@@ -1,7 +1,7 @@
 #include<iostream>
-#include<map>
-#include<unordered_map>
 using namespace std;
+#define multiList ChainList<pair<int, int>>
+#define multiNode ChainNode<pair<int,int>>
 
 template<class T>
 class ChainNode{
@@ -23,7 +23,7 @@ public:
     ChainNode<T>* getNext(){
         return next;
     }
-    T getData(){
+    T& getData(){
         return nodeData;
     }
 };
@@ -71,20 +71,32 @@ public:
         if(i == 0){
             node->setNext(head);
             head = node;
-        }
-        if(i == length){
+            if(i == length){
+                rear = node;
+            }
+        }else if(i == length){
             rear->setNext(node);
             rear = node;
+        }else{
+            while(i > 1){
+                tmp = tmp->getNext();
+                i--;
+            }
+            node->setNext(tmp->getNext());
+            tmp->setNext(node);
+            if(tmp->getNext() == NULL){
+                rear = tmp;
+            }
         }
-        while(i > 1){
-            tmp = tmp->getNext();
-            i--;
-        }
-        node->setNext(tmp->getNext());
-        tmp->setNext(node);
-        if(tmp->getNext() == NULL){
-            rear = tmp;
-        }
+        length++;
+        return 1;
+    }
+    virtual int doInsert(ChainNode<T>* pre, const T &data){
+        ChainNode<T>* node = new ChainNode<T>(data);
+        node->setNext(pre->getNext());
+        pre->setNext(node);
+        if(!node->getNext()) rear = node;
+        length++;
         return 1;
     }
     virtual int doInsert(const T &data){
@@ -100,7 +112,7 @@ public:
         return 1;
     }
     virtual int doDelete(int i){
-        if(length == 0 || i >= length){
+        if(length == 0 || i >= length || i < 0){
             return 0;
         }
         ChainNode<T>* tmp1 = head, * tmp2;
@@ -114,7 +126,6 @@ public:
         }
         tmp2 = tmp1->getNext();
         tmp1->setNext(tmp2->getNext());
-        delete tmp2;
         if(tmp1->getNext() == NULL){
             rear = tmp1;
         }
@@ -125,16 +136,18 @@ public:
 
     void printElems(){
         ChainNode<T>* tmp = head;
-        if(length < 2){
-            cout<<0<<" "<<0<<endl;
-            return;
-        }
+        bool flag = false;
         while(tmp){
-            cout<<tmp->getData();
-            if(tmp->getNext()){
+            if(printp(tmp->getData())){
+                flag = true;
+            }
+            if(flag && tmp->getNext() && tmp->getNext()->getData().first){
                 cout<<" ";
             }
             tmp = tmp->getNext();
+        }
+        if(!flag){
+            cout<<0<<" "<<0;
         }
         cout<<endl;
     }
@@ -151,209 +164,154 @@ public:
         head->setNext(NULL);
         return head;
     }
+
+    bool printp(pair<int, int> p){
+        if(p.first){
+            cout<<p.first<<" "<<p.second;
+            return true;
+        }
+        return false;
+    }
 };
-
-
-template <class T>
-class SqlList{
-protected:
-    T* elem;
-    int length;
-    int maxSize;
-public:
-    SqlList(int maxSize){
-        this->maxSize = maxSize;
-        elem = new T[maxSize + 1];
-        length = 0;
-    }
-
-    bool isEmpty(){
-        return length == 0;
-    }
-    T getElem(int i){
-        return elem[i];
-    }
-    int locateElem(T &elem){
-        int ret = -1;
-        for(int i = 0; i < length; i++){
-            if(this->elem[i] == elem){
-                ret = i;
-                break;
-            }
-        }
-        return ret;
-    }
-    int getLength(){
-        return length;
-    }
-    T* getStart(){
-        return elem;
-    }
-    T* getEnd(){
-        if(length){
-            return &elem[length];
-        }else{
-            return NULL;
-        }
-    }
-    int getMaxSize(){return maxSize;}
-
-    virtual int doInsert(int i, T e){
-        if(i >= 0 && i <= length && length <= maxSize){
-            if(i == length){
-                elem[i] = e;
-            }else{
-                for(int j = length; j > i; j--){
-                    elem[j] = elem[j - 1];
-                }
-                elem[i] = e;
-            }
-            length++;
-            return 1;
-        }else{
-            return 0;
-        }
-    }
-    virtual int doDelete(int i, T &e){
-        if(i >= 0 && i < length){
-            e = elem[i];
-            length--;
-            for(int j = i; j < length; j++){
-                elem[j] = elem[j + 1];
-            }
-            return 1;
-        }else{
-            return 0;
-        }
-    }
-    virtual int doInsert(T e){
-        if(length <= maxSize){
-            elem[length] = e;
-            length++;
-            return 1;
-        }
-        return 0;
-    }
-    int printElems(){
-        if(length > 0){
-            for(int i = 0; i < length; i++){
-                cout<<elem[i];
-                if(i != length - 1){
-                    cout<<" ";
-                }
-            }
-            cout<<endl;
-            return 1;
-        }
-        return 0;
-    }
-    int doReverse();
-
-    template<class T1>
-    friend SqlList<T1> operator+(SqlList<T1> &, SqlList<T1> &);
-};
-
-template<class T>
-SqlList<T> operator+(SqlList<T> &al, SqlList<T> &bl){
-    unordered_map<T, int> map;
-    if(al.getLength() == 0 || bl.getLength() == 0){
-        return al.getLength() ? al : bl;
-    }else{
-        for(int i = 0; i < al.getLength(); i++){
-            map.insert(pair<T, int>(al.getElem(i), 1));
-        }
-        for(int j = 0; j < bl.getLength(); j++){
-            map.insert(pair<T, int>(bl.getElem(j), 1));
-        }
-        SqlList<T> cl(2 * (al.getLength() + bl.getLength()));
-        for(auto it = map.begin(); it != map.end(); it++){
-            cl.doInsert(it->first);
-        }
-        return cl;
-    }
-}
-
-template<class T>
-int SqlList<T>::doReverse(){
-    int start = 0, end = length - 1;
-    int ret = 0;
-    while(start < end){
-        swap(elem[start], elem [end]);
-        start++;
-        end--;
-        ret = 1;
-    }
-    return ret;
-}
-
-void doMultyCross(SqlList<int>* l1, SqlList<int>* l2, SqlList<int>* ret){
-    map<int, int, greater<int>> m;
-    for(int i = 0; i < l1->getMaxSize(); i += 2){
-        for(int j = 0; j < l2->getMaxSize(); j += 2){
-            int pow = l1->getElem(i + 1) + l2->getElem(j + 1);
-            int par = l1->getElem(i) * l2->getElem(j);
-            if(auto it = m.find(pow) != m.end()){
-                m[pow] += par;
-            }else{
-                m.insert(pair<int, int>(pow, par));
-            }
-        }
-    }
-    bool flag = true;
-    for(auto it : m){
-        if(it.second){
-            ret->doInsert(it.second);
-            ret->doInsert(it.first);
-            flag = false;
-        }
-    }
-    if(flag){
-        ret->doInsert(0);
-        ret->doInsert(0);
-    }
-}
-
-void doMultyPlus(SqlList<int>* l1, SqlList<int>* l2, SqlList<int>* ret){
-    map<int, int, greater<int>> m;
-    for(int i = 0; i < l1->getMaxSize(); i += 2){
-        m.insert(pair<int, int>(l1->getElem(i + 1), l1->getElem(i)));
-    }
-    for(int i = 0; i < l2->getMaxSize(); i += 2){
-        if(auto it = m.find(l2->getElem(i + 1)) != m.end()){
-            m[l2->getElem(i + 1)] += l2->getElem(i);
-        }else{
-            m.insert(pair<int, int>(l2->getElem(i + 1), l2->getElem(i)));
-        }
-    }
-    bool flag = true;
-    for(auto it : m){
-        if(it.second){
-            ret->doInsert(it.second);
-            ret->doInsert(it.first);
-            flag = false;
-        }
-    }
-    if(flag){
-        ret->doInsert(0);
-        ret->doInsert(0);
-    }
-}
 
 void doMultyDerive(ChainList<int>* l){
     for(int i = 0; i < l->getLength() - 1; i += 2){
         if(!l->getNode(i + 1)->getData()){
             l->doDelete(i);
             l->doDelete(i);
-            if(!l->getNode(i)){
+            if(!l->getLength() || !l->getNode(i)){
                 return;
             }
+        }else{
+            l->getNode(i)->setData(l->getNode(i)->getData() * l->getNode(i + 1)->getData());
+            l->getNode(i + 1)->setData(l->getNode(i + 1)->getData() - 1);
         }
-        l->getNode(i)->setData(l->getNode(i)->getData() * l->getNode(i + 1)->getData());
-        l->getNode(i + 1)->setData(l->getNode(i + 1)->getData() - 1);
+    }
+}
+
+void doMultyCross(multiList* l1, multiList* l2, multiList* ret){
+    multiNode* pivot1,* pivot2,* pivotR;
+    pivot1 = l1->getHead();
+    while(pivot1){
+        pivot2 = l2->getHead();
+        while(pivot2){
+            int par, expo;
+            pivotR = ret->getHead();
+            par = pivot1->getData().first * pivot2->getData().first;
+            expo = pivot1->getData().second + pivot2->getData().second;
+
+            if(pivotR){
+                if(pivotR->getData().second > expo){
+                    while(pivotR->getNext()){
+                        if(pivotR->getNext()->getData().second > expo){
+                            pivotR = pivotR->getNext();
+                        }else if(pivotR->getNext()->getData().second == expo){
+                            pivotR->getNext()->getData().first += par;
+                            break;
+                        }else{
+                            ret->doInsert(pivotR, make_pair(par, expo));
+                            break;
+                        }
+                    }
+                    if(!pivotR->getNext()) ret->doInsert(pivotR, make_pair(par, expo));
+                }else if(pivotR && pivotR->getData().second == expo){
+                    pivotR->getData().first += par;
+                }else{
+                    ret->doInsert(0, make_pair(par, expo));
+                }
+            }else{
+                ret->doInsert(0, make_pair(par, expo));
+            }
+            pivot2 = pivot2->getNext();
+        }
+        pivot1 = pivot1->getNext();
+    }
+}
+
+void doMultyPlus(multiList* l1, multiList* l2, multiList* ret){
+    multiNode* pivot,* pivotR;
+    pivot = l1->getHead();
+    while(pivot){
+        int par, expo;
+        pivotR = ret->getHead();
+        par = pivot->getData().first;
+        expo = pivot->getData().second;
+
+        if(pivotR){
+            if(pivotR->getData().second > expo){
+                while(pivotR->getNext()){
+                    if(pivotR->getNext()->getData().second > expo){
+                        pivotR = pivotR->getNext();
+                    }else if(pivotR->getNext()->getData().second == expo){
+                        pivotR->getNext()->getData().first += par;
+                        break;
+                    }else{
+                        ret->doInsert(pivotR, make_pair(par, expo));
+                        break;
+                    }
+                }
+                if(!pivotR->getNext()) ret->doInsert(pivotR, make_pair(par, expo));
+            }else if(pivotR && pivotR->getData().second == expo){
+                pivotR->getData().first += par;
+            }else{
+                ret->doInsert(0, make_pair(par, expo));
+            }
+        }else{
+            ret->doInsert(0, make_pair(par, expo));
+        }
+        pivot = pivot->getNext();
+    }
+    pivot = l2->getHead();
+    while(pivot){
+        int par, expo;
+        pivotR = ret->getHead();
+        par = pivot->getData().first;
+        expo = pivot->getData().second;
+
+        if(pivotR){
+            if(pivotR->getData().second > expo){
+                while(pivotR->getNext()){
+                    if(pivotR->getNext()->getData().second > expo){
+                        pivotR = pivotR->getNext();
+                    }else if(pivotR->getNext()->getData().second == expo){
+                        pivotR->getNext()->getData().first += par;
+                        break;
+                    }else{
+                        ret->doInsert(pivotR, make_pair(par, expo));
+                        break;
+                    }
+                }
+                if(!pivotR->getNext()) ret->doInsert(pivotR, make_pair(par, expo));
+            }else if(pivotR && pivotR->getData().second == expo){
+                pivotR->getData().first += par;
+            }else{
+                ret->doInsert(0, make_pair(par, expo));
+            }
+        }else{
+            ret->doInsert(0, make_pair(par, expo));
+        }
+        pivot = pivot->getNext();
     }
 }
 
 int main(){
+    ChainList<pair<int, int>>* list[2];
+    int n[2];
+    for(int t = 0; t < 2; t++){
+        cin>>n[t];
+        list[t] = new ChainList<pair<int, int>>;
+        for(int i = 0; i < n[t]; i++){
+            int par, expo;
+            cin>>par>>expo;
+            list[t]->doInsert(make_pair(par, expo));
+        }
+    }
+    multiList* cross = new multiList();
+    doMultyCross(list[0], list[1], cross);
+    cross->printElems();
+    multiList* plus = new multiList();
+    doMultyPlus(list[0], list[1], plus);
+    plus->printElems();
     // SqlList<int>* list[2];
     // int n[2];
     // for(int t = 0; t < 2; t++){
@@ -372,12 +330,12 @@ int main(){
     // cross->printElems();
     // plus->printElems();
     
-    ChainList<int>* l = new ChainList<int>();
-    int m;
-    while(cin>>m){
-        l->doInsert(m);
-    }
-    // l->doInsert(0);
-    doMultyDerive(l);
-    l->printElems();
+    // ChainList<int>* l = new ChainList<int>();
+    // int m;
+    // while(cin>>m){
+    //     l->doInsert(m);
+    // }
+    // // l->doInsert(0);
+    // doMultyDerive(l);
+    // l->printElems();
 }
