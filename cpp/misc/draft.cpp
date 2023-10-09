@@ -147,9 +147,9 @@ void computer(polynomial result, int c, int e)
 
 polynomial multiply(polynomial a, polynomial b)
 {
-	polynomial result = creat_head();
-	Node* ptr = (Node*)malloc(sizeof(Node));
-	Node* dc1 = a;
+	polynomial result = (Node*)malloc(sizeof(Node));
+    result->next = NULL;
+    Node* dc1 = a;
 	while (dc1 != NULL)
 	{
 		Node* dc2 = b;
@@ -158,37 +158,36 @@ polynomial multiply(polynomial a, polynomial b)
             Node* tmp = (Node*)malloc(sizeof(Node));
             tmp->coef = dc1->coef * dc2->coef;
             tmp->expo = dc1->expo + dc2->expo;
+            tmp->next = NULL;
 
-            ptr->next = result;
-
-            while(ptr->next != NULL){
+            Node* ptr = result;
+            while(ptr->next){
                 if(ptr->next->expo > tmp->expo){
                     tmp->next = ptr->next;
                     ptr->next = tmp;
                     break;
                 }else if(ptr->next->expo == tmp->expo){
-                    ptr->next->expo += tmp->expo;
-                    if(ptr->next->coef == 0){
-                        tmp = ptr->next;
-                        ptr->next = ptr->next->next;
-                        delete tmp;
-                    }
+                    ptr->next->coef += tmp->coef;
+                    delete tmp;
                     break;
                 }
                 ptr = ptr->next;
-                printf("1");
+            }
+            if(!ptr->next){
+                tmp->next = ptr->next;
+                ptr->next = tmp;
             }
 
 			dc2 = dc2->next;
 		}
 		dc1 = dc1->next;
 	}
-	return result;
+	return result->next;
 }
 
 void octCarry(Node* head){
     while(head){
-        if(head->coef > 10){
+        if(head->coef >= 10){
             if(head->next && head->next->expo == head->expo + 1){
                 head->next->coef += head->coef / 10;
                 if(head->next->coef == 0){
@@ -214,7 +213,7 @@ void printOct(Node* head){
         return;
     }
     printOct(head->next);
-    printf("%d * 10 ^ %d", head->coef, head->expo);
+    if(head->coef)printf("coef: %d, expo: %d \n", head->coef, head->expo);
 }
 
 int main(void) {
@@ -289,59 +288,24 @@ int main(void) {
 	polynomial result_m = multiply(m, m);
 	polynomial n = multiply(result_m, cst);
 
+/* ---------------------------------------------------------------------------------------------------------------- */
+
 	Node* p_2 = result_mul;
 	Node* p_n = n;
 	Node* p_m = result_m;
     
+    printOct(p_2);
     // jin wei bing qu ling
     octCarry(p_2);
     octCarry(p_n);
 	octCarry(p_m);
 
+    printf("result of q:\n");
     printOct(p_2);
-    printf("\n");
+    printf("result of n:\n");
     printOct(p_n);
-    printf("\n");
+    printf("result of m:\n");
     printOct(p_m);
-    printf("\n");
 
-	printf("The resultult of m:\n");
-	while (p_m != NULL)
-	{
-		if (p_m->coef == 0)
-		{
-			p_m = p_m->next;
-			continue;
-		}
-		else
-		{
-			printf("coef: %d, expo: %d\n", p_m->coef, p_m->expo);
-			p_m = p_m->next;
-		}
-	}
-
-	printf("\nThe resultult of q:\n");
-	while (p_2 != NULL)
-	{
-		if (p_2->coef == 0)
-		{
-			p_2 = p_2->next;
-			continue;
-		}
-		printf("coef: %d, expo: %d\n", p_2->coef, p_2->expo);
-		p_2 = p_2->next;
-	}
-
-	printf("\nThe resultult of n:\n");
-	while (p_n != NULL)
-	{
-		if (p_n->coef == 0)
-		{
-			p_n = p_n->next;
-			continue;
-		}
-		printf("coef: %d, expo: %d\n", p_n->coef, p_n->expo);
-		p_n = p_n->next;
-	}
 	return 0;
 }
