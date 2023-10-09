@@ -43,7 +43,7 @@ Node* finder(Node* head, int expo) {
 }
 
 polynomial add(polynomial a, polynomial b) {
-	polynomial result = NULL;
+	polynomial result = creat_head();
 	Node* ptr = result;
 	Node* dc1 = a;
 	Node* dc2 = b;
@@ -148,37 +148,23 @@ void computer(polynomial result, int c, int e)
 polynomial multiply(polynomial a, polynomial b)
 {
 	polynomial result = creat_head();
-	Node* ptr = (Node*)malloc(sizeof(Node));
+	Node* ptr = result;
 	Node* dc1 = a;
 	while (dc1 != NULL)
 	{
 		Node* dc2 = b;
 		while (dc2 != NULL)
 		{
-            Node* tmp = (Node*)malloc(sizeof(Node));
-            tmp->coef = dc1->coef * dc2->coef;
-            tmp->expo = dc1->expo + dc2->expo;
-
-            ptr->next = result;
-
-            while(ptr->next != NULL){
-                if(ptr->next->expo > tmp->expo){
-                    tmp->next = ptr->next;
-                    ptr->next = tmp;
-                    break;
-                }else if(ptr->next->expo == tmp->expo){
-                    ptr->next->expo += tmp->expo;
-                    if(ptr->next->coef == 0){
-                        tmp = ptr->next;
-                        ptr->next = ptr->next->next;
-                        delete tmp;
-                    }
-                    break;
-                }
-                ptr = ptr->next;
-                printf("1");
-            }
-
+			int temp = 0;
+			int c = dc1->coef * dc2->coef;
+			int j = c / 10;
+			if (j >= 1)
+			{
+				temp = 1;
+			}
+			int e = dc1->expo + dc2->expo + temp;
+			computer(result, c % 10, e - temp);
+			computer(result, j, e);
 			dc2 = dc2->next;
 		}
 		dc1 = dc1->next;
@@ -186,36 +172,6 @@ polynomial multiply(polynomial a, polynomial b)
 	return result;
 }
 
-void octCarry(Node* head){
-    while(head){
-        if(head->coef > 10){
-            if(head->next && head->next->expo == head->expo + 1){
-                head->next->coef += head->coef / 10;
-                if(head->next->coef == 0){
-                    Node* tmp = head->next;
-                    head->next = tmp->next;
-                    delete tmp;
-                }
-            }else{
-                Node* tmp = (Node*)malloc(sizeof(Node));
-                tmp->coef = head->coef / 10;
-                tmp->expo = head->expo + 1;
-                tmp->next = head->next;
-                head->next = tmp;
-            }
-            head->coef %= 10;
-        }
-        head = head->next;
-    }
-}
-
-void printOct(Node* head){
-    if(!head){
-        return;
-    }
-    printOct(head->next);
-    printf("%d * 10 ^ %d", head->coef, head->expo);
-}
 
 int main(void) {
 	char num_1[] = "31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679";
@@ -292,19 +248,8 @@ int main(void) {
 	Node* p_2 = result_mul;
 	Node* p_n = n;
 	Node* p_m = result_m;
-    
-    // jin wei bing qu ling
-    octCarry(p_2);
-    octCarry(p_n);
-	octCarry(p_m);
 
-    printOct(p_2);
-    printf("\n");
-    printOct(p_n);
-    printf("\n");
-    printOct(p_m);
-    printf("\n");
-
+	
 	printf("The resultult of m:\n");
 	while (p_m != NULL)
 	{
