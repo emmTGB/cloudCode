@@ -293,8 +293,7 @@ int main(void) {
 	Node* p_2 = result_mul;
 	Node* p_n = n;
 	Node* p_m = result_m;
-    
-    printOct(p_2);
+
     // jin wei bing qu ling
     octCarry(p_2);
     octCarry(p_n);
