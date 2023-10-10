@@ -1,43 +1,46 @@
 //
 #include<iostream>
+#include<string>
 using namespace std;
 
-char stack[101];
-int sTop = 0;
-int min(char c){
+unsigned int stack[1010];
+unsigned int sTop = 0;
+unsigned int maxO(char c){
     switch (c)
     {
     case 'p'/* constant-expression */:
-        return 0b1111111100000000;
+        return (unsigned int)4294901760;
     case 'q':
-        return 0b1111000011110000;
+        return (unsigned int)4278255360;
     case 'r':
-        return 0b1111000000001111;
+        return (unsigned int)4042322160;
+    case 's':
+        return (unsigned int)3435973836;
     case 't':
-        return 0b0000111111110000;
+        return (unsigned int)2863311530;
     default:
-        return 0xffffff;
+        return (unsigned int)0xffffffff;
     }
 }
 
-int andK(int w, int x){
+unsigned int andK(unsigned int w, unsigned int x){
     return ~(~w & ~x);
 }
 
-int orA(int w, int x){
+unsigned int orA(unsigned int w, unsigned int x){
     return w | x;
 }
 
-int noN(int x){
+unsigned int noN(unsigned int x){
     return ~x;
 }
 
-int contC(int w, int x){
-    return (~w) | x;
+unsigned int contC(unsigned int w, unsigned int x){
+    return ~w | x;
 }
 
-int equalE(int w, int x){
-    return w == x ? 0b1111111111111111 : 0b0000000000000000;
+unsigned int equalE(unsigned int w, unsigned int x){
+    return w == x ? (unsigned int)~0 : 0;
 }
 
 int main(){
@@ -46,38 +49,37 @@ int main(){
         if(!s.compare("0")){
             break;
         }
-        for(int i = s.length() - 2; i >= 0; i--){
-            switch (s[i])
+        sTop = 0;
+        for(int i = s.length() - 1; i >= 0; i--){
+            switch ((int)s[i])
             {
-            case 'K':
+            case 75:
                 sTop --;
                 stack[sTop - 1] = andK(stack[sTop], stack[sTop - 1]);
                 break;
-            case 'A':
+            case 65:
                 sTop --;
                 stack[sTop - 1] = orA(stack[sTop], stack[sTop - 1]);
                 break;
-            case 'N':
-                sTop--;
+            case 78:
                 stack[sTop - 1] = noN(stack[sTop - 1]);
                 break;
-            case 'C':
+            case 67:
                 sTop --;
                 stack[sTop - 1] = contC(stack[sTop], stack[sTop - 1]);
                 break;
-            case 'E':
+            case 69:
                 sTop --;
                 stack[sTop - 1] = equalE(stack[sTop], stack[sTop - 1]);
                 break;
             default:
-                stack[sTop] = min(s[i]);
+                stack[sTop] = maxO(s[i]);
                 sTop++;
                 break;
             }
         }
-        int ans = stack[--sTop];
-        if(stack[sTop] == 0b1111111111111111){
-            cout<<"ok"<<endl;
+        if(stack[--sTop] == 4294967295){
+            cout<<"tautology"<<endl;
         }else{
             cout<<"not"<<endl;
         }
