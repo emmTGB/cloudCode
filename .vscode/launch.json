@@ -13,7 +13,7 @@
       "name": "(gdb) 启动",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${fileDirname}/bin/${fileBasenameNoExtension}.exe",
+      "program": "${fileDirname}/bin/${fileBasenameNoExtension}",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
