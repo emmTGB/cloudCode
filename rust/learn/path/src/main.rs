@@ -8,4 +8,5 @@ use std::{cmp::Ordering, io::{self, Write}};
 
 fn main() {
     println!("Hello, world!");
+    pub_hosting::add_to_waitlist();
 }

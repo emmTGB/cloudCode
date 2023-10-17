@@ -4,16 +4,22 @@ pub mod front_of_house{
     }
 }
 
+use crate::front_of_house::hosting;
+
 pub fn eat_at_restuarant(){
     crate::front_of_house::hosting::add_to_waitlist();  // 绝对路径
 
     front_of_house::hosting::add_to_waitlist();  // 相对路径
+
+    hosting::add_to_waitlist();  // after use
 
     let mut meal = back_of_house::Breakfast::summer("Rye");
     meal.toast = String::from("Wheat");
     println!("like {} toast", meal.toast);
     // meal.seasonal_fruit xx
 }
+
+pub use front_of_house::hosting as pub_hosting;
 
 fn serve_orde(){}
 
