@@ -11,7 +11,6 @@ void solve();
 
 int main(){
     int _case, n;
-    long long a;
 
     cin>>_case;
     for(int i = 0; i < _case; i++)
