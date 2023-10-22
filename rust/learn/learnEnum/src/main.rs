@@ -1,5 +1,6 @@
 fn main() {
     println!("Hello, world!");
+    let Ip = IpAddr::V4(192, 168, 1, 2);
 }
 
 enum IpAddr{
