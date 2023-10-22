@@ -1,5 +1,6 @@
 h2{
     color: #39C5BB;
+    font-weight: 900;
 }
 .color{
     color: red;
@@ -9,11 +10,14 @@ h2{
 }
 #thisId{
     font-style: initial;
-    font-family: fantasy;
+    font-family: 微软雅黑, 等线, sans-serif;
     color: blue;
 }
 /* * for all (default) */
 *{
     font-weight: 900;
     color: #5f5f5f;
+}
+div{
+    font: italic 100 60px 'fira code';
 }
