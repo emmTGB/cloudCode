@@ -5,17 +5,23 @@ using namespace std;
 
 
 void solve(){
-    ll res, m, n, p, q;
-    cin>>m;
+    ll res, m, n, p, q, g;
+    scanf("%lld", &m);
     for(ll i = 0; i < m; i++){
-        cin>>n;
-        res = 0;
-        p = 0;
+        scanf("%lld", &n);
+        p = 1, res = 0, g = 0;
+
         for(ll j = 0; j < n; j++){
-            cin>>q;
-            while(q < p){
-                q *= 2;
-                ++res;
+            scanf("%lld", &q);
+            ll tmp = q, t = 0;
+            while(tmp < p){
+                tmp <<= 1;
+                ++t;
+            }
+            tmp = p << 1;
+            while(tmp <= q){
+                tmp <<= 1;
+                --t;
             }
             g += t;
             g = max(0ll, g);
