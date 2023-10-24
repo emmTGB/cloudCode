@@ -5,31 +5,35 @@ using namespace std;
 #define pii pair<int, int>
 #define mii map<int, int>
 
-void solve(){
+void solve() {
     int c, t;
-    cin>>c;
-    for(int i = 0; i < c; i++){
+    cin >> c;
+    for (int i = 0; i < c; i++) {
         int sum = 0;
+        ll res = 0;
         mii fir, end, cnt;
-        vector<int> a;
         cin >> t;
-        for(int j = 0; j < t; j++){
-            cin>>a[j];
-            if(cnt[a[j]] == 0){
+        vector<int> a(t);
+        for (int j = 0; j < t; j++) {
+            cin >> a[j];
+            if (cnt[a[j]] == 0) {
                 cnt[a[j]] = 1;
                 fir[a[j]] = j;
                 end[a[j]] = j;
-            }else{
+            }
+            else {
                 end[a[j]] = j;
             }
         }
-        for(int j = 0; j < t; j++){
-            if(fir[a[j]] == j) ++sum;
-            if(end[a[j]] == j) res += sum;
+        for (int j = 0; j < t; j++) {
+            if (fir[a[j]] == j) ++sum;
+            if (end[a[j]] == j) res += sum;
         }
+
+        cout << res << endl;
     }
 }
 
-int main(){
+int main() {
     solve();
 }

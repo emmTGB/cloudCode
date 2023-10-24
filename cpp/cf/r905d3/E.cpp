@@ -3,23 +3,22 @@
 using namespace std;
 #define ll long long
 
-
-void solve(){
+void solve() {
     ll res, m, n, p, q, g;
     scanf("%lld", &m);
-    for(ll i = 0; i < m; i++){
+    for (ll i = 0; i < m; i++) {
         scanf("%lld", &n);
         p = 1, res = 0, g = 0;
 
-        for(ll j = 0; j < n; j++){
+        for (ll j = 0; j < n; j++) {
             scanf("%lld", &q);
             ll tmp = q, t = 0;
-            while(tmp < p){
+            while (tmp < p) {
                 tmp <<= 1;
                 ++t;
             }
             tmp = p << 1;
-            while(tmp <= q){
+            while (tmp <= q) {
                 tmp <<= 1;
                 --t;
             }
@@ -28,11 +27,10 @@ void solve(){
             res += g;
             p = q;
         }
-        cout<<res;
+        cout << res << endl;
     }
 }
 
-int main()
-{
+int main() {
     solve();
 }

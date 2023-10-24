@@ -9,40 +9,40 @@ using namespace std;
 
 void solve();
 
-int main(){
+int main() {
     int _case, n;
 
-    cin>>_case;
-    for(int i = 0; i < _case; i++)
+    cin >> _case;
+    for (int i = 0; i < _case; i++)
         solve();
 }
 
-void solve(){
+void solve() {
     int n;
     int a;
     map<int, int> m;
-    cin>>n;
+    cin >> n;
 
-    auto decompose = [&] (int x) -> void{
-        for(int i = 2; i * i <= x; i++){
-            while(x % i == 0){
+    auto decompose = [&](int x) -> void {
+        for (int i = 2; i * i <= x; i++) {
+            while (x % i == 0) {
                 m[i]++, x /= i;
             }
         }
-        if(x > 1) m[x]++;
-    };
+        if (x > 1) m[x]++;
+        };
 
-    for(int i = 0; i < n; i++){
-        cin>>a;
+    for (int i = 0; i < n; i++) {
+        cin >> a;
         decompose(a);
     }
     bool ok = 1;
-    for(auto [x, y] : m){
-        if(y % n != 0){
+    for (auto [x, y] : m) {
+        if (y % n != 0) {
             ok = 0;
             break;
         }
     }
-    if(ok) cout<<"YES\n";
-    else cout<<"NO\n";
+    if (ok) cout << "YES\n";
+    else cout << "NO\n";
 }
