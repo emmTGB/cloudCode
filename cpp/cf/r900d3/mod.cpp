@@ -74,3 +74,7 @@ ll qp(ll x, ll p)
     }
     return ans;
 }
+
+int main() {
+    cout << 1ll / 2;
+}
