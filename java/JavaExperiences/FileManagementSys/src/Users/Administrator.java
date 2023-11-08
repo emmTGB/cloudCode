@@ -2,6 +2,7 @@ package Users;
 
 import Process.DataProcess;
 
+import java.sql.SQLOutput;
 import java.util.Enumeration;
 import java.util.Scanner;
 
@@ -15,24 +16,25 @@ public class Administrator extends User {
     public void showMenu() {
         String tip = new String("Select your operation:");
 
-        System.out.println("Your User type: Administrator");
-        System.out.println(
-                "Welcome to Administrator menu\n" +
-                        "\t1.Modify User\n" +
-                        "\t2.Delete User\n" +
-                        "\t3.Add User\n" +
-                        "\t4.List User\n" +
-                        "\t5.Download File\n" +
-                        "\t6.Doc List\n" +
-                        "\t7.Change Your Password\n" +
-                        "\t8.Exit\n" +
-                        "***************************************"
-        );
-        System.out.println(tip);
-
         String[] npr = new String[3];
         String input = null;
-        while (true) {
+        do {
+            System.out.println("Your User type: Administrator");
+            System.out.println(
+                    """
+                            Welcome to Administrator menu
+                            \t1.Modify User
+                            \t2.Delete User
+                            \t3.Add User
+                            \t4.List User
+                            \t5.Download File
+                            \t6.File List
+                            \t7.Change Your Password
+                            \t8.Exit
+                            ***************************************"""
+            );
+            System.out.println(tip);
+
             input = DataProcess.scanner.nextLine().trim();
             if (!(input).matches("[12345678]")) {
                 System.err.println(tip);
@@ -40,11 +42,56 @@ public class Administrator extends User {
                 int nextInt = Integer.parseInt(input);
                 switch (nextInt) {
                     case 1:
+                        System.out.println("Modify User");
+                        TipsForInput.tipsForInputUser(npr);
+                        if(changeUserInfo(npr[0], npr[1], npr[2]))
+                            System.out.println("Succeeded to modify");
+                        else
+                            System.out.println("Failed to modify");
                         break;
                     case 2:
+                        System.out.println("Delete User");
+                        System.out.println("Please input user name:");
+                        npr[0] = DataProcess.scanner.nextLine().trim();
+                        if(delUser(npr[0]))
+                            System.out.println("Succeeded to delete");
+                        else
+                            System.out.println("Failed to delete");
+                        break;
+                    case 3:
+                        System.out.println("Add User");
+                        TipsForInput.tipsForInputUser(npr);
+                        if(addUser(npr[0], npr[1], npr[2]))
+                            System.out.println("Succeeded to add");
+                        else
+                            System.out.println("Failed to add");
+                        break;
+                    case 4:
+                        System.out.println("List Users");
+                        listUser();
+                        break;
+                    case 5:
+                        System.out.println("Download File");
+                        //TODO
+                        break;
+                    case 6:
+                        System.out.println("File List");
+                        //TODO
+                        break;
+                    case 7:
+                        System.out.println("Change Your Password");
+                        System.out.println("Please input new password:");
+                        npr[1] = DataProcess.scanner.nextLine().trim();
+                        resetPassWord(npr[1]);
+                        break;
+                    case 8:
+                        return;
+                    default:
+                        break;
                 }
+                break;
             }
-        }
+        }while(true);
     }
 
     public boolean changeUserInfo(String name, String passWord, String role) {

@@ -30,4 +30,13 @@ public abstract class User {
     public boolean verifyPassWord(String passWord) {
         return this.passWord.equals(passWord);
     }
+
+    protected void resetPassWord(String passWord){
+        this.passWord = passWord;
+    }
+
+    //TODO
+    protected void showFileList(){}
+
+    protected void downloadFile(){}
 }
