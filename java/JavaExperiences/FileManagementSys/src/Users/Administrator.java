@@ -14,15 +14,15 @@ public class Administrator extends User {
 
     @Override
     public void showMenu() {
-        String tip = new String("Select your operation:");
+        String tip = "Select your operation:";
 
         String[] npr = new String[3];
         String input = null;
+        System.out.println("Welcome! Your User type: Administrator");
         do {
-            System.out.println("Your User type: Administrator");
             System.out.println(
                     """
-                            Welcome to Administrator menu
+                            ******Administrator menu******
                             \t1.Modify User
                             \t2.Delete User
                             \t3.Add User
@@ -31,7 +31,7 @@ public class Administrator extends User {
                             \t6.File List
                             \t7.Change Your Password
                             \t8.Exit
-                            ***************************************"""
+                            *******************************"""
             );
             System.out.println(tip);
 
@@ -44,7 +44,7 @@ public class Administrator extends User {
                     case 1:
                         System.out.println("Modify User");
                         TipsForInput.tipsForInputUser(npr);
-                        if(changeUserInfo(npr[0], npr[1], npr[2]))
+                        if (changeUserInfo(npr[0], npr[1], npr[2]))
                             System.out.println("Succeeded to modify");
                         else
                             System.out.println("Failed to modify");
@@ -53,7 +53,7 @@ public class Administrator extends User {
                         System.out.println("Delete User");
                         System.out.println("Please input user name:");
                         npr[0] = DataProcess.scanner.nextLine().trim();
-                        if(delUser(npr[0]))
+                        if (delUser(npr[0]))
                             System.out.println("Succeeded to delete");
                         else
                             System.out.println("Failed to delete");
@@ -61,14 +61,15 @@ public class Administrator extends User {
                     case 3:
                         System.out.println("Add User");
                         TipsForInput.tipsForInputUser(npr);
-                        if(addUser(npr[0], npr[1], npr[2]))
+                        if (addUser(npr[0], npr[1], npr[2]))
                             System.out.println("Succeeded to add");
                         else
                             System.out.println("Failed to add");
                         break;
                     case 4:
-                        System.out.println("List Users");
+                        System.out.println("----List Users----");
                         listUser();
+                        System.out.println("----List Ending---");
                         break;
                     case 5:
                         System.out.println("Download File");
@@ -89,9 +90,8 @@ public class Administrator extends User {
                     default:
                         break;
                 }
-                break;
             }
-        }while(true);
+        } while (true);
     }
 
     public boolean changeUserInfo(String name, String passWord, String role) {

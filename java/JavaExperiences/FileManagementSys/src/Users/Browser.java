@@ -14,15 +14,15 @@ public class Browser extends User {
         String[] npr = new String[3];
         String input = null;
         do {
-            System.out.println("Your User type: Browser");
+            System.out.println("Welcome! Your User type: Browser");
             System.out.println(
                     """
-                            Welcome to Browser menu
+                            *******Browser menu******
                             \t1.Download File
                             \t2.File List
                             \t3.Change Your Password
                             \t4.Exit
-                            ***************************************"""
+                            *******************************"""
             );
             System.out.println(tip);
 
@@ -51,8 +51,7 @@ public class Browser extends User {
                     default:
                         break;
                 }
-                break;
             }
-        }while(true);
+        } while (true);
     }
 }

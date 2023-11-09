@@ -26,15 +26,9 @@ public class DataProcess {
 
     public static Scanner scanner = new Scanner(System.in);
 
-    public static void init() {
+    public static void init() throws IOException, DataException {
         userTable = new Hashtable<>();
-        try {
-            readUsers();
-        } catch (IOException ie) {
-            ie.printStackTrace();
-        } catch (DataException de) {
-            de.printStackTrace();
-        }
+        readUsers();
     }
 
     private static void readUsers() throws IOException, DataException {
@@ -43,9 +37,9 @@ public class DataProcess {
         do {
             try {
                 flag = false;
-                buff = new BufferedReader(new FileReader("../Data/Users.txt"));
+                buff = new BufferedReader(new FileReader("src/Data/Users.txt"));
             } catch (FileNotFoundException nf) {
-                File file = new File("../Data/User.txt");
+                File file = new File("src/Data/Users.txt");
                 flag = true;
             }
         } while (flag);
@@ -74,11 +68,19 @@ public class DataProcess {
         buff.close();
     }
 
-    public static void writeUsers() {
+    public static void writeUsers() throws IOException {
+        BufferedWriter buff = null;
         try {
-            BufferedWriter buff = new BufferedWriter(new FileWriter("../Data/Users.txt"));
+            buff = new BufferedWriter(new FileWriter("../Data/Users.txt"));
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+
+        Enumeration<User> e = userTable.elements();
+        User user;
+        while (e.hasMoreElements()) {
+            user = e.nextElement();
+            buff.write(user.toString());
         }
     }
 
@@ -86,7 +88,7 @@ public class DataProcess {
 
     }
 
-    public static User searchUser(String name, String passWord) {
+    public static User fetchUser(String name, String passWord) {
         if (userTable.containsKey(name)) {
             User temp = userTable.get(name);
             if (temp.verifyPassWord(passWord)) {
@@ -94,6 +96,10 @@ public class DataProcess {
             }
         }
         return null;
+    }
+
+    public static boolean inTable(String name) {
+        return userTable.containsKey(name);
     }
 
     public static Enumeration<User> getAllUsers() {

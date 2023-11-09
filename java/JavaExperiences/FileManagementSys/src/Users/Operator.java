@@ -14,16 +14,16 @@ public class Operator extends User {
         String[] npr = new String[3];
         String input = null;
         do {
-            System.out.println("Your User type: Operator");
+            System.out.println("Welcome! Your User type: Operator");
             System.out.println(
                     """
-                            Welcome to Operator menu
+                            ******Operator menu******
                             \t1.Download File
                             \t2.Upload File
                             \t3.File List
                             \t4.Change Your Password
                             \t5.Exit
-                            ***************************************"""
+                            *******************************"""
             );
             System.out.println(tip);
 
@@ -56,13 +56,12 @@ public class Operator extends User {
                     default:
                         break;
                 }
-                break;
             }
-        }while(true);
+        } while (true);
     }
 
     //TODO
-    private boolean uploadFile(){
+    private boolean uploadFile() {
         return false;
     }
 }

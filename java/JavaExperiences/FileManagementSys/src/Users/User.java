@@ -39,4 +39,9 @@ public abstract class User {
     protected void showFileList(){}
 
     protected void downloadFile(){}
+
+    @Override
+    public String toString(){
+        return userName + "\n" + passWord + "\n" + role + "\n";
+    }
 }
