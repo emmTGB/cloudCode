@@ -69,12 +69,11 @@ public class DataProcess {
     }
 
     public static void writeUsers() throws IOException {
-        BufferedWriter buff = null;
-        try {
-            buff = new BufferedWriter(new FileWriter("../Data/Users.txt"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        File userTxt = new File("src/Data/user.txt");
+        if (userTxt.exists())
+            userTxt.delete();
+        userTxt.createNewFile();
+        BufferedWriter buff = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(userTxt)));
 
         Enumeration<User> e = userTable.elements();
         User user;
@@ -82,6 +81,7 @@ public class DataProcess {
             user = e.nextElement();
             buff.write(user.toString());
         }
+        buff.close();
     }
 
     public static void updateUserFile() {
@@ -126,15 +126,23 @@ public class DataProcess {
 
     public static boolean insertUser(String name, String passWord, String role) {
         User user;
-        if (userTable.containsKey(name))
+        if (userTable.containsKey(name)) {
+            System.err.println("User Already Exists!");
             return false;
-        else {
+        }else if {
+            System.err.println("Unsupported Password!");
+            return false;
+        } else {
             if (role.equalsIgnoreCase("Administrator"))
                 user = new Administrator(name, passWord);
             else if (role.equalsIgnoreCase("Operator"))
                 user = new Operator(name, passWord);
-            else
+            else if (role.equalsIgnoreCase("Browser"))
                 user = new Browser(name, passWord);
+            else {
+                System.err.println("Wrong Role!");
+                return false;
+            }
             userTable.put(name, user);
             updateUserFile();
             return true;

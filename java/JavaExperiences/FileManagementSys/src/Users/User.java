@@ -1,16 +1,18 @@
 package Users;
 
-import Process.DataProcess;
-
 public abstract class User {
     protected final String userName;
     protected String passWord;
-    protected String role;
+    protected String userRole;
 
 
     protected User(String userName, String passWord) {
         this.userName = userName;
         this.passWord = passWord;
+    }
+
+    public static boolean passWordUsable(String passWord) {
+        return !(passWord.length() > 24 || passWord.length() < 4);
     }
 
     public abstract void showMenu();
@@ -19,8 +21,8 @@ public abstract class User {
         return userName;
     }
 
-    public String getRole() {
-        return role;
+    public String getUserRole() {
+        return userRole;
     }
 
     protected String getPassWord() {
@@ -31,17 +33,22 @@ public abstract class User {
         return this.passWord.equals(passWord);
     }
 
-    protected void resetPassWord(String passWord){
+    protected boolean resetPassWord(String passWord) {
+        if (!passWordUsable(passWord))
+            return false;
         this.passWord = passWord;
+        return true;
     }
 
     //TODO
-    protected void showFileList(){}
+    protected void showFileList() {
+    }
 
-    protected void downloadFile(){}
+    protected void downloadFile() {
+    }
 
     @Override
-    public String toString(){
-        return userName + "\n" + passWord + "\n" + role + "\n";
+    public String toString() {
+        return userName + "\n" + passWord + "\n" + userRole + "\n";
     }
 }

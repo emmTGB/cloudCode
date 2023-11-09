@@ -2,21 +2,19 @@ package Users;
 
 import Process.DataProcess;
 
-import java.sql.SQLOutput;
 import java.util.Enumeration;
-import java.util.Scanner;
 
 public class Administrator extends User {
     public Administrator(String userName, String passWord) {
         super(userName, passWord);
-        role = "Administrator";
+        userRole = "Administrator";
     }
 
     @Override
     public void showMenu() {
         String tip = "Select your operation:";
 
-        String[] npr = new String[3];
+        String name, pass, role;
         String input = null;
         System.out.println("Welcome! Your User type: Administrator");
         do {
@@ -43,8 +41,17 @@ public class Administrator extends User {
                 switch (nextInt) {
                     case 1:
                         System.out.println("Modify User");
-                        TipsForInput.tipsForInputUser(npr);
-                        if (changeUserInfo(npr[0], npr[1], npr[2]))
+                        System.out.println("Please input user name:");
+                        name = DataProcess.scanner.nextLine().trim();
+                        if (!DataProcess.inTable(name)) {
+                            System.err.println("User does not exist!");
+                            break;
+                        }
+                        System.out.println("Please input password:");
+                        pass = DataProcess.scanner.nextLine().trim();
+                        System.out.println("Please input role:");
+                        role = DataProcess.scanner.nextLine().trim();
+                        if (changeUserInfo(name, pass, role))
                             System.out.println("Succeeded to modify");
                         else
                             System.out.println("Failed to modify");
@@ -52,16 +59,25 @@ public class Administrator extends User {
                     case 2:
                         System.out.println("Delete User");
                         System.out.println("Please input user name:");
-                        npr[0] = DataProcess.scanner.nextLine().trim();
-                        if (delUser(npr[0]))
+                        name = DataProcess.scanner.nextLine().trim();
+                        if (delUser(name))
                             System.out.println("Succeeded to delete");
                         else
-                            System.out.println("Failed to delete");
+                            System.err.println("Failed to delete");
                         break;
                     case 3:
                         System.out.println("Add User");
-                        TipsForInput.tipsForInputUser(npr);
-                        if (addUser(npr[0], npr[1], npr[2]))
+                        System.out.println("Please input user name:");
+                        name = DataProcess.scanner.nextLine().trim();
+                        if (DataProcess.inTable(name)) {
+                            System.err.println("User has already existed!");
+                            break;
+                        }
+                        System.out.println("Please input password:");
+                        pass = DataProcess.scanner.nextLine().trim();
+                        System.out.println("Please input role:");
+                        role = DataProcess.scanner.nextLine().trim();
+                        if (addUser(name, pass, role))
                             System.out.println("Succeeded to add");
                         else
                             System.out.println("Failed to add");
@@ -82,8 +98,8 @@ public class Administrator extends User {
                     case 7:
                         System.out.println("Change Your Password");
                         System.out.println("Please input new password:");
-                        npr[1] = DataProcess.scanner.nextLine().trim();
-                        resetPassWord(npr[1]);
+                        pass = DataProcess.scanner.nextLine().trim();
+                        resetPassWord(pass);
                         break;
                     case 8:
                         return;
@@ -112,7 +128,7 @@ public class Administrator extends User {
         while (e.hasMoreElements()) {
             user = e.nextElement();
             System.out.println(
-                    "Name: " + user.getUserName() + "\t Password: " + user.getPassWord() + "\t Role: " + user.getRole()
+                    "Name: " + user.getUserName() + "\t Password: " + user.getPassWord() + "\t Role: " + user.getUserRole()
             );
         }
     }

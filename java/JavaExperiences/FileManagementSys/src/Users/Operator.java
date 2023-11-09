@@ -11,7 +11,7 @@ public class Operator extends User {
     public void showMenu() {
         String tip = new String("Select your operation:");
 
-        String[] npr = new String[3];
+        String pass;
         String input = null;
         do {
             System.out.println("Welcome! Your User type: Operator");
@@ -48,8 +48,8 @@ public class Operator extends User {
                     case 4:
                         System.out.println("Change Your Password");
                         System.out.println("Please input new password:");
-                        npr[1] = DataProcess.scanner.nextLine().trim();
-                        resetPassWord(npr[1]);
+                        pass = DataProcess.scanner.nextLine().trim();
+                        resetPassWord(pass);
                         break;
                     case 5:
                         return;

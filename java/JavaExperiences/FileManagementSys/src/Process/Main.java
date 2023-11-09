@@ -24,19 +24,19 @@ public class Main {
                 System.err.println(tip);
             } else {
                 int nextInt = Integer.parseInt(input);
-                String name, passwd, role;
+                String name, pass, role;
                 switch (nextInt) {
                     case 1:
                         System.out.println("Login");
                         System.out.println("Please input user name:");
                         name = DataProcess.scanner.nextLine().trim();
                         if (!DataProcess.inTable(name)) {
-                            System.out.println("User does not exist!");
+                            System.err.println("User does not exist!");
                             break;
                         }
                         System.out.println("Please input password:");
-                        passwd = DataProcess.scanner.nextLine().trim();
-                        Objects.requireNonNull(DataProcess.fetchUser(name, passwd)).showMenu();
+                        pass = DataProcess.scanner.nextLine().trim();
+                        Objects.requireNonNull(DataProcess.fetchUser(name, pass)).showMenu();
                         break;
                     case 2:
                         System.out.println("Signup");
@@ -47,10 +47,10 @@ public class Main {
                             break;
                         }
                         System.out.println("Please input password:");
-                        passwd = DataProcess.scanner.nextLine().trim();
+                        pass = DataProcess.scanner.nextLine().trim();
                         System.out.println("Please input role:");
                         role = DataProcess.scanner.nextLine().trim();
-                        if (DataProcess.insertUser(name, passwd, role))
+                        if (DataProcess.insertUser(name, pass, role))
                             System.out.println("Succeeded!");
                         else
                             System.out.println("Failed");
@@ -74,5 +74,10 @@ public class Main {
         }
         mainMenu();
         DataProcess.scanner.close();
+        try {
+            DataProcess.writeUsers();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
