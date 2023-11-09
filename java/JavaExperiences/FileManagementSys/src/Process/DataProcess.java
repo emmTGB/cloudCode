@@ -40,6 +40,7 @@ public class DataProcess {
                 buff = new BufferedReader(new FileReader("src/Data/Users.txt"));
             } catch (FileNotFoundException nf) {
                 File file = new File("src/Data/Users.txt");
+                file.createNewFile();
                 flag = true;
             }
         } while (flag);
@@ -129,7 +130,7 @@ public class DataProcess {
         if (userTable.containsKey(name)) {
             System.err.println("User Already Exists!");
             return false;
-        }else if {
+        } else if (!User.passWordUsable(passWord)) {
             System.err.println("Unsupported Password!");
             return false;
         } else {
