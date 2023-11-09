@@ -8,7 +8,7 @@ import java.util.Hashtable;
 import java.util.Scanner;
 
 class DataException extends Throwable {
-    private String exceptionMsg;
+    private final String exceptionMsg;
 
     protected DataException(String exceptionMsg) {
         super();
@@ -52,25 +52,24 @@ public class DataProcess {
 
             if (passWord == null || role == null) {
                 buff.close();
-                throw new DataException("Something wrong with file 'user.txt'");
+                throw new DataException("Something wrong with file 'Users.txt'");
             }
 
-            if (role.equals("Administrator"))
-                userTable.put(name, new Administrator(name, passWord));
-            else if (role.equals("Operator"))
-                userTable.put(name, new Operator(name, passWord));
-            else if (role.equals("Browser"))
-                userTable.put(name, new Browser(name, passWord));
-            else {
-                buff.close();
-                throw new DataException("Unexpected role");
+            switch (role) {
+                case "Administrator" -> userTable.put(name, new Administrator(name, passWord));
+                case "Operator" -> userTable.put(name, new Operator(name, passWord));
+                case "Browser" -> userTable.put(name, new Browser(name, passWord));
+                default -> {
+                    buff.close();
+                    throw new DataException("Unexpected role");
+                }
             }
         }
         buff.close();
     }
 
     public static void writeUsers() throws IOException {
-        File userTxt = new File("src/Data/user.txt");
+        File userTxt = new File("src/Data/Users.txt");
         if (userTxt.exists())
             userTxt.delete();
         userTxt.createNewFile();
@@ -103,9 +102,12 @@ public class DataProcess {
         return userTable.containsKey(name);
     }
 
+    public static String checkUserRole(String name) {
+        return userTable.get(name).getUserRole();
+    }
+
     public static Enumeration<User> getAllUsers() {
-        Enumeration<User> e = userTable.elements();
-        return e;
+        return userTable.elements();
     }
 
     public static boolean updateUser(String name, String passWord, String role) {
@@ -130,7 +132,7 @@ public class DataProcess {
         if (userTable.containsKey(name)) {
             System.err.println("User Already Exists!");
             return false;
-        } else if (!User.passWordUsable(passWord)) {
+        } else if (User.passWordNOK(passWord)) {
             System.err.println("Unsupported Password!");
             return false;
         } else {

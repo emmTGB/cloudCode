@@ -11,8 +11,8 @@ public abstract class User {
         this.passWord = passWord;
     }
 
-    public static boolean passWordUsable(String passWord) {
-        return !(passWord.length() > 24 || passWord.length() < 4);
+    public static boolean passWordNOK(String passWord) {
+        return passWord.length() > 24 || passWord.length() < 4;
     }
 
     public abstract void showMenu();
@@ -33,11 +33,12 @@ public abstract class User {
         return this.passWord.equals(passWord);
     }
 
-    protected boolean resetPassWord(String passWord) {
-        if (!passWordUsable(passWord))
-            return false;
+    protected void resetPassWord(String passWord) {
+        if (passWordNOK(passWord)) {
+            System.err.println("Unsupported Password!");
+            return;
+        }
         this.passWord = passWord;
-        return true;
     }
 
     //TODO

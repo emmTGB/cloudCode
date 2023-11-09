@@ -5,6 +5,7 @@ import Process.DataProcess;
 public class Operator extends User {
     public Operator(String userName, String passWord) {
         super(userName, passWord);
+        userRole = "Operator";
     }
 
     @Override

@@ -1,5 +1,7 @@
 package Process;
 
+import Users.User;
+
 import java.io.IOException;
 import java.util.Objects;
 
@@ -9,20 +11,20 @@ public class Main {
     public static void mainMenu() {
         menuLoop:
         do {
-            String tip = "Select your operation:";
             System.out.println(
                     """
+                            ------Menu------
                             \t1.Login
                             \t2.Signup
-                            \t0.Exit"""
+                            \t0.Exit
+                            ----------------"""
             );
+            System.out.print("Select your operation: ");
 
             String input;
             input = DataProcess.scanner.nextLine().trim();
 
-            if (!(input).matches("[012]")) {
-                System.err.println(tip);
-            } else {
+            if ((input).matches("[012]")) {
                 int nextInt = Integer.parseInt(input);
                 String name, pass, role;
                 switch (nextInt) {
@@ -43,11 +45,15 @@ public class Main {
                         System.out.println("Please input user name:");
                         name = DataProcess.scanner.nextLine().trim();
                         if (DataProcess.inTable(name)) {
-                            System.out.println("User has already existed!");
+                            System.err.println("User has already existed!");
                             break;
                         }
                         System.out.println("Please input password:");
                         pass = DataProcess.scanner.nextLine().trim();
+                        if (User.passWordNOK(pass)) {
+                            System.err.println("Unsupported Password!");
+                            break;
+                        }
                         System.out.println("Please input role:");
                         role = DataProcess.scanner.nextLine().trim();
                         if (DataProcess.insertUser(name, pass, role))
@@ -58,6 +64,8 @@ public class Main {
                     default:
                         break menuLoop;
                 }
+            } else {
+                System.err.println("Wrong Number Typed!");
             }
         } while (true);
     }
@@ -70,6 +78,7 @@ public class Main {
             return;
         } catch (DataException e) {
             System.err.println(e.getMessage());
+
             return;
         }
         mainMenu();

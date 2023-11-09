@@ -46,9 +46,16 @@ public class Administrator extends User {
                         if (!DataProcess.inTable(name)) {
                             System.err.println("User does not exist!");
                             break;
+                        } else if (DataProcess.checkUserRole(name).equalsIgnoreCase("Administrator")) {
+                            System.err.println("You can not modify an Admin");
+                            break;
                         }
                         System.out.println("Please input password:");
                         pass = DataProcess.scanner.nextLine().trim();
+                        if (User.passWordNOK(pass)) {
+                            System.err.println("Unsupported Password!");
+                            break;
+                        }
                         System.out.println("Please input role:");
                         role = DataProcess.scanner.nextLine().trim();
                         if (changeUserInfo(name, pass, role))
@@ -75,6 +82,10 @@ public class Administrator extends User {
                         }
                         System.out.println("Please input password:");
                         pass = DataProcess.scanner.nextLine().trim();
+                        if (User.passWordNOK(pass)) {
+                            System.err.println("Unsupported Password!");
+                            break;
+                        }
                         System.out.println("Please input role:");
                         role = DataProcess.scanner.nextLine().trim();
                         if (addUser(name, pass, role))

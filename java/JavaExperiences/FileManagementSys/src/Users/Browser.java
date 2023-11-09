@@ -5,13 +5,14 @@ import Process.DataProcess;
 public class Browser extends User {
     public Browser(String userName, String passWord) {
         super(userName, passWord);
+        userRole = "Browser";
     }
 
     @Override
     public void showMenu() {
         String tip = new String("Select your operation:");
 
-        String[] npr = new String[3];
+        String pass;
         String input = null;
         do {
             System.out.println("Welcome! Your User type: Browser");
@@ -43,8 +44,8 @@ public class Browser extends User {
                     case 3:
                         System.out.println("Change Your Password");
                         System.out.println("Please input new password:");
-                        npr[1] = DataProcess.scanner.nextLine().trim();
-                        resetPassWord(npr[1]);
+                        pass = DataProcess.scanner.nextLine().trim();
+                        resetPassWord(pass);
                         break;
                     case 4:
                         return;
