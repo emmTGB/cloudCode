@@ -1,5 +1,6 @@
 package Process;
 
+import Graphic.MyFrame;
 import Users.User;
 
 import java.io.IOException;
@@ -71,22 +72,24 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        try {
-            DataProcess.init();
-        } catch (IOException e) {
-            System.err.println("Failed to initialize the program.");
-            return;
-        } catch (DataException e) {
-            System.err.println(e.getMessage());
+        MyFrame mainFrame = new MyFrame("FileManagementSys");
 
-            return;
-        }
-        mainMenu();
-        DataProcess.scanner.close();
-        try {
-            DataProcess.writeUsers();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            DataProcess.init();
+//        } catch (IOException e) {
+//            System.err.println("Failed to initialize the program.");
+//            return;
+//        } catch (DataException e) {
+//            System.err.println(e.getMessage());
+//
+//            return;
+//        }
+//        mainMenu();
+//        DataProcess.scanner.close();
+//        try {
+//            DataProcess.writeUsers();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 }
