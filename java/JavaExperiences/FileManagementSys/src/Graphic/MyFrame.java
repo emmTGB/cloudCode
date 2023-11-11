@@ -39,4 +39,8 @@ public class MyFrame extends JFrame {
         add(currentPanel);
         SwingUtilities.updateComponentTreeUI(this);  // 更新窗口，似乎优于repaint
     }
+
+    public void hideMainPanel() {
+
+    }
 }

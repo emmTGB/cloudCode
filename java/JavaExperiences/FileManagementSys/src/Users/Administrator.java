@@ -5,6 +5,18 @@ import Process.DataProcess;
 import java.util.Enumeration;
 
 public class Administrator extends User {
+    public static final int OPTION_NUM = 8;
+    public static final String[] OPTION_LIST = {
+            "Exit",
+            "Modify User",
+            "Delete User",
+            "Add User",
+            "List User",
+            "Download File",
+            "File List",
+            "Change Your Password"
+    };
+
     public Administrator(String userName, String passWord) {
         super(userName, passWord);
         userRole = "Administrator";
@@ -28,13 +40,13 @@ public class Administrator extends User {
                             \t5.Download File
                             \t6.File List
                             \t7.Change Your Password
-                            \t8.Exit
+                            \t0.Exit
                             *******************************"""
             );
             System.out.println(tip);
 
             input = DataProcess.scanner.nextLine().trim();
-            if (!(input).matches("[12345678]")) {
+            if (!(input).matches("[01234567]")) {
                 System.err.println(tip);
             } else {
                 int nextInt = Integer.parseInt(input);
@@ -112,7 +124,7 @@ public class Administrator extends User {
                         pass = DataProcess.scanner.nextLine().trim();
                         resetPassWord(pass);
                         break;
-                    case 8:
+                    case 0:
                         return;
                     default:
                         break;

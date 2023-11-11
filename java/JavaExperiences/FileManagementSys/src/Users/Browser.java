@@ -10,7 +10,7 @@ public class Browser extends User {
 
     @Override
     public void showMenu() {
-        String tip = new String("Select your operation:");
+        String tip = "Select your operation:";
 
         String pass;
         String input = null;
