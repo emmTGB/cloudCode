@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.concurrent.LinkedTransferQueue;
 
 public class LoginPanel extends MyPanel {
     SpringLayout loginLayout = new SpringLayout();
@@ -68,20 +69,33 @@ public class LoginPanel extends MyPanel {
             }
         });
 
-        add(labelName);
-        add(labelPass);
-        add(textName);
-        add(textPass);
+        JPanel inputPane = new JPanel();
+        GroupLayout inputLayout = new GroupLayout(inputPane);
+        inputPane.setLayout(inputLayout);
+        inputPane.setBackground(GUIConsts.BG_COLOR);
 
-        loginLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, textName, 0, SpringLayout.HORIZONTAL_CENTER, this);
-        loginLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, textPass, 0, SpringLayout.HORIZONTAL_CENTER, this);
-        loginLayout.putConstraint(SpringLayout.EAST, labelName, -5, SpringLayout.WEST, textName);
-        loginLayout.putConstraint(SpringLayout.EAST, labelPass, -5, SpringLayout.WEST, textPass);
+        GroupLayout.SequentialGroup hGroup = inputLayout.createSequentialGroup();
+        hGroup.addGap(5);
+        hGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelName).addComponent(labelPass));
+        hGroup.addGap(5);
+        hGroup.addGroup(inputLayout.createParallelGroup().addComponent(textName).addComponent(textPass));
+        hGroup.addGap(5);
 
-        loginLayout.putConstraint(SpringLayout.SOUTH, textName, -5, SpringLayout.VERTICAL_CENTER, this);
-        loginLayout.putConstraint(SpringLayout.NORTH, textPass, 5, SpringLayout.VERTICAL_CENTER, this);
-        loginLayout.putConstraint(SpringLayout.SOUTH, labelName, 0, SpringLayout.SOUTH, textName);
-        loginLayout.putConstraint(SpringLayout.SOUTH, labelPass, 0, SpringLayout.SOUTH, textPass);
+        inputLayout.setHorizontalGroup(hGroup);
+
+        GroupLayout.SequentialGroup vGroup = inputLayout.createSequentialGroup();
+        vGroup.addGap(10);
+        vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelName).addComponent(textName));
+        vGroup.addGap(10);
+        vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelPass).addComponent(textPass));
+        vGroup.addGap(10);
+
+        inputLayout.setVerticalGroup(vGroup);
+
+        add(inputPane);
+
+        loginLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, inputPane, 0, SpringLayout.HORIZONTAL_CENTER, this);
+        loginLayout.putConstraint(SpringLayout.VERTICAL_CENTER, inputPane, 0, SpringLayout.VERTICAL_CENTER, this);
     }
 
     @Override
@@ -108,6 +122,6 @@ public class LoginPanel extends MyPanel {
 
     @Override
     public void cancelTriggered() {
-        myFrame.replacePanel(new MainMenuPanel());
+        myFrame.rollBack();
     }
 }

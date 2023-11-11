@@ -30,8 +30,6 @@ public class MainMenuPanel extends MyPanel {
         mainMenuLayout.putConstraint(SpringLayout.VERTICAL_CENTER, signUp, 0, SpringLayout.VERTICAL_CENTER, this);
         mainMenuLayout.putConstraint(SpringLayout.SOUTH, login, -5, SpringLayout.NORTH, signUp);
         mainMenuLayout.putConstraint(SpringLayout.NORTH, exit, 5, SpringLayout.SOUTH, signUp);
-
-
     }
 
     @Override
@@ -39,7 +37,7 @@ public class MainMenuPanel extends MyPanel {
         if (login.isSelected()) {
             myFrame.replacePanel(new LoginPanel());
         } else if (signUp.isSelected()) {
-            System.out.println("sign up");
+            myFrame.replacePanel(new CreateUserPanel());
         } else if (exit.isSelected()) {
             myFrame.dispose();
         }

@@ -1,83 +1,21 @@
 package Graphic;
 
 import Consts.GUIConsts;
-import Users.Administrator;
-import Users.User;
 import Process.*;
+import Users.User;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
-public class AdminMenuPanel extends MyPanel {
-    User admin;
-    JLabel menuHint1, menuHint2;
-    Box menuBox;
-    String[] optionList = Administrator.OPTION_LIST;
-    JRadioButton[] menuRadioButtons = new JRadioButton[optionList.length];
-    SpringLayout menuLayout;
-
-    public AdminMenuPanel(User admin) {
-        super();
-        this.admin = admin;
-
-        menuLayout = new SpringLayout();
-        setLayout(menuLayout);
-        menuHint1 = new JLabel("Welcome to Administrator menu!");
-        menuHint2 = new JLabel("Select your option");
-
-        add(menuHint1);
-        add(menuHint2);
-
-        menuLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, menuHint1, 0, SpringLayout.HORIZONTAL_CENTER, this);
-        menuLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, menuHint2, 0, SpringLayout.HORIZONTAL_CENTER, this);
-        menuLayout.putConstraint(SpringLayout.NORTH, menuHint1, 10, SpringLayout.NORTH, this);
-        menuLayout.putConstraint(SpringLayout.NORTH, menuHint2, 5, SpringLayout.SOUTH, menuHint1);
-
-        menuBox = Box.createVerticalBox();
-        ButtonGroup buttonGroup = new ButtonGroup();
-        for (int i = 0; i < menuRadioButtons.length; i++) {
-            menuRadioButtons[i] = new JRadioButton(Administrator.OPTION_LIST[i]);
-            menuBox.add(menuRadioButtons[i]);
-            buttonGroup.add(menuRadioButtons[i]);
-        }
-        add(menuBox);
-
-        menuLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, menuBox, 0, SpringLayout.HORIZONTAL_CENTER, this);
-        menuLayout.putConstraint(SpringLayout.VERTICAL_CENTER, menuBox, 0, SpringLayout.VERTICAL_CENTER, this);
-    }
-
-    @Override
-    public void confirmTriggered() {
-        for (int i = 0; i < menuRadioButtons.length; i++) {
-            if (menuRadioButtons[i].isSelected()) {
-                switch (i) {
-                    case 1 -> myFrame.replacePanel(new ModifyUserPanel(admin));
-                    case 2 -> {
-
-                    }
-                    case 3 -> myFrame.replacePanel(new CreateUserPanel());
-                }
-            }
-        }
-    }
-
-    @Override
-    public void cancelTriggered() {
-        myFrame.rollBack();
-    }
-}
-
-class ModifyUserPanel extends MyPanel {
-    User admin;
+public class CreateUserPanel extends MyPanel {
     SpringLayout createUserLayout = new SpringLayout();
     JLabel labelName, labelPass, labelRole;
     JTextField textName, textPass, textRole;
 
-    public ModifyUserPanel(User admin) {
+    public CreateUserPanel() {
         super();
-        this.admin = admin;
         setLayout(createUserLayout);
         setPreferredSize(new Dimension(GUIConsts.WIDTH, GUIConsts.HEIGHT));
 
@@ -185,37 +123,16 @@ class ModifyUserPanel extends MyPanel {
 
     @Override
     public void confirmTriggered() {
-        String name = textName.getText().trim(), pass = textPass.getText().trim(), role = textRole.getText().trim();
-        if (role.equalsIgnoreCase("Administrator")) System.out.println("111");  // todo
-        else
-            try {
-                DataProcess.updateUser(textName.getText().trim(), textPass.getText().trim(), textRole.getText().trim());
-            } catch (UserException e) {
-                throw new RuntimeException(e);
-            }
+        try {
+            DataProcess.insertUser(textName.getText().trim(), textPass.getText().trim(), textRole.getText().trim());
+        } catch (UserException e) {
+            throw new RuntimeException(e);
+        }
         myFrame.rollBack();
     }
 
     @Override
     public void cancelTriggered() {
         myFrame.rollBack();
-    }
-}
-
-class DeleteUserPanel extends MyPanel {
-    User admin;
-
-    public DeleteUserPanel(User admin) {
-        this.admin = admin;
-    }
-
-    @Override
-    public void confirmTriggered() {
-
-    }
-
-    @Override
-    public void cancelTriggered() {
-
     }
 }

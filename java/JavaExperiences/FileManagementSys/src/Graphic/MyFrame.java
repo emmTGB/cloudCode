@@ -1,6 +1,7 @@
 package Graphic;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicBorders;
 
 import Consts.*;
 
@@ -35,9 +36,21 @@ public class MyFrame extends JFrame {
 
     public void replacePanel(MyPanel newPanel) {
         remove(currentPanel);
+        newPanel.prePanel = currentPanel;
         currentPanel = newPanel;
         add(currentPanel);
         SwingUtilities.updateComponentTreeUI(this);  // 更新窗口，似乎优于repaint
+    }
+
+    public void rollBack() {
+        if (currentPanel.prePanel == null)
+            dispose();
+        else {
+            remove(currentPanel);
+            currentPanel = currentPanel.prePanel;
+            add(currentPanel);
+            SwingUtilities.updateComponentTreeUI(this);
+        }
     }
 
     public void hideMainPanel() {

@@ -1,11 +1,13 @@
 package Graphic;
 
 import Consts.GUIConsts;
+import Process.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import static java.lang.System.out;
 
@@ -33,6 +35,11 @@ public class MainButtonPanel extends MyPanel {
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                try {
+                    DataProcess.writeUsers();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
                 myFrame.dispose();
             }
         });
