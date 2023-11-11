@@ -72,24 +72,23 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        try {
+            DataProcess.init();
+        } catch (IOException e) {
+            System.err.println("Failed to initialize the program.");
+            return;
+        } catch (DataException e) {
+            System.err.println(e.getMessage());
+            return;
+        }
         MyFrame mainFrame = new MyFrame("FileManagementSys");
 
-//        try {
-//            DataProcess.init();
-//        } catch (IOException e) {
-//            System.err.println("Failed to initialize the program.");
-//            return;
-//        } catch (DataException e) {
-//            System.err.println(e.getMessage());
-//
-//            return;
-//        }
-//        mainMenu();
-//        DataProcess.scanner.close();
-//        try {
-//            DataProcess.writeUsers();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+        DataProcess.scanner.close();
+        
+        try {
+            DataProcess.writeUsers();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
