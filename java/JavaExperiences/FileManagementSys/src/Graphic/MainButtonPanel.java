@@ -1,18 +1,14 @@
 package Graphic;
 
-import Consts.GUIConsts;
-import Process.*;
+import Consts.GUI_CONST;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-
-import static java.lang.System.out;
 
 public class MainButtonPanel extends MyPanel {
-    SpringLayout buttonLayout = new SpringLayout();
+    SpringLayout springLayout = new SpringLayout();
     JButton confirm = new JButton("Confirm");
     JButton cancel = new JButton("Cancel");
     JButton exit = new JButton("exit");
@@ -20,41 +16,45 @@ public class MainButtonPanel extends MyPanel {
     public MainButtonPanel() {
         super();
 
+//        confirm.setBackground(GUI_CONST.BG_COLOR);
         confirm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 myFrame.currentPanel.confirmTriggered();
             }
         });
+//        cancel.setBackground(GUI_CONST.BG_COLOR);
         cancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 myFrame.currentPanel.cancelTriggered();
             }
         });
+//        exit.setBackground(GUI_CONST.BG_COLOR);
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    DataProcess.writeUsers();
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
                 myFrame.dispose();
             }
         });
 
-        setLayout(buttonLayout);
+        setLayout(springLayout);
         add(confirm);
         add(cancel);
         add(exit);
 
-        buttonLayout.putConstraint(SpringLayout.EAST, confirm, -5, SpringLayout.HORIZONTAL_CENTER, this);
-        buttonLayout.putConstraint(SpringLayout.WEST, cancel, 5, SpringLayout.HORIZONTAL_CENTER, this);
-        buttonLayout.putConstraint(SpringLayout.EAST, exit, -10, SpringLayout.EAST, this);
-        buttonLayout.putConstraint(SpringLayout.SOUTH, confirm, -10, SpringLayout.SOUTH, this);
-        buttonLayout.putConstraint(SpringLayout.SOUTH, cancel, -10, SpringLayout.SOUTH, this);
-        buttonLayout.putConstraint(SpringLayout.SOUTH, exit, -10, SpringLayout.SOUTH, this);
+        for (Component c : this.getComponents()) {
+            c.setBackground(GUI_CONST.BG_COLOR);
+            c.setForeground(GUI_CONST.FONT_COLOR);
+            c.setFont(GUI_CONST.FONT);
+        }
+
+        springLayout.putConstraint(SpringLayout.EAST, confirm, -5, SpringLayout.HORIZONTAL_CENTER, this);
+        springLayout.putConstraint(SpringLayout.WEST, cancel, 5, SpringLayout.HORIZONTAL_CENTER, this);
+        springLayout.putConstraint(SpringLayout.EAST, exit, -10, SpringLayout.EAST, this);
+        springLayout.putConstraint(SpringLayout.SOUTH, confirm, -10, SpringLayout.SOUTH, this);
+        springLayout.putConstraint(SpringLayout.SOUTH, cancel, -10, SpringLayout.SOUTH, this);
+        springLayout.putConstraint(SpringLayout.SOUTH, exit, -10, SpringLayout.SOUTH, this);
 
         setPreferredSize(new Dimension(getWidth(), 48));
     }

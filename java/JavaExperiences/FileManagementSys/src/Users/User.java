@@ -25,7 +25,7 @@ public abstract class User {
         return userRole;
     }
 
-    protected String getPassWord() {
+    public String getPassWord() {
         return passWord;
     }
 

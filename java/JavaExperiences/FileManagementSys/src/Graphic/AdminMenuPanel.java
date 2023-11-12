@@ -1,16 +1,17 @@
 package Graphic;
 
-import Consts.GUIConsts;
+import Consts.GUI_CONST;
+import Process.DataProcess;
+import Process.UserException;
 import Users.Administrator;
 import Users.User;
-import Process.*;
-import com.sun.source.tree.LabeledStatementTree;
-import jdk.jfr.DataAmount;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class AdminMenuPanel extends MyPanel {
     User admin;
@@ -18,24 +19,24 @@ public class AdminMenuPanel extends MyPanel {
     Box menuBox;
     String[] optionList = Administrator.OPTION_LIST;
     JRadioButton[] menuRadioButtons = new JRadioButton[optionList.length];
-    SpringLayout menuLayout;
+    SpringLayout springLayout;
 
     public AdminMenuPanel(User admin) {
         super();
         this.admin = admin;
 
-        menuLayout = new SpringLayout();
-        setLayout(menuLayout);
+        springLayout = new SpringLayout();
+        setLayout(springLayout);
         menuHint1 = new JLabel("Welcome to Administrator menu!");
         menuHint2 = new JLabel("Select your option");
 
         add(menuHint1);
         add(menuHint2);
 
-        menuLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, menuHint1, 0, SpringLayout.HORIZONTAL_CENTER, this);
-        menuLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, menuHint2, 0, SpringLayout.HORIZONTAL_CENTER, this);
-        menuLayout.putConstraint(SpringLayout.NORTH, menuHint1, 10, SpringLayout.NORTH, this);
-        menuLayout.putConstraint(SpringLayout.NORTH, menuHint2, 5, SpringLayout.SOUTH, menuHint1);
+        springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, menuHint1, 0, SpringLayout.HORIZONTAL_CENTER, this);
+        springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, menuHint2, 0, SpringLayout.HORIZONTAL_CENTER, this);
+        springLayout.putConstraint(SpringLayout.NORTH, menuHint1, 10, SpringLayout.NORTH, this);
+        springLayout.putConstraint(SpringLayout.NORTH, menuHint2, 5, SpringLayout.SOUTH, menuHint1);
 
         menuBox = Box.createVerticalBox();
         ButtonGroup buttonGroup = new ButtonGroup();
@@ -44,10 +45,65 @@ public class AdminMenuPanel extends MyPanel {
             menuBox.add(menuRadioButtons[i]);
             buttonGroup.add(menuRadioButtons[i]);
         }
+        menuBox.add(menuRadioButtons[0]);
+        menuBox.setAutoscrolls(true);
         add(menuBox);
 
-        menuLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, menuBox, 0, SpringLayout.HORIZONTAL_CENTER, this);
-        menuLayout.putConstraint(SpringLayout.VERTICAL_CENTER, menuBox, 0, SpringLayout.VERTICAL_CENTER, this);
+        springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, menuBox, 0, SpringLayout.HORIZONTAL_CENTER, this);
+        springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, menuBox, 0, SpringLayout.VERTICAL_CENTER, this);
+
+        for (Component c : menuBox.getComponents()) {
+            c.setBackground(GUI_CONST.BG_COLOR);
+            c.setForeground(GUI_CONST.FONT_COLOR);
+            c.setFont(GUI_CONST.FONT);
+        }
+        for (Component c : this.getComponents()) {
+            c.setBackground(GUI_CONST.BG_COLOR);
+            c.setForeground(GUI_CONST.FONT_COLOR);
+            c.setFont(GUI_CONST.FONT);
+        }
+    }
+
+    private void listUsers() {
+        UserListFrame userListFrame = new UserListFrame(myFrame);
+        myFrame.setVisible(false);
+        userListFrame.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                myFrame.setLocation(userListFrame.getLocationOnScreen());
+                myFrame.setVisible(true);
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            }
+        });
     }
 
     @Override
@@ -58,6 +114,8 @@ public class AdminMenuPanel extends MyPanel {
                     case 1 -> myFrame.replacePanel(new ModifyUserPanel(admin));
                     case 2 -> myFrame.replacePanel(new DeleteUserPanel(admin));
                     case 3 -> myFrame.replacePanel(new CreateUserPanel());
+                    case 4 -> listUsers();
+                    case 0 -> myFrame.rollBack();
                 }
             }
         }
@@ -69,140 +127,23 @@ public class AdminMenuPanel extends MyPanel {
     }
 }
 
-class ModifyUserPanel extends MyPanel {
+class ModifyUserPanel extends CreateUserPanel {
     User admin;
-    SpringLayout createUserLayout = new SpringLayout();
-    JLabel labelName, labelPass, labelRole;
-    JTextField textName, textPass, textRole;
-    static final String HINT_NAME = "type user name";
-    static final String HINT_PASS = "type user pass";
-    static final String HINT_ROLE = "type user Role";
-    JLabel labelMsg;
 
     public ModifyUserPanel(User admin) {
         super();
         this.admin = admin;
-        setLayout(createUserLayout);
-        setPreferredSize(new Dimension(GUIConsts.WIDTH, GUIConsts.HEIGHT));
-
-        labelName = new JLabel("User name:");
-        labelPass = new JLabel("Password:");
-        labelRole = new JLabel("Role:");
-
-        textName = new JTextField();
-        textName.setColumns(30);
-        textName.setText(HINT_NAME);
-        textName.setForeground(Color.gray);
-        textName.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (textName.getText().equals(HINT_NAME)) {
-                    textName.setText("");
-                    textName.setForeground(Color.BLACK);
-                }
-                labelMsg.setVisible(false);
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (textName.getText().isEmpty()) {
-                    textName.setText(HINT_NAME);
-                    textName.setForeground(Color.gray);
-                }
-            }
-        });
-        textPass = new JTextField();
-        textPass.setColumns(30);
-        textPass.setText(HINT_PASS);
-        textPass.setForeground(Color.gray);
-        textPass.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (textPass.getText().equals(HINT_PASS)) {
-                    textPass.setText("");
-                    textPass.setForeground(Color.BLACK);
-                }
-                labelMsg.setVisible(false);
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (textPass.getText().isEmpty()) {
-                    textPass.setText(HINT_PASS);
-                    textPass.setForeground(Color.gray);
-                }
-            }
-        });
-        textRole = new JTextField();
-        textRole.setColumns(30);
-        textRole.setText(HINT_ROLE);
-        textRole.setForeground(Color.gray);
-        textRole.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (textRole.getText().equals(HINT_ROLE)) {
-                    textRole.setText("");
-                    textRole.setForeground(Color.BLACK);
-                }
-                labelMsg.setVisible(false);
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (textRole.getText().isEmpty()) {
-                    textRole.setText(HINT_ROLE);
-                    textRole.setForeground(Color.gray);
-                }
-            }
-        });
-
-        JPanel inputPane = new JPanel();
-        GroupLayout inputLayout = new GroupLayout(inputPane);
-        inputPane.setLayout(inputLayout);
-        inputPane.setBackground(GUIConsts.BG_COLOR);
-
-        GroupLayout.SequentialGroup hGroup = inputLayout.createSequentialGroup();
-        hGroup.addGap(5);
-        hGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelName).addComponent(labelPass).addComponent(labelRole));
-        hGroup.addGap(5);
-        hGroup.addGroup(inputLayout.createParallelGroup().addComponent(textName).addComponent(textPass).addComponent(textRole));
-        hGroup.addGap(5);
-
-        inputLayout.setHorizontalGroup(hGroup);
-
-        GroupLayout.SequentialGroup vGroup = inputLayout.createSequentialGroup();
-        vGroup.addGap(10);
-        vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelName).addComponent(textName));
-        vGroup.addGap(10);
-        vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelPass).addComponent(textPass));
-        vGroup.addGap(10);
-        vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelRole).addComponent(textRole));
-        vGroup.addGap(10);
-
-        inputLayout.setVerticalGroup(vGroup);
-
-        add(inputPane);
-
-        createUserLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, inputPane, 0, SpringLayout.HORIZONTAL_CENTER, this);
-        createUserLayout.putConstraint(SpringLayout.VERTICAL_CENTER, inputPane, 0, SpringLayout.VERTICAL_CENTER, this);
-
-        labelMsg = new JLabel();
-        add(labelMsg);
-        createUserLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, labelMsg, 0, SpringLayout.HORIZONTAL_CENTER, this);
-        createUserLayout.putConstraint(SpringLayout.NORTH, labelMsg, 10, SpringLayout.SOUTH, inputPane);
-        labelMsg.setForeground(Color.RED);
-        labelMsg.setVisible(false);
     }
 
     @Override
     public void confirmTriggered() {
-        String name = textName.getText().trim(), pass = textPass.getText().trim(), role = textRole.getText().trim();
-        if (role.equalsIgnoreCase("Administrator")) {
-            labelMsg.setText("Admin Cannot Be Modified!");
-            labelMsg.setVisible(true);
-            return;
-        } else
-            try {
+
+        try {
+            String name = textName.getText().trim();
+            if (DataProcess.checkUserRole(name).equalsIgnoreCase("Administrator")) {
+                labelMsg.setText("Admin Cannot Be Modified!");
+                labelMsg.setVisible(true);
+            } else {
                 boolean nameNotTyped = textName.getText().equals(HINT_NAME);
                 boolean passNotTyped = textPass.getText().equals(HINT_PASS);
                 boolean roleNotTyped = textRole.getText().equals(HINT_ROLE);
@@ -221,22 +162,18 @@ class ModifyUserPanel extends MyPanel {
                 DataProcess.updateUser(textName.getText().trim(), textPass.getText().trim(), textRole.getText().trim());
                 bounceUpMsg("Succeeded!");
                 myFrame.rollBack(); //todo
-            } catch (UserException e) {
-                //todo
-                labelMsg.setText(e.getMessage());
-                labelMsg.setVisible(true);
             }
-    }
-
-    @Override
-    public void cancelTriggered() {
-        myFrame.rollBack();
+        } catch (UserException e) {
+            //todo
+            labelMsg.setText(e.getMessage());
+            labelMsg.setVisible(true);
+        }
     }
 }
 
 class DeleteUserPanel extends MyPanel {
     User admin;
-    SpringLayout deleteUserLayout = new SpringLayout();
+    SpringLayout springLayout = new SpringLayout();
     JLabel labelName;
     JTextField textName;
     static final String HINT_NAME = "type user name";
@@ -245,21 +182,23 @@ class DeleteUserPanel extends MyPanel {
     public DeleteUserPanel(User admin) {
         super();
         this.admin = admin;
-        setLayout(deleteUserLayout);
-        setPreferredSize(new Dimension(GUIConsts.WIDTH, GUIConsts.HEIGHT));
+        setLayout(springLayout);
+        setPreferredSize(new Dimension(GUI_CONST.WIDTH, GUI_CONST.HEIGHT));
 
         labelName = new JLabel("User name:");
+
         textName = new JTextField();
         textName.setColumns(30);
         textName.setText(HINT_NAME);
-        textName.setForeground(Color.GRAY);
         textName.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
                 if (textName.getText().equals(HINT_NAME)) {
                     textName.setText("");
-                    textName.setForeground(Color.BLACK);
+                    textName.setForeground(GUI_CONST.FONT_COLOR);
+                    textName.setFont(GUI_CONST.FONT);
                 }
+                textName.setBackground(GUI_CONST.ALT_BG_COLOR);
                 labelMsg.setVisible(false);
             }
 
@@ -267,15 +206,17 @@ class DeleteUserPanel extends MyPanel {
             public void focusLost(FocusEvent e) {
                 if (textName.getText().isEmpty()) {
                     textName.setText(HINT_NAME);
-                    textName.setForeground(Color.gray);
+                    textName.setForeground(GUI_CONST.ALT_FONT_COLOR);
+                    textName.setFont(GUI_CONST.FONT_ITALIC);
                 }
+                textName.setBackground(GUI_CONST.BG_COLOR);
             }
         });
 
         JPanel inputPane = new JPanel();
         GroupLayout inputLayout = new GroupLayout(inputPane);
         inputPane.setLayout(inputLayout);
-        inputPane.setBackground(GUIConsts.BG_COLOR);
+        inputPane.setBackground(GUI_CONST.BG_COLOR);
 
         GroupLayout.SequentialGroup hGroup = inputLayout.createSequentialGroup();
         hGroup.addGap(5);
@@ -294,15 +235,26 @@ class DeleteUserPanel extends MyPanel {
         inputLayout.setVerticalGroup(vGroup);
 
         add(inputPane);
-        deleteUserLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, inputPane, 0, SpringLayout.HORIZONTAL_CENTER, this);
-        deleteUserLayout.putConstraint(SpringLayout.VERTICAL_CENTER, inputPane, 0, SpringLayout.VERTICAL_CENTER, this);
+        springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, inputPane, 0, SpringLayout.HORIZONTAL_CENTER, this);
+        springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, inputPane, 0, SpringLayout.VERTICAL_CENTER, this);
 
         labelMsg = new JLabel();
         add(labelMsg);
-        deleteUserLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, labelMsg, 0, SpringLayout.HORIZONTAL_CENTER, this);
-        deleteUserLayout.putConstraint(SpringLayout.NORTH, labelMsg, 10, SpringLayout.SOUTH, inputPane);
-        labelMsg.setForeground(Color.RED);
+        springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, labelMsg, 0, SpringLayout.HORIZONTAL_CENTER, this);
+        springLayout.putConstraint(SpringLayout.NORTH, labelMsg, 10, SpringLayout.SOUTH, inputPane);
+        labelMsg.setForeground(GUI_CONST.ERR_COLOR);
         labelMsg.setVisible(false);
+
+        for (Component c : inputPane.getComponents()) {
+            c.setBackground(GUI_CONST.BG_COLOR);
+            c.setForeground(GUI_CONST.FONT_COLOR);
+            c.setFont(GUI_CONST.FONT);
+            if (c instanceof JTextField tf) {
+                tf.setForeground(GUI_CONST.ALT_FONT_COLOR);
+                tf.setFont(GUI_CONST.FONT_ITALIC);
+                tf.setBorder(GUI_CONST.TF_BORDER);
+            }
+        }
     }
 
     @Override
@@ -312,6 +264,13 @@ class DeleteUserPanel extends MyPanel {
             labelMsg.setText(
                     "Please input your"
                             + " user name"
+            );
+            labelMsg.setVisible(true);
+            return;
+        }
+        if (textName.getText().trim().equals(admin.getUserName())) {
+            labelMsg.setText(
+                    "You Cannot Delete Your Self"
             );
             labelMsg.setVisible(true);
             return;

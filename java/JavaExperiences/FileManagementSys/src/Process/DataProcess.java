@@ -93,12 +93,18 @@ public class DataProcess {
         return userTable.containsKey(name);
     }
 
-    public static String checkUserRole(String name) {
-        return userTable.get(name).getUserRole();
+    public static String checkUserRole(String name) throws UserException {
+        if (userTable.containsKey(name))
+            return userTable.get(name).getUserRole();
+        throw UserException.USER_NOT_EXIST_ERR;
     }
 
     public static Enumeration<User> getAllUsers() {
         return userTable.elements();
+    }
+
+    public static int getLengthOfUserLists() {
+        return userTable.size();
     }
 
     public static void updateUser(String name, String passWord, String role) throws UserException {

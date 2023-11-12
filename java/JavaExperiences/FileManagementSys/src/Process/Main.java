@@ -2,6 +2,7 @@ package Process;
 
 import Graphic.MyFrame;
 
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
@@ -82,44 +83,16 @@ public class Main {
             return;
         }
         MyFrame mainFrame = new MyFrame("FileManagementSys");
-        mainFrame.addWindowListener(new WindowListener() {
+        mainFrame.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowOpened(WindowEvent e) {
-
-            }
-
-            @Override
-            public void windowClosing(WindowEvent e) {
+            public void windowClosed(WindowEvent e) {
+                super.windowClosing(e);
                 try {
                     DataProcess.writeUsers();
                 } catch (IOException ex) {
+                    //todo
                     throw new RuntimeException(ex);
                 }
-            }
-
-            @Override
-            public void windowClosed(WindowEvent e) {
-
-            }
-
-            @Override
-            public void windowIconified(WindowEvent e) {
-
-            }
-
-            @Override
-            public void windowDeiconified(WindowEvent e) {
-
-            }
-
-            @Override
-            public void windowActivated(WindowEvent e) {
-
-            }
-
-            @Override
-            public void windowDeactivated(WindowEvent e) {
-
             }
         });
 

@@ -1,16 +1,10 @@
 package Graphic;
 
+import Consts.GUI_CONST;
+
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicBorders;
-
-import Consts.*;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-
-import static java.lang.System.*;
 
 public class MyFrame extends JFrame {
     JPanel root = new JPanel();
@@ -22,9 +16,9 @@ public class MyFrame extends JFrame {
         MyPanel.myFrame = this;
         BorderLayout panelLayout = new BorderLayout();
         setLayout(panelLayout);
-        setBounds(0, 0, GUIConsts.WIDTH, GUIConsts.HEIGHT);
+        setBounds(0, 0, GUI_CONST.WIDTH, GUI_CONST.HEIGHT);
 
-        root.setBackground(GUIConsts.BG_COLOR);
+        root.setBackground(GUI_CONST.BG_COLOR);
         add(root);
         add(mainButtonPanel, BorderLayout.SOUTH);
         currentPanel = new MainMenuPanel();
@@ -43,8 +37,7 @@ public class MyFrame extends JFrame {
     }
 
     public void rollBack() {
-        if (currentPanel.prePanel == null)
-            dispose();
+        if (currentPanel.prePanel == null) dispose();
         else {
             remove(currentPanel);
             currentPanel = currentPanel.prePanel;
@@ -53,7 +46,4 @@ public class MyFrame extends JFrame {
         }
     }
 
-    public void hideMainPanel() {
-
-    }
 }

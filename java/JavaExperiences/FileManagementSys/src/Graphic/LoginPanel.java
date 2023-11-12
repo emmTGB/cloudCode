@@ -1,9 +1,9 @@
 package Graphic;
 
-import Consts.GUIConsts;
+import Consts.GUI_CONST;
 import Process.DataProcess;
-import Users.*;
-import Process.*;
+import Process.UserException;
+import Users.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +11,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 public class LoginPanel extends MyPanel {
-    SpringLayout loginLayout = new SpringLayout();
+    SpringLayout springLayout = new SpringLayout();
     JLabel labelName, labelPass;
     JTextField textName, textPass;
     JLabel labelMsg;
@@ -20,8 +20,8 @@ public class LoginPanel extends MyPanel {
 
     public LoginPanel() {
         super();
-        setLayout(loginLayout);
-        setPreferredSize(new Dimension(GUIConsts.WIDTH, GUIConsts.HEIGHT));
+        setLayout(springLayout);
+        setPreferredSize(new Dimension(GUI_CONST.WIDTH, GUI_CONST.HEIGHT));
 
         labelName = new JLabel("User name:");
         labelPass = new JLabel("Password:");
@@ -29,14 +29,15 @@ public class LoginPanel extends MyPanel {
         textName = new JTextField();
         textName.setColumns(30);
         textName.setText(HINT_NAME);
-        textName.setForeground(Color.gray);
         textName.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
                 if (textName.getText().equals(HINT_NAME)) {
                     textName.setText("");
-                    textName.setForeground(Color.BLACK);
+                    textName.setForeground(GUI_CONST.FONT_COLOR);
+                    textName.setFont(GUI_CONST.FONT);
                 }
+                textName.setBackground(GUI_CONST.ALT_BG_COLOR);
                 labelMsg.setVisible(false);
             }
 
@@ -44,21 +45,24 @@ public class LoginPanel extends MyPanel {
             public void focusLost(FocusEvent e) {
                 if (textName.getText().isEmpty()) {
                     textName.setText(HINT_NAME);
-                    textName.setForeground(Color.gray);
+                    textName.setForeground(GUI_CONST.ALT_FONT_COLOR);
+                    textName.setFont(GUI_CONST.FONT_ITALIC);
                 }
+                textName.setBackground(GUI_CONST.BG_COLOR);
             }
         });
         textPass = new JTextField();
         textPass.setColumns(30);
         textPass.setText(HINT_PASS);
-        textPass.setForeground(Color.gray);
         textPass.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
                 if (textPass.getText().equals(HINT_PASS)) {
                     textPass.setText("");
-                    textPass.setForeground(Color.BLACK);
+                    textPass.setForeground(GUI_CONST.FONT_COLOR);
+                    textPass.setFont(GUI_CONST.FONT);
                 }
+                textPass.setBackground(GUI_CONST.ALT_BG_COLOR);
                 labelMsg.setVisible(false);
             }
 
@@ -67,14 +71,16 @@ public class LoginPanel extends MyPanel {
                 if (textPass.getText().isEmpty()) {
                     textPass.setText(HINT_PASS);
                     textPass.setForeground(Color.gray);
+                    textPass.setFont(new Font(GUI_CONST.FONT.getName(), Font.ITALIC, GUI_CONST.FONT.getSize()));
                 }
+                textPass.setBackground(GUI_CONST.BG_COLOR);
             }
         });
 
         JPanel inputPane = new JPanel();
         GroupLayout inputLayout = new GroupLayout(inputPane);
         inputPane.setLayout(inputLayout);
-        inputPane.setBackground(GUIConsts.BG_COLOR);
+        inputPane.setBackground(GUI_CONST.BG_COLOR);
 
         GroupLayout.SequentialGroup hGroup = inputLayout.createSequentialGroup();
         hGroup.addGap(5);
@@ -96,15 +102,26 @@ public class LoginPanel extends MyPanel {
 
         add(inputPane);
 
-        loginLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, inputPane, 0, SpringLayout.HORIZONTAL_CENTER, this);
-        loginLayout.putConstraint(SpringLayout.VERTICAL_CENTER, inputPane, 0, SpringLayout.VERTICAL_CENTER, this);
+        springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, inputPane, 0, SpringLayout.HORIZONTAL_CENTER, this);
+        springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, inputPane, 0, SpringLayout.VERTICAL_CENTER, this);
 
         labelMsg = new JLabel();
         add(labelMsg);
-        loginLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, labelMsg, 0, SpringLayout.HORIZONTAL_CENTER, this);
-        loginLayout.putConstraint(SpringLayout.NORTH, labelMsg, 10, SpringLayout.SOUTH, inputPane);
+        springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, labelMsg, 0, SpringLayout.HORIZONTAL_CENTER, this);
+        springLayout.putConstraint(SpringLayout.NORTH, labelMsg, 10, SpringLayout.SOUTH, inputPane);
         labelMsg.setVisible(false);
-        labelMsg.setForeground(Color.RED);
+        labelMsg.setForeground(GUI_CONST.ERR_COLOR);
+
+        for (Component c : inputPane.getComponents()) {
+            c.setBackground(GUI_CONST.BG_COLOR);
+            c.setForeground(GUI_CONST.FONT_COLOR);
+            c.setFont(GUI_CONST.FONT);
+            if (c instanceof JTextField tf) {
+                tf.setForeground(GUI_CONST.ALT_FONT_COLOR);
+                tf.setFont(GUI_CONST.FONT_ITALIC);
+                tf.setBorder(GUI_CONST.TF_BORDER);
+            }
+        }
     }
 
     @Override

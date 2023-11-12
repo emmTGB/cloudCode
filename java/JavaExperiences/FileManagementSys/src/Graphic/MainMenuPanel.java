@@ -1,12 +1,12 @@
 package Graphic;
 
-import Consts.GUIConsts;
+import Consts.GUI_CONST;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class MainMenuPanel extends MyPanel {
-    SpringLayout mainMenuLayout = new SpringLayout();
+    SpringLayout springLayout = new SpringLayout();
     JRadioButton login = new JRadioButton("Login", true);
     JRadioButton signUp = new JRadioButton("Sign up");
     JRadioButton exit = new JRadioButton("exit");
@@ -15,21 +15,25 @@ public class MainMenuPanel extends MyPanel {
     public MainMenuPanel() {
         super();
 
-        setLayout(mainMenuLayout);
+        setLayout(springLayout);
         mainMenuGroup.add(login);
         mainMenuGroup.add(signUp);
         mainMenuGroup.add(exit);
 
-        add(login);
-        add(signUp);
-        add(exit);
+        Box menuBox = Box.createVerticalBox();
+        menuBox.add(login);
+        menuBox.add(signUp);
+        menuBox.add(exit);
+        add(menuBox);
 
-        mainMenuLayout.putConstraint(SpringLayout.WEST, login, -20, SpringLayout.HORIZONTAL_CENTER, this);
-        mainMenuLayout.putConstraint(SpringLayout.WEST, signUp, -20, SpringLayout.HORIZONTAL_CENTER, this);
-        mainMenuLayout.putConstraint(SpringLayout.WEST, exit, -20, SpringLayout.HORIZONTAL_CENTER, this);
-        mainMenuLayout.putConstraint(SpringLayout.VERTICAL_CENTER, signUp, 0, SpringLayout.VERTICAL_CENTER, this);
-        mainMenuLayout.putConstraint(SpringLayout.SOUTH, login, -5, SpringLayout.NORTH, signUp);
-        mainMenuLayout.putConstraint(SpringLayout.NORTH, exit, 5, SpringLayout.SOUTH, signUp);
+        for (Component c : menuBox.getComponents()) {
+            c.setBackground(GUI_CONST.BG_COLOR);
+            c.setForeground(GUI_CONST.FONT_COLOR);
+            c.setFont(GUI_CONST.FONT);
+        }
+
+        springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, menuBox, 0, SpringLayout.HORIZONTAL_CENTER, this);
+        springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, menuBox, 0, SpringLayout.VERTICAL_CENTER, this);
     }
 
     @Override

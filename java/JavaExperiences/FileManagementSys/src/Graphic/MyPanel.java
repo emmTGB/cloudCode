@@ -1,6 +1,6 @@
 package Graphic;
 
-import Consts.GUIConsts;
+import Consts.GUI_CONST;
 
 import javax.swing.*;
 
@@ -13,6 +13,6 @@ public abstract class MyPanel extends JPanel implements MessageSlot {
     }
 
     protected MyPanel() {
-        setBackground(GUIConsts.BG_COLOR);
+        setBackground(GUI_CONST.BG_COLOR);
     }
 }
