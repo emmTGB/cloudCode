@@ -13,9 +13,9 @@ public class CreateUserPanel extends MyPanel {
     JLabel labelName, labelPass, labelRole;
     JLabel labelMsg;
     JTextField textName, textPass, textRole;
-    String HINT_NAME = "type user name";
-    String HINT_PASS = "type user pass";
-    String HINT_ROLE = "type user Role";
+    static final String HINT_NAME = "type user name";
+    static final String HINT_PASS = "type user pass";
+    static final String HINT_ROLE = "type user Role";
 
     public CreateUserPanel() {
         super();
@@ -150,7 +150,8 @@ public class CreateUserPanel extends MyPanel {
                 return;
             }
             DataProcess.insertUser(textName.getText().trim(), textPass.getText().trim(), textRole.getText().trim());
-            myFrame.rollBack();
+            bounceUpMsg("Succeeded!");
+            myFrame.rollBack();  //todo
         } catch (UserException e) {
             //todo
             labelMsg.setText(e.getMessage());

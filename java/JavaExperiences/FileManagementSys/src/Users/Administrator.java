@@ -44,10 +44,6 @@ public class Administrator extends User {
         } while (true);
     }
 
-    public boolean delUser(String name) {
-        return DataProcess.deleteUser(name);
-    }
-
     public void addUser(String name, String passWord, String role) {
         try {
             DataProcess.insertUser(name, passWord, role);

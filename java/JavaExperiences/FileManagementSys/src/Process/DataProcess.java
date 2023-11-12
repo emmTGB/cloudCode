@@ -142,13 +142,12 @@ public class DataProcess {
         }
     }
 
-    public static boolean deleteUser(String name) {
+    public static void deleteUser(String name) throws UserException {
         if (userTable.containsKey(name)) {
             userTable.remove(name);
             updateUserFile();
-            return true;
         } else {
-            return false;
+            throw UserException.USER_NOT_EXIST_ERR;
         }
     }
 
