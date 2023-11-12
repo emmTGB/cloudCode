@@ -55,7 +55,7 @@ public class AdminMenuPanel extends MyPanel {
                 switch (i) {
                     case 1 -> myFrame.replacePanel(new ModifyUserPanel(admin));
                     case 2 -> {
-
+                        //TODO
                     }
                     case 3 -> myFrame.replacePanel(new CreateUserPanel());
                 }
@@ -204,6 +204,7 @@ class ModifyUserPanel extends MyPanel {
 
 class DeleteUserPanel extends MyPanel {
     User admin;
+    SpringLayout deleteUserLayout = new SpringLayout();
 
     public DeleteUserPanel(User admin) {
         this.admin = admin;

@@ -3,18 +3,20 @@ package Graphic;
 import Consts.GUIConsts;
 import Process.DataProcess;
 import Users.*;
+import Process.*;
 
-import javax.sound.midi.Soundbank;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.util.concurrent.LinkedTransferQueue;
 
 public class LoginPanel extends MyPanel {
     SpringLayout loginLayout = new SpringLayout();
     JLabel labelName, labelPass;
     JTextField textName, textPass;
+    JLabel labelMsg;
+    static final String HINT_NAME = "type user name";
+    static final String HINT_PASS = "type user pass";
 
     public LoginPanel() {
         super();
@@ -26,44 +28,44 @@ public class LoginPanel extends MyPanel {
 
         textName = new JTextField();
         textName.setColumns(30);
-        String nameHint = "type user name";
-        textName.setText(nameHint);
+        textName.setText(HINT_NAME);
         textName.setForeground(Color.gray);
         textName.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (textName.getText().equals(nameHint)) {
+                if (textName.getText().equals(HINT_NAME)) {
                     textName.setText("");
                     textName.setForeground(Color.BLACK);
                 }
+                labelMsg.setVisible(false);
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 if (textName.getText().isEmpty()) {
-                    textName.setText(nameHint);
+                    textName.setText(HINT_NAME);
                     textName.setForeground(Color.gray);
                 }
             }
         });
         textPass = new JTextField();
         textPass.setColumns(30);
-        String passHint = "type user pass";
-        textPass.setText(passHint);
+        textPass.setText(HINT_PASS);
         textPass.setForeground(Color.gray);
         textPass.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (textPass.getText().equals(passHint)) {
+                if (textPass.getText().equals(HINT_PASS)) {
                     textPass.setText("");
                     textPass.setForeground(Color.BLACK);
                 }
+                labelMsg.setVisible(false);
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 if (textPass.getText().isEmpty()) {
-                    textPass.setText(passHint);
+                    textPass.setText(HINT_PASS);
                     textPass.setForeground(Color.gray);
                 }
             }
@@ -96,27 +98,48 @@ public class LoginPanel extends MyPanel {
 
         loginLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, inputPane, 0, SpringLayout.HORIZONTAL_CENTER, this);
         loginLayout.putConstraint(SpringLayout.VERTICAL_CENTER, inputPane, 0, SpringLayout.VERTICAL_CENTER, this);
+
+        labelMsg = new JLabel();
+        add(labelMsg);
+        loginLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, labelMsg, 0, SpringLayout.HORIZONTAL_CENTER, this);
+        loginLayout.putConstraint(SpringLayout.NORTH, labelMsg, 10, SpringLayout.SOUTH, inputPane);
+        labelMsg.setVisible(false);
+        labelMsg.setForeground(Color.RED);
     }
 
     @Override
     public void confirmTriggered() {
-        User user = DataProcess.fetchUser(textName.getText().trim(), textPass.getText().trim());
-        String role = "";
-        if (user != null) {
-            role = user.getUserRole();
-        } else {
-            //TODO
-            System.out.println("wrong");
+        try {
+            boolean nameNotTyped = textName.getText().equals(HINT_NAME);
+            boolean passNotTyped = textPass.getText().equals(HINT_PASS);
+            if (nameNotTyped || passNotTyped) {
+                labelMsg.setText(
+                        "Please input your"
+                                + (nameNotTyped ? " user name" : "")
+                                + (nameNotTyped && passNotTyped ? " and" : "")
+                                + (passNotTyped ? " password" : "")
+                );
+                labelMsg.setVisible(true);
+                return;
+            }
+            User user = DataProcess.fetchUser(textName.getText().trim(), textPass.getText().trim());
+            String role = user.getUserRole();
+
+            switch (role) {
+                case "Administrator":
+                    myFrame.replacePanel(new AdminMenuPanel(user));
+                    break;
+                case "Operator":
+                case "Browser":
+                default:
+                    break;
+            }
+        } catch (UserException e) {
+            // TODO
+            labelMsg.setText(e.getMessage());
+            labelMsg.setVisible(true);
         }
-        switch (role) {
-            case "Administrator":
-                myFrame.replacePanel(new AdminMenuPanel(user));
-                break;
-            case "Operator":
-            case "Browser":
-            default:
-                break;
-        }
+
 
     }
 

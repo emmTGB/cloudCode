@@ -2,7 +2,6 @@ package Graphic;
 
 import Consts.GUIConsts;
 import Process.*;
-import Users.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +11,11 @@ import java.awt.event.FocusListener;
 public class CreateUserPanel extends MyPanel {
     SpringLayout createUserLayout = new SpringLayout();
     JLabel labelName, labelPass, labelRole;
+    JLabel labelMsg;
     JTextField textName, textPass, textRole;
+    String HINT_NAME = "type user name";
+    String HINT_PASS = "type user pass";
+    String HINT_ROLE = "type user Role";
 
     public CreateUserPanel() {
         super();
@@ -25,66 +28,66 @@ public class CreateUserPanel extends MyPanel {
 
         textName = new JTextField();
         textName.setColumns(30);
-        String nameHint = "type user name";
-        textName.setText(nameHint);
+        textName.setText(HINT_NAME);
         textName.setForeground(Color.gray);
         textName.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (textName.getText().equals(nameHint)) {
+                if (textName.getText().equals(HINT_NAME)) {
                     textName.setText("");
                     textName.setForeground(Color.BLACK);
                 }
+                labelMsg.setVisible(false);
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 if (textName.getText().isEmpty()) {
-                    textName.setText(nameHint);
+                    textName.setText(HINT_NAME);
                     textName.setForeground(Color.gray);
                 }
             }
         });
         textPass = new JTextField();
         textPass.setColumns(30);
-        String passHint = "type user pass";
-        textPass.setText(passHint);
+        textPass.setText(HINT_PASS);
         textPass.setForeground(Color.gray);
         textPass.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (textPass.getText().equals(passHint)) {
+                if (textPass.getText().equals(HINT_PASS)) {
                     textPass.setText("");
                     textPass.setForeground(Color.BLACK);
                 }
+                labelMsg.setVisible(false);
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 if (textPass.getText().isEmpty()) {
-                    textPass.setText(passHint);
+                    textPass.setText(HINT_PASS);
                     textPass.setForeground(Color.gray);
                 }
             }
         });
         textRole = new JTextField();
         textRole.setColumns(30);
-        String roleHint = "type user Role";
-        textRole.setText(roleHint);
+        textRole.setText(HINT_ROLE);
         textRole.setForeground(Color.gray);
         textRole.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (textRole.getText().equals(roleHint)) {
+                if (textRole.getText().equals(HINT_ROLE)) {
                     textRole.setText("");
                     textRole.setForeground(Color.BLACK);
                 }
+                labelMsg.setVisible(false);
             }
 
             @Override
             public void focusLost(FocusEvent e) {
                 if (textRole.getText().isEmpty()) {
-                    textRole.setText(roleHint);
+                    textRole.setText(HINT_ROLE);
                     textRole.setForeground(Color.gray);
                 }
             }
@@ -119,16 +122,40 @@ public class CreateUserPanel extends MyPanel {
 
         createUserLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, inputPane, 0, SpringLayout.HORIZONTAL_CENTER, this);
         createUserLayout.putConstraint(SpringLayout.VERTICAL_CENTER, inputPane, 0, SpringLayout.VERTICAL_CENTER, this);
+
+        labelMsg = new JLabel();
+        add(labelMsg);
+        createUserLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, labelMsg, 0, SpringLayout.HORIZONTAL_CENTER, this);
+        createUserLayout.putConstraint(SpringLayout.NORTH, labelMsg, 10, SpringLayout.SOUTH, inputPane);
+        labelMsg.setVisible(false);
+        labelMsg.setForeground(Color.RED);
     }
 
     @Override
     public void confirmTriggered() {
         try {
+            boolean nameNotTyped = textName.getText().equals(HINT_NAME);
+            boolean passNotTyped = textPass.getText().equals(HINT_PASS);
+            boolean roleNotTyped = textRole.getText().equals(HINT_ROLE);
+            if (nameNotTyped || passNotTyped || roleNotTyped) {
+                labelMsg.setText(
+                        "Please input your"
+                                + (nameNotTyped ? " user name" : "")
+                                + (nameNotTyped && passNotTyped ? " and" : "")
+                                + (passNotTyped ? " password" : "")
+                                + ((nameNotTyped || passNotTyped) && roleNotTyped ? " and" : "")
+                                + (roleNotTyped ? " role" : "")
+                );
+                labelMsg.setVisible(true);
+                return;
+            }
             DataProcess.insertUser(textName.getText().trim(), textPass.getText().trim(), textRole.getText().trim());
+            myFrame.rollBack();
         } catch (UserException e) {
-            throw new RuntimeException(e);
+            //todo
+            labelMsg.setText(e.getMessage());
+            labelMsg.setVisible(true);
         }
-        myFrame.rollBack();
     }
 
     @Override

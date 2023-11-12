@@ -1,6 +1,9 @@
 package Process;
 
-import Users.*;
+import Users.Administrator;
+import Users.Browser;
+import Users.Operator;
+import Users.User;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -74,14 +77,16 @@ public class DataProcess {
 
     }
 
-    public static User fetchUser(String name, String passWord) {
+    public static User fetchUser(String name, String passWord) throws UserException {
         if (userTable.containsKey(name)) {
             User temp = userTable.get(name);
             if (temp.verifyPassWord(passWord)) {
                 return temp;
+            } else {
+                throw UserException.PASS_WRONG_ERR;
             }
         }
-        return null;
+        throw UserException.USER_NOT_EXIST_ERR;
     }
 
     public static boolean inTable(String name) {
@@ -99,7 +104,7 @@ public class DataProcess {
     public static void updateUser(String name, String passWord, String role) throws UserException {
         User user;
         if (User.passWordNOK(passWord)) {
-            throw (new UserException("Unsupported Password!"));
+            throw UserException.PASS_UNSUPPORTED_ERR;
         } else if (userTable.containsKey(name)) {
             if (role.equalsIgnoreCase("Administrator"))
                 user = new Administrator(name, passWord);
@@ -108,20 +113,20 @@ public class DataProcess {
             else if (role.equalsIgnoreCase("Browser"))
                 user = new Browser(name, passWord);
             else
-                throw new UserException("Wrong Role!");
+                throw UserException.ROLE_WRONG_ERR;
             userTable.put(name, user);
             updateUserFile();
         } else {
-            throw new UserException("User Does Not Exist!");
+            throw UserException.USER_NOT_EXIST_ERR;
         }
     }
 
     public static void insertUser(String name, String passWord, String role) throws UserException {
         User user;
         if (userTable.containsKey(name)) {
-            throw (new UserException("User Already Exists!"));
+            throw UserException.USER_ALREADY_EXISTS_ERR;
         } else if (User.passWordNOK(passWord)) {
-            throw (new UserException("Unsupported Password!"));
+            throw UserException.PASS_UNSUPPORTED_ERR;
         } else {
             if (role.equalsIgnoreCase("Administrator"))
                 user = new Administrator(name, passWord);
@@ -130,7 +135,7 @@ public class DataProcess {
             else if (role.equalsIgnoreCase("Browser"))
                 user = new Browser(name, passWord);
             else {
-                throw (new UserException("Wrong Role!"));
+                throw UserException.ROLE_WRONG_ERR;
             }
             userTable.put(name, user);
             updateUserFile();
