@@ -26,9 +26,9 @@ public class DataProcess {
         do {
             try {
                 flag = false;
-                buff = new BufferedReader(new FileReader("src/Data/Users.txt"));
+                buff = new BufferedReader(new FileReader("src/data/Users.txt"));
             } catch (FileNotFoundException nf) {
-                File file = new File("src/Data/Users.txt");
+                File file = new File("src/data/Users.txt");
                 file.createNewFile();
                 flag = true;
             }
@@ -58,7 +58,7 @@ public class DataProcess {
     }
 
     public static void writeUsers() throws IOException {
-        File userTxt = new File("src/Data/Users.txt");
+        File userTxt = new File("src/data/Users.txt");
         if (userTxt.exists())
             userTxt.delete();
         userTxt.createNewFile();
