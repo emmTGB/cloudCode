@@ -43,14 +43,6 @@ public class Administrator extends User {
         System.out.println(tip);
     }
 
-    public void addUser(String name, String passWord, String role) {
-        try {
-            DataProcess.insertUser(name, passWord, role);
-        } catch (UserException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public void listUser() {
         Enumeration<User> e = DataProcess.getAllUsers();
         User user;
