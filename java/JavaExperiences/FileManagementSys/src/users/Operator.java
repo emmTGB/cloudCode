@@ -1,11 +1,19 @@
-package Users;
+package users;
 
-import Process.DataProcess;
+import process.DataProcess;
 
-public class Browser extends User {
-    public Browser(String userName, String passWord) {
+public class Operator extends User {
+    public static final String[] OPTION_LIST = {
+            "Exit",
+            "Download File",
+            "Upload File",
+            "File List",
+            "Change Your Password"
+    };
+
+    public Operator(String userName, String passWord) {
         super(userName, passWord);
-        userRole = "Browser";
+        userRole = "Operator";
     }
 
     @Override
@@ -13,16 +21,17 @@ public class Browser extends User {
         String tip = "Select your operation:";
 
         String pass;
-        String input = null;
+        String input;
         do {
-            System.out.println("Welcome! Your User type: Browser");
+            System.out.println("Welcome! Your User type: Operator");
             System.out.println(
                     """
-                            *******Browser menu******
+                            ******Operator menu******
                             \t1.Download File
-                            \t2.File List
-                            \t3.Change Your Password
-                            \t4.Exit
+                            \t2.Upload File
+                            \t3.File List
+                            \t4.Change Your Password
+                            \t5.Exit
                             *******************************"""
             );
             System.out.println(tip);
@@ -38,21 +47,30 @@ public class Browser extends User {
                         //TODO
                         break;
                     case 2:
-                        System.out.println("File List");
+                        System.out.println("Upload File");
                         //TODO
                         break;
                     case 3:
+                        System.out.println("File List");
+                        //TODO
+                        break;
+                    case 4:
                         System.out.println("Change Your Password");
                         System.out.println("Please input new password:");
                         pass = DataProcess.scanner.nextLine().trim();
                         resetPassWord(pass);
                         break;
-                    case 4:
+                    case 5:
                         return;
                     default:
                         break;
                 }
             }
         } while (true);
+    }
+
+    //TODO
+    private boolean uploadFile() {
+        return false;
     }
 }

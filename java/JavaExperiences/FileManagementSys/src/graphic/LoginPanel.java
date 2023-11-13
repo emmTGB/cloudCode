@@ -1,31 +1,32 @@
-package Graphic;
+package graphic;
 
-import Consts.GUI_CONST;
-import Process.DataProcess;
-import Process.UserException;
+import consts.GUI_CONST;
+import process.DataProcess;
+import process.UserException;
+import users.User;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
-public class CreateUserPanel extends MyPanel {
-    SpringLayout springLayout = new SpringLayout();
-    JLabel labelName, labelPass, labelRole;
+public class LoginPanel extends MyPanel {
+    final SpringLayout springLayout = new SpringLayout();
+    final JLabel labelName;
+    final JLabel labelPass;
+    final JTextField textName;
+    final JPasswordField textPass;
     JLabel labelMsg;
-    JTextField textName, textPass, textRole;
     static final String HINT_NAME = "type user name";
     static final String HINT_PASS = "type user pass";
-    static final String HINT_ROLE = "type user Role";
 
-    public CreateUserPanel() {
+    public LoginPanel() {
         super();
         setLayout(springLayout);
         setPreferredSize(new Dimension(GUI_CONST.WIDTH, GUI_CONST.HEIGHT));
 
         labelName = new JLabel("User name:");
         labelPass = new JLabel("Password:");
-        labelRole = new JLabel("Role:");
 
         textName = new JTextField();
         textName.setColumns(30);
@@ -52,13 +53,15 @@ public class CreateUserPanel extends MyPanel {
                 textName.setBackground(GUI_CONST.BG_COLOR);
             }
         });
-        textPass = new JTextField();
+        textPass = new JPasswordField();
         textPass.setColumns(30);
+        textPass.setEchoChar('\0');
         textPass.setText(HINT_PASS);
         textPass.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (textPass.getText().equals(HINT_PASS)) {
+                if (new String(textPass.getPassword()).equals(HINT_PASS)) {
+                    textPass.setEchoChar('*');
                     textPass.setText("");
                     textPass.setForeground(GUI_CONST.FONT_COLOR);
                     textPass.setFont(GUI_CONST.FONT);
@@ -69,37 +72,13 @@ public class CreateUserPanel extends MyPanel {
 
             @Override
             public void focusLost(FocusEvent e) {
-                if (textPass.getText().isEmpty()) {
+                if (textPass.getPassword().length == 0) {
+                    textPass.setEchoChar('\0');
                     textPass.setText(HINT_PASS);
                     textPass.setForeground(GUI_CONST.ALT_FONT_COLOR);
                     textPass.setFont(GUI_CONST.FONT_ITALIC);
                 }
                 textPass.setBackground(GUI_CONST.BG_COLOR);
-            }
-        });
-        textRole = new JTextField();
-        textRole.setColumns(30);
-        textRole.setText(HINT_ROLE);
-        textRole.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (textRole.getText().equals(HINT_ROLE)) {
-                    textRole.setText("");
-                    textRole.setForeground(GUI_CONST.FONT_COLOR);
-                    textRole.setFont(GUI_CONST.FONT);
-                }
-                textRole.setBackground(GUI_CONST.ALT_BG_COLOR);
-                labelMsg.setVisible(false);
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (textRole.getText().isEmpty()) {
-                    textRole.setText(HINT_ROLE);
-                    textRole.setForeground(GUI_CONST.ALT_FONT_COLOR);
-                    textRole.setFont(GUI_CONST.FONT_ITALIC);
-                }
-                textRole.setBackground(GUI_CONST.BG_COLOR);
             }
         });
 
@@ -110,9 +89,9 @@ public class CreateUserPanel extends MyPanel {
 
         GroupLayout.SequentialGroup hGroup = inputLayout.createSequentialGroup();
         hGroup.addGap(5);
-        hGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelName).addComponent(labelPass).addComponent(labelRole));
+        hGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelName).addComponent(labelPass));
         hGroup.addGap(5);
-        hGroup.addGroup(inputLayout.createParallelGroup().addComponent(textName).addComponent(textPass).addComponent(textRole));
+        hGroup.addGroup(inputLayout.createParallelGroup().addComponent(textName).addComponent(textPass));
         hGroup.addGap(5);
 
         inputLayout.setHorizontalGroup(hGroup);
@@ -122,8 +101,6 @@ public class CreateUserPanel extends MyPanel {
         vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelName).addComponent(textName));
         vGroup.addGap(10);
         vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelPass).addComponent(textPass));
-        vGroup.addGap(10);
-        vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelRole).addComponent(textRole));
         vGroup.addGap(10);
 
         inputLayout.setVerticalGroup(vGroup);
@@ -155,29 +132,34 @@ public class CreateUserPanel extends MyPanel {
     @Override
     public void confirmTriggered() {
         try {
-            boolean nameNotTyped = textName.getText().equals(HINT_NAME);
-            boolean passNotTyped = textPass.getText().equals(HINT_PASS);
-            boolean roleNotTyped = textRole.getText().equals(HINT_ROLE);
-            if (nameNotTyped || passNotTyped || roleNotTyped) {
+            boolean nameNotTyped = textName.getText().equals(HINT_NAME) || textName.getText().isEmpty();
+            boolean passNotTyped = (new String(textPass.getPassword()).equals(HINT_PASS)) || textPass.getPassword().length == 0;
+            if (nameNotTyped || passNotTyped) {
                 labelMsg.setText(
                         "Please input your"
                                 + (nameNotTyped ? " user name" : "")
                                 + (nameNotTyped && passNotTyped ? " and" : "")
                                 + (passNotTyped ? " password" : "")
-                                + ((nameNotTyped || passNotTyped) && roleNotTyped ? " and" : "")
-                                + (roleNotTyped ? " role" : "")
                 );
                 labelMsg.setVisible(true);
                 return;
             }
-            DataProcess.insertUser(textName.getText().trim(), textPass.getText().trim(), textRole.getText().trim());
-            bounceUpMsg("Succeeded!");
-            myFrame.rollBack();  //todo
+            User user = DataProcess.fetchUser(textName.getText().trim(), new String(textPass.getPassword()));
+            textPass.setText("");
+            String role = user.getUserRole();
+
+            switch (role) {
+                case "Administrator" -> myFrame.replacePanel(new AdminMenuPanel(user));
+                case "Operator" -> myFrame.replacePanel(new OperatorMenuPanel(user));
+                case "Browser" -> myFrame.replacePanel(new BrowserMenuPanel(user));
+            }
         } catch (UserException e) {
-            //todo
+            // TODO
             labelMsg.setText(e.getMessage());
             labelMsg.setVisible(true);
         }
+
+
     }
 
     @Override

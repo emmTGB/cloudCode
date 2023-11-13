@@ -1,16 +1,16 @@
-package Graphic;
+package graphic;
 
-import Consts.GUI_CONST;
+import consts.GUI_CONST;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class MainMenuPanel extends MyPanel {
-    SpringLayout springLayout = new SpringLayout();
-    JRadioButton login = new JRadioButton("Login", true);
-    JRadioButton signUp = new JRadioButton("Sign up");
-    JRadioButton exit = new JRadioButton("exit");
-    ButtonGroup mainMenuGroup = new ButtonGroup();
+    final SpringLayout springLayout = new SpringLayout();
+    final JRadioButton login = new JRadioButton("Login", true);
+    final JRadioButton signUp = new JRadioButton("Sign up");
+    final JRadioButton exit = new JRadioButton("exit");
+    final ButtonGroup mainMenuGroup = new ButtonGroup();
 
     public MainMenuPanel() {
         super();

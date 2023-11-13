@@ -1,6 +1,6 @@
-package Users;
+package users;
 
-import Process.*;
+import process.*;
 
 import java.util.Enumeration;
 
@@ -26,22 +26,21 @@ public class Administrator extends User {
         String tip = "Select your operation:";
 
         System.out.println("Welcome! Your User type: Administrator");
-        do {
-            System.out.println(
-                    """
-                            ******Administrator menu******
-                            \t1.Modify User
-                            \t2.Delete User
-                            \t3.Add User
-                            \t4.List User
-                            \t5.Download File
-                            \t6.File List
-                            \t7.Change Your Password
-                            \t0.Exit
-                            *******************************"""
-            );
-            System.out.println(tip);
-        } while (true);
+
+        System.out.println(
+                """
+                        ******Administrator menu******
+                        \t1.Modify User
+                        \t2.Delete User
+                        \t3.Add User
+                        \t4.List User
+                        \t5.Download File
+                        \t6.File List
+                        \t7.Change Your Password
+                        \t0.Exit
+                        *******************************"""
+        );
+        System.out.println(tip);
     }
 
     public void addUser(String name, String passWord, String role) {
@@ -50,7 +49,6 @@ public class Administrator extends User {
         } catch (UserException e) {
             throw new RuntimeException(e);
         }
-        return;
     }
 
     public void listUser() {

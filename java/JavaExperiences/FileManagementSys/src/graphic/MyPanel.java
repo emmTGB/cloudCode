@@ -1,6 +1,6 @@
-package Graphic;
+package graphic;
 
-import Consts.GUI_CONST;
+import consts.GUI_CONST;
 
 import javax.swing.*;
 

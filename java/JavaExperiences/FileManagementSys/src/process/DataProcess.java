@@ -1,9 +1,9 @@
-package Process;
+package process;
 
-import Users.Administrator;
-import Users.Browser;
-import Users.Operator;
-import Users.User;
+import users.Administrator;
+import users.Browser;
+import users.Operator;
+import users.User;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class DataProcess {
     private static Hashtable<String, User> userTable;
 
-    public static Scanner scanner = new Scanner(System.in);
+    public static final Scanner scanner = new Scanner(System.in);
 
     public static void init() throws IOException, DataException {
         userTable = new Hashtable<>();
@@ -155,8 +155,5 @@ public class DataProcess {
         } else {
             throw UserException.USER_NOT_EXIST_ERR;
         }
-    }
-
-    public static void main(String[] args) {
     }
 }

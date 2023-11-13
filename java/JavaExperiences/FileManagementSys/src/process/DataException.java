@@ -1,4 +1,4 @@
-package Process;
+package process;
 
 public class DataException extends Throwable {
     private final String exceptionMsg;

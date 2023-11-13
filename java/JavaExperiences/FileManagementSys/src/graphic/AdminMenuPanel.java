@@ -1,10 +1,10 @@
-package Graphic;
+package graphic;
 
-import Consts.GUI_CONST;
-import Process.DataProcess;
-import Process.UserException;
-import Users.Administrator;
-import Users.User;
+import consts.GUI_CONST;
+import process.DataProcess;
+import process.UserException;
+import users.Administrator;
+import users.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,12 +14,13 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class AdminMenuPanel extends MyPanel {
-    User admin;
-    JLabel menuHint1, menuHint2;
-    Box menuBox;
-    String[] optionList = Administrator.OPTION_LIST;
-    JRadioButton[] menuRadioButtons = new JRadioButton[optionList.length];
-    SpringLayout springLayout;
+    final User admin;
+    final JLabel menuHint1;
+    final JLabel menuHint2;
+    final Box menuBox;
+    final String[] optionList = Administrator.OPTION_LIST;
+    final JRadioButton[] menuRadioButtons = new JRadioButton[optionList.length];
+    final SpringLayout springLayout;
 
     public AdminMenuPanel(User admin) {
         super();
@@ -41,7 +42,7 @@ public class AdminMenuPanel extends MyPanel {
         menuBox = Box.createVerticalBox();
         ButtonGroup buttonGroup = new ButtonGroup();
         for (int i = 0; i < menuRadioButtons.length; i++) {
-            menuRadioButtons[i] = new JRadioButton(Administrator.OPTION_LIST[i]);
+            menuRadioButtons[i] = new JRadioButton(optionList[i]);
             menuBox.add(menuRadioButtons[i]);
             buttonGroup.add(menuRadioButtons[i]);
         }
@@ -115,6 +116,7 @@ public class AdminMenuPanel extends MyPanel {
                     case 2 -> myFrame.replacePanel(new DeleteUserPanel(admin));
                     case 3 -> myFrame.replacePanel(new CreateUserPanel());
                     case 4 -> listUsers();
+                    case 7 -> myFrame.replacePanel(new ChangePassPanel(admin));
                     case 0 -> myFrame.rollBack();
                 }
             }
@@ -128,11 +130,11 @@ public class AdminMenuPanel extends MyPanel {
 }
 
 class ModifyUserPanel extends CreateUserPanel {
-    User admin;
+    final User user;
 
-    public ModifyUserPanel(User admin) {
+    public ModifyUserPanel(User user) {
         super();
-        this.admin = admin;
+        this.user = user;
     }
 
     @Override
@@ -172,16 +174,16 @@ class ModifyUserPanel extends CreateUserPanel {
 }
 
 class DeleteUserPanel extends MyPanel {
-    User admin;
-    SpringLayout springLayout = new SpringLayout();
-    JLabel labelName;
-    JTextField textName;
+    final User user;
+    final SpringLayout springLayout = new SpringLayout();
+    final JLabel labelName;
+    final JTextField textName;
     static final String HINT_NAME = "type user name";
     JLabel labelMsg;
 
-    public DeleteUserPanel(User admin) {
+    public DeleteUserPanel(User user) {
         super();
-        this.admin = admin;
+        this.user = user;
         setLayout(springLayout);
         setPreferredSize(new Dimension(GUI_CONST.WIDTH, GUI_CONST.HEIGHT));
 
@@ -259,7 +261,7 @@ class DeleteUserPanel extends MyPanel {
 
     @Override
     public void confirmTriggered() {
-        boolean nameNotTyped = textName.getText().equals(HINT_NAME);
+        boolean nameNotTyped = textName.getText().equals(HINT_NAME) || textName.getText().isEmpty();
         if (nameNotTyped) {
             labelMsg.setText(
                     "Please input your"
@@ -268,7 +270,7 @@ class DeleteUserPanel extends MyPanel {
             labelMsg.setVisible(true);
             return;
         }
-        if (textName.getText().trim().equals(admin.getUserName())) {
+        if (textName.getText().trim().equals(user.getUserName())) {
             labelMsg.setText(
                     "You Cannot Delete Your Self"
             );

@@ -1,15 +1,14 @@
-package Graphic;
+package graphic;
 
-import Consts.GUI_CONST;
+import consts.GUI_CONST;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
 
 public class MyFrame extends JFrame {
-    JPanel root = new JPanel();
-    MainButtonPanel mainButtonPanel = new MainButtonPanel();
-    MyPanel currentPanel = null;
+    final JPanel root = new JPanel();
+    final MainButtonPanel mainButtonPanel = new MainButtonPanel();
+    MyPanel currentPanel;
 
     public MyFrame(String title) {
         super(title);
@@ -17,6 +16,7 @@ public class MyFrame extends JFrame {
         BorderLayout panelLayout = new BorderLayout();
         setLayout(panelLayout);
         setBounds(0, 0, GUI_CONST.WIDTH, GUI_CONST.HEIGHT);
+        setLocationRelativeTo(null);
 
         root.setBackground(GUI_CONST.BG_COLOR);
         add(root);

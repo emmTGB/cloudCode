@@ -1,8 +1,8 @@
-package Graphic;
+package graphic;
 
-import Consts.GUI_CONST;
-import Process.DataProcess;
-import Users.User;
+import consts.GUI_CONST;
+import process.DataProcess;
+import users.User;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
@@ -11,17 +11,18 @@ import java.awt.*;
 import java.util.Enumeration;
 
 public class UserListFrame extends JFrame {
-    Enumeration<User> listUsers = DataProcess.getAllUsers();
+    final Enumeration<User> listUsers = DataProcess.getAllUsers();
     static final String[] columnNames = {"user name", "password", "role"};
-    String[][] contents = new String[DataProcess.getLengthOfUserLists()][3];
+    final String[][] contents = new String[DataProcess.getLengthOfUserLists()][3];
 
-    JTable tableUsers;
-    JScrollPane scrollPane;
+    final JTable tableUsers;
+    final JScrollPane scrollPane;
 
     public UserListFrame(JFrame fatherFrame) {
         super("User list");
         Point loc = fatherFrame.getLocationOnScreen();
         setBounds(loc.x, loc.y, GUI_CONST.WIDTH, GUI_CONST.HEIGHT);
+        setBackground(GUI_CONST.BG_COLOR);
 
         int i = 0;
         while (listUsers.hasMoreElements()) {
@@ -113,7 +114,28 @@ class DIYScrollBar extends BasicScrollBarUI {
 
     public void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
 
-        Graphics2D g2 = (Graphics2D) g;
+        Graphics2D g2 = getGraphics2D((Graphics2D) g, trackBounds);
+
+        //填充Track
+
+        g2.fillRect(trackBounds.x, trackBounds.y, trackBounds.width,
+
+                trackBounds.height);
+
+        //绘制Track的边框
+
+        if (trackHighlight == BasicScrollBarUI.DECREASE_HIGHLIGHT)
+
+            this.paintDecreaseHighlight(g);
+
+        if (trackHighlight == BasicScrollBarUI.INCREASE_HIGHLIGHT)
+
+            this.paintIncreaseHighlight(g);
+
+    }
+
+    private Graphics2D getGraphics2D(Graphics2D g, Rectangle trackBounds) {
+        Graphics2D g2 = g;
 
         GradientPaint gp = null;
 
@@ -139,27 +161,7 @@ class DIYScrollBar extends BasicScrollBarUI {
 
 
         g2.setPaint(gp);
-
-        //填充Track
-
-        g2.fillRect(trackBounds.x, trackBounds.y, trackBounds.width,
-
-                trackBounds.height);
-
-        //绘制Track的边框
-        /*       g2.setColor(new Color(175, 155, 95));
-         g2.drawRect(trackBounds.x, trackBounds.y, trackBounds.width - 1,
-                trackBounds.height - 1);
-                */
-
-        if (trackHighlight == BasicScrollBarUI.DECREASE_HIGHLIGHT)
-
-            this.paintDecreaseHighlight(g);
-
-        if (trackHighlight == BasicScrollBarUI.INCREASE_HIGHLIGHT)
-
-            this.paintIncreaseHighlight(g);
-
+        return g2;
     }
 
 

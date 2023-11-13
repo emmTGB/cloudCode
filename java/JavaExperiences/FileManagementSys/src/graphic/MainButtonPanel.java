@@ -1,42 +1,25 @@
-package Graphic;
+package graphic;
 
-import Consts.GUI_CONST;
+import consts.GUI_CONST;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MainButtonPanel extends MyPanel {
-    SpringLayout springLayout = new SpringLayout();
-    JButton confirm = new JButton("Confirm");
-    JButton cancel = new JButton("Cancel");
-    JButton exit = new JButton("exit");
+    final SpringLayout springLayout = new SpringLayout();
+    final JButton confirm = new JButton("Confirm");
+    final JButton cancel = new JButton("Cancel");
+    final JButton exit = new JButton("exit");
 
     public MainButtonPanel() {
         super();
 
 //        confirm.setBackground(GUI_CONST.BG_COLOR);
-        confirm.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                myFrame.currentPanel.confirmTriggered();
-            }
-        });
+        confirm.addActionListener(e -> myFrame.currentPanel.confirmTriggered());
 //        cancel.setBackground(GUI_CONST.BG_COLOR);
-        cancel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                myFrame.currentPanel.cancelTriggered();
-            }
-        });
+        cancel.addActionListener(e -> myFrame.currentPanel.cancelTriggered());
 //        exit.setBackground(GUI_CONST.BG_COLOR);
-        exit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                myFrame.dispose();
-            }
-        });
+        exit.addActionListener(e -> myFrame.dispose());
 
         setLayout(springLayout);
         add(confirm);
