@@ -1,8 +1,6 @@
 package graphic;
 
 import consts.GUI_CONST;
-import consts.Role;
-import process.DataProcess;
 import process.UserException;
 import users.Administrator;
 import users.User;
@@ -15,7 +13,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class AdminMenuPanel extends MyPanel {
-    final User admin;
+    final Administrator admin;
     final JLabel menuHint1;
     final JLabel menuHint2;
     final Box menuBox;
@@ -25,7 +23,7 @@ public class AdminMenuPanel extends MyPanel {
 
     public AdminMenuPanel(User admin) {
         super();
-        this.admin = admin;
+        this.admin = (Administrator) admin;
 
         springLayout = new SpringLayout();
         setLayout(springLayout);
@@ -131,11 +129,11 @@ public class AdminMenuPanel extends MyPanel {
 }
 
 class ModifyUserPanel extends CreateUserPanel {
-    final User user;
+    final Administrator admin;
 
-    public ModifyUserPanel(User user) {
+    public ModifyUserPanel(Administrator admin) {
         super();
-        this.user = user;
+        this.admin = admin;
     }
 
     @Override
@@ -147,7 +145,7 @@ class ModifyUserPanel extends CreateUserPanel {
                 boolean passNotTyped = textPass.getText().equals(HINT_PASS);
                 boolean roleNotTyped = textRole.getText().equals(HINT_ROLE);
                 if (nameNotTyped || passNotTyped || roleNotTyped) {
-                    labelMsg.setText(
+                    showMsg(
                             "Please input your"
                                     + (nameNotTyped ? " user name" : "")
                                     + (nameNotTyped && passNotTyped ? " and" : "")
@@ -155,32 +153,29 @@ class ModifyUserPanel extends CreateUserPanel {
                                     + ((nameNotTyped || passNotTyped) && roleNotTyped ? " and" : "")
                                     + (roleNotTyped ? " role" : "")
                     );
-                    labelMsg.setVisible(true);
                     return;
                 }
-                DataProcess.updateUser(textName.getText().trim(), textPass.getText().trim(), textRole.getText().trim());
+                admin.modifyUser(textName.getText().trim(), textPass.getText().trim(), textRole.getText().trim());
                 bounceUpMsg("Succeeded!");
                 myFrame.rollBack(); //todo
             }
         } catch (UserException e) {
             //todo
-            labelMsg.setText(e.getMessage());
-            labelMsg.setVisible(true);
+            showMsg(e.getMessage());
         }
     }
 }
 
 class DeleteUserPanel extends MyPanel {
-    final User user;
+    final Administrator admin;
     final SpringLayout springLayout = new SpringLayout();
     final JLabel labelName;
     final JTextField textName;
     static final String HINT_NAME = "type user name";
-    JLabel labelMsg;
 
-    public DeleteUserPanel(User user) {
+    public DeleteUserPanel(User admin) {
         super();
-        this.user = user;
+        this.admin = (Administrator) admin;
         setLayout(springLayout);
         setPreferredSize(new Dimension(GUI_CONST.WIDTH, GUI_CONST.HEIGHT));
 
@@ -260,27 +255,18 @@ class DeleteUserPanel extends MyPanel {
     public void confirmTriggered() {
         boolean nameNotTyped = textName.getText().equals(HINT_NAME) || textName.getText().isEmpty();
         if (nameNotTyped) {
-            labelMsg.setText(
+            showMsg(
                     "Please input your"
                             + " user name"
             );
-            labelMsg.setVisible(true);
-            return;
-        }
-        if (textName.getText().trim().equals(user.getUserName())) {
-            labelMsg.setText(
-                    "You Cannot Delete Your Self"
-            );
-            labelMsg.setVisible(true);
             return;
         }
         try {
-            DataProcess.deleteUser(textName.getText().trim());
+            admin.deleteUser(textName.getText().trim());
             bounceUpMsg("Succeeded");
             myFrame.rollBack();
         } catch (UserException e) {
-            labelMsg.setText(e.getMessage());
-            labelMsg.setVisible(true);
+            showMsg(e.getMessage());
         }
     }
 

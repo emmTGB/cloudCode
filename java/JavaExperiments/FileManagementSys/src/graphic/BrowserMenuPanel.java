@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class BrowserMenuPanel extends MyPanel {
-    final User browser;
+    final Browser browser;
     final JLabel menuHint1;
     final JLabel menuHint2;
     final Box menuBox;
@@ -18,7 +18,7 @@ public class BrowserMenuPanel extends MyPanel {
 
     public BrowserMenuPanel(User browser) {
         super();
-        this.browser = browser;
+        this.browser = (Browser) browser;
 
         springLayout = new SpringLayout();
         setLayout(springLayout);

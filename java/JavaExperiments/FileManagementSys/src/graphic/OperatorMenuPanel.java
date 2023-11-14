@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class OperatorMenuPanel extends MyPanel {
-    final User operator;
+    final Operator operator;
     final JLabel menuHint1;
     final JLabel menuHint2;
     final Box menuBox;
@@ -18,7 +18,7 @@ public class OperatorMenuPanel extends MyPanel {
 
     public OperatorMenuPanel(User operator) {
         super();
-        this.operator = operator;
+        this.operator = (Operator) operator;
 
         springLayout = new SpringLayout();
         setLayout(springLayout);

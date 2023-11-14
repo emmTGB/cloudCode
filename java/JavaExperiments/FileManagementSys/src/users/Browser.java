@@ -1,7 +1,6 @@
 package users;
 
 import consts.Role;
-import process.DataProcess;
 
 public class Browser extends User {
     public static final String[] OPTION_LIST = {

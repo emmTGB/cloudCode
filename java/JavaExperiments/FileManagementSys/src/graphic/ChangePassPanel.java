@@ -1,7 +1,6 @@
 package graphic;
 
 import consts.GUI_CONST;
-import process.DataProcess;
 import process.UserException;
 import users.User;
 
@@ -9,6 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 public class ChangePassPanel extends MyPanel {
     final User user;
@@ -16,7 +17,6 @@ public class ChangePassPanel extends MyPanel {
     final JLabel labelCur;
     final JLabel labelNew;
     final JLabel labelRep;
-    JLabel labelMsg;
     final JPasswordField textCur;
     final JPasswordField textNew;
     final JPasswordField textRep;
@@ -145,7 +145,6 @@ public class ChangePassPanel extends MyPanel {
         inputLayout.setVerticalGroup(vGroup);
 
         add(inputPane);
-
         springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, inputPane, 0, SpringLayout.HORIZONTAL_CENTER, this);
         springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, inputPane, 0, SpringLayout.VERTICAL_CENTER, this);
 
@@ -171,28 +170,37 @@ public class ChangePassPanel extends MyPanel {
     @Override
     public void confirmTriggered() {  // TODO
         try {
-            boolean nameNotTyped = new String(textCur.getPassword()).equals(HINT_CUR) || textCur.getPassword().length == 0;
-            boolean passNotTyped = new String(textNew.getPassword()).equals(HINT_NEW) || textNew.getPassword().length == 0;
-            boolean roleNotTyped = new String(textRep.getPassword()).equals(HINT_REP) || textRep.getPassword().length == 0;
-            if (nameNotTyped || passNotTyped || roleNotTyped) {
-                labelMsg.setText(
-                        "Please input your"
-                                + (nameNotTyped ? " current password" : "")
-                                + (nameNotTyped && passNotTyped ? " and" : "")
-                                + (passNotTyped ? " new password" : "")
-                                + ((nameNotTyped || passNotTyped) && roleNotTyped ? " and" : "")
-                                + (roleNotTyped ? " repeat your new pass word" : "")
+            boolean curNotTyped = new String(textCur.getPassword()).equals(HINT_CUR) || textCur.getPassword().length == 0;
+            boolean newNotTyped = new String(textNew.getPassword()).equals(HINT_NEW) || textNew.getPassword().length == 0;
+            boolean repNotTyped = new String(textRep.getPassword()).equals(HINT_REP) || textRep.getPassword().length == 0;
+            if (curNotTyped || newNotTyped || repNotTyped) {
+                showMsg(
+                        "Please"
+                                + ((curNotTyped || newNotTyped) ? "" : "input your")
+                                + (curNotTyped ? " current password" : "")
+                                + (curNotTyped && newNotTyped ? " and" : "")
+                                + (newNotTyped ? " new password" : "")
+                                + ((curNotTyped || newNotTyped) && repNotTyped ? " and" : "")
+                                + (repNotTyped ? " repeat your new pass word" : "")
                 );
-                labelMsg.setVisible(true);
                 return;
             }
-            DataProcess.insertUser(textCur.getText().trim(), textNew.getText().trim(), textRep.getText().trim());
+            String curPass = new String(textCur.getPassword());
+            String newPass = new String(textNew.getPassword());
+            String repPass = new String(textRep.getPassword());
+            if (curPass.equals(newPass)) {
+                showMsg("You Did Not Change Your Password!");
+                return;
+            } else if (!newPass.equals(repPass)) {
+                showMsg("You Should Enter Two SAME New Password!");
+                return;
+            }
+            user.resetPassWord(new String(textNew.getPassword()));
             bounceUpMsg("Succeeded!");
-            myFrame.rollBack();  //todo
+            myFrame.rollBack();
         } catch (UserException e) {
             //todo
-            labelMsg.setText(e.getMessage());
-            labelMsg.setVisible(true);
+            showMsg(e.getMessage());
         }
     }
 

@@ -16,7 +16,7 @@ public class Main {
         } catch (IOException e) {
             System.err.println("Failed to initialize the program.");
             return;
-        } catch (DataException e) {
+        } catch (Throwable e) {
             System.err.println(e.getMessage());
             return;
         }

@@ -16,7 +16,6 @@ public class LoginPanel extends MyPanel {
     final JLabel labelPass;
     final JTextField textName;
     final JPasswordField textPass;
-    JLabel labelMsg;
     static final String HINT_NAME = "type user name";
     static final String HINT_PASS = "type user pass";
 
@@ -135,13 +134,12 @@ public class LoginPanel extends MyPanel {
             boolean nameNotTyped = textName.getText().equals(HINT_NAME) || textName.getText().isEmpty();
             boolean passNotTyped = (new String(textPass.getPassword()).equals(HINT_PASS)) || textPass.getPassword().length == 0;
             if (nameNotTyped || passNotTyped) {
-                labelMsg.setText(
+                showMsg(
                         "Please input your"
                                 + (nameNotTyped ? " user name" : "")
                                 + (nameNotTyped && passNotTyped ? " and" : "")
                                 + (passNotTyped ? " password" : "")
                 );
-                labelMsg.setVisible(true);
                 return;
             }
             User user = DataProcess.fetchUser(textName.getText().trim(), new String(textPass.getPassword()));
@@ -154,8 +152,7 @@ public class LoginPanel extends MyPanel {
             }
         } catch (UserException e) {
             // TODO
-            labelMsg.setText(e.getMessage());
-            labelMsg.setVisible(true);
+            showMsg(e.getMessage());
         }
 
 

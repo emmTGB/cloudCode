@@ -29,7 +29,7 @@ public class UserListFrame extends JFrame {
             User user = listUsers.nextElement();
             contents[i][0] = user.getUserName();
             contents[i][1] = user.getPassWord();
-            contents[i][2] = user.getUserRole();
+            contents[i][2] = user.getUserRole().toString();
             i++;
         }
 

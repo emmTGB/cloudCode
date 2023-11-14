@@ -1,8 +1,8 @@
 package graphic;
 
 import consts.GUI_CONST;
-import process.DataProcess;
 import process.UserException;
+import users.Administrator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +14,6 @@ public class CreateUserPanel extends MyPanel {
     final JLabel labelName;
     final JLabel labelPass;
     final JLabel labelRole;
-    JLabel labelMsg;
     final JTextField textName;
     final JTextField textPass;
     final JTextField textRole;
@@ -163,7 +162,7 @@ public class CreateUserPanel extends MyPanel {
             boolean passNotTyped = textPass.getText().equals(HINT_PASS) || textPass.getText().isEmpty();
             boolean roleNotTyped = textRole.getText().equals(HINT_ROLE) || textRole.getText().isEmpty();
             if (nameNotTyped || passNotTyped || roleNotTyped) {
-                labelMsg.setText(
+                showMsg(
                         "Please input your"
                                 + (nameNotTyped ? " user name" : "")
                                 + (nameNotTyped && passNotTyped ? " and" : "")
@@ -171,16 +170,14 @@ public class CreateUserPanel extends MyPanel {
                                 + ((nameNotTyped || passNotTyped) && roleNotTyped ? " and" : "")
                                 + (roleNotTyped ? " role" : "")
                 );
-                labelMsg.setVisible(true);
                 return;
             }
-            DataProcess.insertUser(textName.getText().trim(), textPass.getText().trim(), textRole.getText().trim());
+            Administrator.addUser(textName.getText().trim(), textPass.getText().trim(), textRole.getText().trim());
             bounceUpMsg("Succeeded!");
             myFrame.rollBack();  //todo
         } catch (UserException e) {
             //todo
-            labelMsg.setText(e.getMessage());
-            labelMsg.setVisible(true);
+            showMsg(e.getMessage());
         }
     }
 

@@ -1,5 +1,6 @@
 package process;
 
+import consts.FILE_CONST;
 import consts.Role;
 import users.Administrator;
 import users.Browser;
@@ -16,50 +17,49 @@ public class DataProcess {
 
     public static final Scanner scanner = new Scanner(System.in);
 
-    public static void init() throws IOException, DataException {
+    public static void init() throws IOException, DataException, UserException {
         userTable = new Hashtable<>();
         readUsers();
     }
 
-    private static void readUsers() throws IOException, DataException {
+    private static void readUsers() throws IOException, DataException, UserException {
         boolean flag;
         BufferedReader buff = null;
         do {
             try {
                 flag = false;
-                buff = new BufferedReader(new FileReader("src/data/Users.txt"));
+                buff = new BufferedReader(new FileReader(FILE_CONST.FILE_PATH));
             } catch (FileNotFoundException nf) {
-                File file = new File("src/data/Users.txt");
+                File file = new File(FILE_CONST.FILE_PATH);
                 file.createNewFile();
                 flag = true;
             }
         } while (flag);
 
-        String name, passWord, role;
+        String name, passWord, roleStr;
         while ((name = buff.readLine()) != null) {
             passWord = buff.readLine();
-            role = buff.readLine();
+            roleStr = buff.readLine();
 
-            if (passWord == null || role == null) {
+            if (passWord == null || roleStr == null) {
                 buff.close();
-                throw new DataException("Something wrong with file 'Users.txt'");
+                throw DataException.FILE_CONTENT_ERR;
             }
 
-            switch (role) {
-                case "Administrator" -> userTable.put(name, new Administrator(name, passWord));
-                case "Operator" -> userTable.put(name, new Operator(name, passWord));
-                case "Browser" -> userTable.put(name, new Browser(name, passWord));
-                default -> {
-                    buff.close();
-                    throw new DataException("Unexpected role");
-                }
+            User user;
+            switch (Role.getRole(roleStr)) {
+                case ADMINISTRATOR -> user = new Administrator(name, passWord);
+                case OPERATOR -> user = new Operator(name, passWord);
+                case BROWSER -> user = new Browser(name, passWord);
+                default -> throw UserException.ROLE_UNEXPECTED_ERR;
             }
+            userTable.put(name, user);
         }
         buff.close();
     }
 
     public static void writeUsers() throws IOException {
-        File userTxt = new File("src/data/Users.txt");
+        File userTxt = new File(FILE_CONST.FILE_PATH);
         if (userTxt.exists())
             userTxt.delete();
         userTxt.createNewFile();
@@ -137,7 +137,7 @@ public class DataProcess {
                 case ADMINISTRATOR -> user = new Administrator(name, passWord);
                 case OPERATOR -> user = new Operator(name, passWord);
                 case BROWSER -> user = new Browser(name, passWord);
-                default -> throw UserException.ROLE_WRONG_ERR;
+                default -> throw UserException.ROLE_UNEXPECTED_ERR;
             }
             userTable.put(name, user);
             updateUserFile();

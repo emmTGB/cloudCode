@@ -33,7 +33,7 @@ public abstract class User {
         return this.passWord.equals(passWord);
     }
 
-    protected void resetPassWord(String passWord) throws UserException {
+    public void resetPassWord(String passWord) throws UserException {
         if (passWordNOK(passWord)) {
             throw UserException.PASS_UNSUPPORTED_ERR;
         }

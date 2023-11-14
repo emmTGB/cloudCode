@@ -1,7 +1,8 @@
 package users;
 
 import consts.Role;
-import process.*;
+import process.DataProcess;
+import process.UserException;
 
 import java.util.Enumeration;
 
@@ -40,6 +41,14 @@ public class Administrator extends User {
             throw new UserException("You Can Not Delete An Admin");
 
         DataProcess.deleteUser(name);
+    }
+
+    public static void addUser(String name, String pass, String roleStr) throws UserException {
+        if (DataProcess.inTable(name)) throw UserException.USER_ALREADY_EXISTS_ERR;
+        if (passWordNOK(pass)) throw UserException.PASS_UNSUPPORTED_ERR;
+        Role role = Role.getRole(roleStr);
+
+        DataProcess.insertUser(name, pass, role);
     }
 
     public void listUser() {

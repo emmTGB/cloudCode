@@ -11,20 +11,20 @@ public enum Role {
     final String role;
 
     public static Role getRole(String role) throws UserException {
-        for (Role r : Role.values()){
-            if (role.equalsIgnoreCase(r.toString())){
+        for (Role r : Role.values()) {
+            if (role.equalsIgnoreCase(r.toString())) {
                 return r;
             }
         }
-        throw UserException.ROLE_WRONG_ERR;
+        throw UserException.ROLE_UNEXPECTED_ERR;
     }
 
-    Role(String role){
-        this.role=role;
+    Role(String role) {
+        this.role = role;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return role;
     }
 }
