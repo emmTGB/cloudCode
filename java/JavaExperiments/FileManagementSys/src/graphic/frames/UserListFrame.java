@@ -22,7 +22,6 @@ public class UserListFrame extends JFrame {
         super("User list");
         Point loc = fatherFrame.getLocationOnScreen();
         setBounds(loc.x, loc.y, GUI_CONST.WIDTH, GUI_CONST.HEIGHT);
-        setBackground(GUI_CONST.BG_COLOR);
 
         int i = 0;
         while (listUsers.hasMoreElements()) {
