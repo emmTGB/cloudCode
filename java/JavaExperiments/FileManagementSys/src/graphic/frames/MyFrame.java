@@ -1,6 +1,9 @@
-package graphic;
+package graphic.frames;
 
 import consts.GUI_CONST;
+import graphic.panels.MainButtonPanel;
+import graphic.panels.MainMenuPanel;
+import graphic.panels.MyPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,7 +11,7 @@ import java.awt.*;
 public class MyFrame extends JFrame {
     final JPanel root = new JPanel();
     final MainButtonPanel mainButtonPanel = new MainButtonPanel();
-    MyPanel currentPanel;
+    public MyPanel currentPanel;
 
     public MyFrame(String title) {
         super(title);

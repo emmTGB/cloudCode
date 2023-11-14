@@ -1,14 +1,14 @@
-package graphic;
+package graphic.panels;
 
 import consts.GUI_CONST;
+import graphic.frames.UserListFrame;
+import graphic.utilities.MyTextField;
 import process.UserException;
 import users.Administrator;
 import users.User;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -141,9 +141,9 @@ class ModifyUserPanel extends CreateUserPanel {
 
         try {
             {
-                boolean nameNotTyped = textName.getText().equals(HINT_NAME);
-                boolean passNotTyped = textPass.getText().equals(HINT_PASS);
-                boolean roleNotTyped = textRole.getText().equals(HINT_ROLE);
+                boolean nameNotTyped = textName.notTyped();
+                boolean passNotTyped = textPass.notTyped();
+                boolean roleNotTyped = textRole.notTyped();
                 if (nameNotTyped || passNotTyped || roleNotTyped) {
                     showMsg(
                             "Please input your"
@@ -156,6 +156,7 @@ class ModifyUserPanel extends CreateUserPanel {
                     return;
                 }
                 admin.modifyUser(textName.getText().trim(), textPass.getText().trim(), textRole.getText().trim());
+                labelMsg.setVisible(false);
                 bounceUpMsg("Succeeded!");
                 myFrame.rollBack(); //todo
             }
@@ -170,7 +171,7 @@ class DeleteUserPanel extends MyPanel {
     final Administrator admin;
     final SpringLayout springLayout = new SpringLayout();
     final JLabel labelName;
-    final JTextField textName;
+    final MyTextField textName;
     static final String HINT_NAME = "type user name";
 
     public DeleteUserPanel(User admin) {
@@ -181,53 +182,30 @@ class DeleteUserPanel extends MyPanel {
 
         labelName = new JLabel("User name:");
 
-        textName = new JTextField();
-        textName.setColumns(30);
-        textName.setText(HINT_NAME);
-        textName.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (textName.getText().equals(HINT_NAME)) {
-                    textName.setText("");
-                    textName.setForeground(GUI_CONST.FONT_COLOR);
-                    textName.setFont(GUI_CONST.FONT);
-                }
-                textName.setBackground(GUI_CONST.ALT_BG_COLOR);
-                labelMsg.setVisible(false);
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (textName.getText().isEmpty()) {
-                    textName.setText(HINT_NAME);
-                    textName.setForeground(GUI_CONST.ALT_FONT_COLOR);
-                    textName.setFont(GUI_CONST.FONT_ITALIC);
-                }
-                textName.setBackground(GUI_CONST.BG_COLOR);
-            }
-        });
+        textName = new MyTextField(HINT_NAME);
 
         JPanel inputPane = new JPanel();
-        GroupLayout inputLayout = new GroupLayout(inputPane);
-        inputPane.setLayout(inputLayout);
-        inputPane.setBackground(GUI_CONST.BG_COLOR);
+        {
+            GroupLayout inputLayout = new GroupLayout(inputPane);
+            inputPane.setLayout(inputLayout);
+            inputPane.setBackground(GUI_CONST.BG_COLOR);
 
-        GroupLayout.SequentialGroup hGroup = inputLayout.createSequentialGroup();
-        hGroup.addGap(5);
-        hGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelName));
-        hGroup.addGap(5);
-        hGroup.addGroup(inputLayout.createParallelGroup().addComponent(textName));
-        hGroup.addGap(5);
+            GroupLayout.SequentialGroup hGroup = inputLayout.createSequentialGroup();
+            hGroup.addGap(5);
+            hGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelName));
+            hGroup.addGap(5);
+            hGroup.addGroup(inputLayout.createParallelGroup().addComponent(textName));
+            hGroup.addGap(5);
 
-        inputLayout.setHorizontalGroup(hGroup);
+            inputLayout.setHorizontalGroup(hGroup);
 
-        GroupLayout.ParallelGroup vGroup = inputLayout.createParallelGroup();
-        vGroup.addGap(10);
-        vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelName).addComponent(textName));
-        vGroup.addGap(10);
+            GroupLayout.ParallelGroup vGroup = inputLayout.createParallelGroup();
+            vGroup.addGap(10);
+            vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelName).addComponent(textName));
+            vGroup.addGap(10);
 
-        inputLayout.setVerticalGroup(vGroup);
-
+            inputLayout.setVerticalGroup(vGroup);
+        }
         add(inputPane);
         springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, inputPane, 0, SpringLayout.HORIZONTAL_CENTER, this);
         springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, inputPane, 0, SpringLayout.VERTICAL_CENTER, this);
@@ -248,6 +226,9 @@ class DeleteUserPanel extends MyPanel {
                 tf.setFont(GUI_CONST.FONT_ITALIC);
                 tf.setBorder(GUI_CONST.TF_BORDER);
             }
+            if (c instanceof JCheckBox cb) {
+                cb.setFont(GUI_CONST.FONT_SMALL);
+            }
         }
     }
 
@@ -263,6 +244,7 @@ class DeleteUserPanel extends MyPanel {
         }
         try {
             admin.deleteUser(textName.getText().trim());
+            labelMsg.setVisible(false);
             bounceUpMsg("Succeeded");
             myFrame.rollBack();
         } catch (UserException e) {

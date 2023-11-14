@@ -1,4 +1,4 @@
-package graphic;
+package graphic.panels;
 
 import consts.GUI_CONST;
 import users.Browser;

@@ -1,11 +1,13 @@
-package graphic;
+package graphic.panels;
 
 import consts.GUI_CONST;
+import graphic.MessageSlot;
+import graphic.frames.MyFrame;
 
 import javax.swing.*;
 
 public abstract class MyPanel extends JPanel implements MessageSlot {
-    static MyFrame myFrame;
+    public static MyFrame myFrame;
     public MyPanel prePanel;
     protected JLabel labelMsg;
 

@@ -1,4 +1,4 @@
-package graphic;
+package graphic.frames;
 
 import consts.GUI_CONST;
 import process.DataProcess;

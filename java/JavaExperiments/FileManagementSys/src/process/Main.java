@@ -1,6 +1,6 @@
 package process;
 
-import graphic.MyFrame;
+import graphic.frames.MyFrame;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
