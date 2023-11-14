@@ -8,7 +8,7 @@ public class UserException extends Throwable {
     public static final UserException PASS_UNSUPPORTED_ERR = new UserException("Unsupported Password!");
     public static final UserException ROLE_WRONG_ERR = new UserException("Wrong Role!");
 
-    protected UserException(String exceptionMsg) {
+    public UserException(String exceptionMsg) {
         super();
         this.exceptionMsg = exceptionMsg;
     }

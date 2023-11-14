@@ -1,6 +1,7 @@
 package graphic;
 
 import consts.GUI_CONST;
+import consts.Role;
 import process.DataProcess;
 import process.UserException;
 import users.Administrator;
@@ -141,11 +142,7 @@ class ModifyUserPanel extends CreateUserPanel {
     public void confirmTriggered() {
 
         try {
-            String name = textName.getText().trim();
-            if (DataProcess.checkUserRole(name).equalsIgnoreCase("Administrator")) {
-                labelMsg.setText("Admin Cannot Be Modified!");
-                labelMsg.setVisible(true);
-            } else {
+            {
                 boolean nameNotTyped = textName.getText().equals(HINT_NAME);
                 boolean passNotTyped = textPass.getText().equals(HINT_PASS);
                 boolean roleNotTyped = textRole.getText().equals(HINT_ROLE);

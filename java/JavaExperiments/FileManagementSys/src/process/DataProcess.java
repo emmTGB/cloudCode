@@ -1,5 +1,6 @@
 package process;
 
+import consts.Role;
 import users.Administrator;
 import users.Browser;
 import users.Operator;
@@ -93,7 +94,7 @@ public class DataProcess {
         return userTable.containsKey(name);
     }
 
-    public static String checkUserRole(String name) throws UserException {
+    public static Role checkUserRole(String name) throws UserException {
         if (userTable.containsKey(name))
             return userTable.get(name).getUserRole();
         throw UserException.USER_NOT_EXIST_ERR;
@@ -107,19 +108,17 @@ public class DataProcess {
         return userTable.size();
     }
 
-    public static void updateUser(String name, String passWord, String role) throws UserException {
+    public static void updateUser(String name, String passWord, Role role) throws UserException {
         User user;
         if (User.passWordNOK(passWord)) {
             throw UserException.PASS_UNSUPPORTED_ERR;
         } else if (userTable.containsKey(name)) {
-            if (role.equalsIgnoreCase("Administrator"))
-                user = new Administrator(name, passWord);
-            else if (role.equalsIgnoreCase("Operator"))
-                user = new Operator(name, passWord);
-            else if (role.equalsIgnoreCase("Browser"))
-                user = new Browser(name, passWord);
-            else
-                throw UserException.ROLE_WRONG_ERR;
+            switch (role) {
+                case ADMINISTRATOR -> user = new Administrator(name, passWord);
+                case OPERATOR -> user = new Operator(name, passWord);
+                case BROWSER -> user = new Browser(name, passWord);
+                default -> throw UserException.PASS_UNSUPPORTED_ERR;
+            }
             userTable.put(name, user);
             updateUserFile();
         } else {
@@ -127,21 +126,18 @@ public class DataProcess {
         }
     }
 
-    public static void insertUser(String name, String passWord, String role) throws UserException {
+    public static void insertUser(String name, String passWord, Role role) throws UserException {
         User user;
         if (userTable.containsKey(name)) {
             throw UserException.USER_ALREADY_EXISTS_ERR;
         } else if (User.passWordNOK(passWord)) {
             throw UserException.PASS_UNSUPPORTED_ERR;
         } else {
-            if (role.equalsIgnoreCase("Administrator"))
-                user = new Administrator(name, passWord);
-            else if (role.equalsIgnoreCase("Operator"))
-                user = new Operator(name, passWord);
-            else if (role.equalsIgnoreCase("Browser"))
-                user = new Browser(name, passWord);
-            else {
-                throw UserException.ROLE_WRONG_ERR;
+            switch (role) {
+                case ADMINISTRATOR -> user = new Administrator(name, passWord);
+                case OPERATOR -> user = new Operator(name, passWord);
+                case BROWSER -> user = new Browser(name, passWord);
+                default -> throw UserException.ROLE_WRONG_ERR;
             }
             userTable.put(name, user);
             updateUserFile();

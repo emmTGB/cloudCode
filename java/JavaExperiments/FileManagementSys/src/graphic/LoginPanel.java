@@ -146,12 +146,11 @@ public class LoginPanel extends MyPanel {
             }
             User user = DataProcess.fetchUser(textName.getText().trim(), new String(textPass.getPassword()));
             textPass.setText("");
-            String role = user.getUserRole();
 
-            switch (role) {
-                case "Administrator" -> myFrame.replacePanel(new AdminMenuPanel(user));
-                case "Operator" -> myFrame.replacePanel(new OperatorMenuPanel(user));
-                case "Browser" -> myFrame.replacePanel(new BrowserMenuPanel(user));
+            switch (user.getUserRole()) {
+                case ADMINISTRATOR -> myFrame.replacePanel(new AdminMenuPanel(user));
+                case OPERATOR -> myFrame.replacePanel(new OperatorMenuPanel(user));
+                case BROWSER -> myFrame.replacePanel(new BrowserMenuPanel(user));
             }
         } catch (UserException e) {
             // TODO

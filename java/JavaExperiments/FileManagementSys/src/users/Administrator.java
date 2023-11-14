@@ -1,5 +1,6 @@
 package users;
 
+import consts.Role;
 import process.*;
 
 import java.util.Enumeration;
@@ -18,29 +19,27 @@ public class Administrator extends User {
 
     public Administrator(String userName, String passWord) {
         super(userName, passWord);
-        userRole = "Administrator";
+        userRole = Role.ADMINISTRATOR;
     }
 
-    @Override
-    public void showMenu() {
-        String tip = "Select your operation:";
+    public void modifyUser(String name, String pass, String roleStr) throws UserException {
+        if (!DataProcess.inTable(name)) throw UserException.USER_NOT_EXIST_ERR;
+        if (name.equals(this.userName)) throw new UserException("You Can Not Modify Yourself!");
+        if (passWordNOK(pass)) throw UserException.PASS_UNSUPPORTED_ERR;
+        Role role = Role.getRole(roleStr);
+        if (DataProcess.checkUserRole(name).equals(Role.ADMINISTRATOR))
+            throw new UserException("You Can Not Modify An Admin!");
 
-        System.out.println("Welcome! Your User type: Administrator");
+        DataProcess.updateUser(name, pass, role);
+    }
 
-        System.out.println(
-                """
-                        ******Administrator menu******
-                        \t1.Modify User
-                        \t2.Delete User
-                        \t3.Add User
-                        \t4.List User
-                        \t5.Download File
-                        \t6.File List
-                        \t7.Change Your Password
-                        \t0.Exit
-                        *******************************"""
-        );
-        System.out.println(tip);
+    public void deleteUser(String name) throws UserException {
+        if (!DataProcess.inTable(name)) throw UserException.USER_NOT_EXIST_ERR;
+        if (name.equals(this.userName)) throw new UserException("You Can Not Delete Yourself!");
+        if (DataProcess.checkUserRole(name).equals(Role.ADMINISTRATOR))
+            throw new UserException("You Can Not Delete An Admin");
+
+        DataProcess.deleteUser(name);
     }
 
     public void listUser() {
