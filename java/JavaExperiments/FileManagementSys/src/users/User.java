@@ -7,6 +7,7 @@ public abstract class User {
     protected final String userName;
     protected String passWord;
     protected Role userRole;
+    protected final int id = 0;  // TODO: 0015 11/15
 
     protected User(String userName, String passWord) {
         this.userName = userName;

@@ -13,7 +13,7 @@ public interface GUI_CONST {
 
     int WIDTH = 800, HEIGHT = 600;
     int FONT_SIZE = WIDTH / 40;
-    int TF_LENGTH = 24;
+    int TF_LENGTH = 20;
 
     Font FONT = new Font("sans-serif", Font.PLAIN, FONT_SIZE);
     Font FONT_ITALIC = new Font("sans-serif", Font.ITALIC, FONT_SIZE);

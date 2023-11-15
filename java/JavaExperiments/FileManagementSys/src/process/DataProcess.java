@@ -1,5 +1,6 @@
 package process;
 
+import connection.ConnectionSQL;
 import consts.FILE_CONST;
 import consts.Role;
 import users.Administrator;
@@ -8,12 +9,17 @@ import users.Operator;
 import users.User;
 
 import java.io.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Scanner;
+import java.util.Vector;
 
 public class DataProcess {
     private static Hashtable<String, User> userTable;
+    private static final ConnectionSQL connectionUsers = new ConnectionSQL("users");
 
     public static final Scanner scanner = new Scanner(System.in);
 
@@ -78,34 +84,86 @@ public class DataProcess {
 
     }
 
+    //ok
     public static User fetchUser(String name, String passWord) throws UserException {
-        if (userTable.containsKey(name)) {
-            User temp = userTable.get(name);
-            if (temp.verifyPassWord(passWord)) {
-                return temp;
-            } else {
-                throw UserException.PASS_WRONG_ERR;
+        if (inTable(name)) {
+            ResultSet resultSet = connectionUsers.fetchRow(new String[]{"name", "password", "role"}, 0, "'" + name + "'");
+
+            try {
+                if (!resultSet.next())
+                    throw UserException.ROLE_UNEXPECTED_ERR;// TODO: 0015 11/15
+                String _pass = resultSet.getString("password");
+                String _role = resultSet.getString("role");
+                if (_pass.equals(passWord)) {
+                    switch (Role.getRole(_role)) {
+                        case ADMINISTRATOR -> {
+                            return new Administrator(name, passWord);
+                        }
+                        case OPERATOR -> {
+                            return new Operator(name, passWord);
+                        }
+                        case BROWSER -> {
+                            return new Browser(name, passWord);
+                        }
+                        default -> throw UserException.ROLE_UNEXPECTED_ERR;
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
         throw UserException.USER_NOT_EXIST_ERR;
     }
 
+    //ok
     public static boolean inTable(String name) {
-        return userTable.containsKey(name);
+        return connectionUsers.inTable("name", "'" + name + "'");
     }
 
+    //ok
     public static Role checkUserRole(String name) throws UserException {
-        if (userTable.containsKey(name))
-            return userTable.get(name).getUserRole();
+        if (inTable(name)) {
+            ResultSet resultSet = connectionUsers.fetchRow(new String[]{"name", "role"}, 0, "'" + name + "'");
+            try {
+                String _role = resultSet.getString("role");
+                return Role.getRole(_role);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
         throw UserException.USER_NOT_EXIST_ERR;
     }
 
+    //ok
     public static Enumeration<User> getAllUsers() {
-        return userTable.elements();
+        ResultSet resultSet = connectionUsers.listRows(new String[]{
+                "name", "password", "role"
+        });
+        Vector<User> v = new Vector<>();
+        while (true) {
+            try {
+                if (!resultSet.next()) break;
+                User temp;
+                String _name = resultSet.getString("name");
+                String _pass = resultSet.getString("password");
+                String _role = resultSet.getString("role");
+                switch (Role.getRole(_role)) {
+                    case ADMINISTRATOR -> temp = new Administrator(_name, _pass);
+                    case OPERATOR -> temp = new Operator(_name, _pass);
+                    case BROWSER -> temp = new Browser(_name, _pass);
+                    default -> throw UserException.ROLE_UNEXPECTED_ERR;
+                }
+                v.add(temp);
+            } catch (SQLException | UserException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return v.elements();
     }
 
+    //ok
     public static int getLengthOfUserLists() {
-        return userTable.size();
+        return connectionUsers.getRow();
     }
 
     public static void updateUser(String name, String passWord, Role role) throws UserException {
@@ -126,22 +184,21 @@ public class DataProcess {
         }
     }
 
+    //ok
     public static void insertUser(String name, String passWord, Role role) throws UserException {
-        User user;
-        if (userTable.containsKey(name)) {
+        if (inTable(name)) {
             throw UserException.USER_ALREADY_EXISTS_ERR;
         } else if (User.passWordNOK(passWord)) {
             throw UserException.PASS_UNSUPPORTED_ERR;
-        } else {
-            switch (role) {
-                case ADMINISTRATOR -> user = new Administrator(name, passWord);
-                case OPERATOR -> user = new Operator(name, passWord);
-                case BROWSER -> user = new Browser(name, passWord);
-                default -> throw UserException.ROLE_UNEXPECTED_ERR;
-            }
-            userTable.put(name, user);
-            updateUserFile();
         }
+        connectionUsers.insertRow(
+                new String[]{
+                        "name", "password", "role"
+                },
+                new String[]{
+                        "'" + name + "'", "'" + passWord + "'", "'" + role.toString() + "'",
+                }
+        );
     }
 
     public static void deleteUser(String name) throws UserException {
