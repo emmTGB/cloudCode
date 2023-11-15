@@ -10,6 +10,7 @@ import users.User;
 
 import java.io.*;
 import java.sql.Connection;
+import java.sql.DataTruncation;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Enumeration;
@@ -135,10 +136,16 @@ public class DataProcess {
     }
 
     //ok
-    public static Enumeration<User> getAllUsers() {
-        ResultSet resultSet = connectionUsers.listRows(new String[]{
-                "name", "password", "role"
-        });
+    public static Enumeration<User> getAllUsers() throws DataException {
+        ResultSet resultSet;
+        try {
+            resultSet = connectionUsers.listRows(new String[]{
+                    "name", "password", "role"
+            });
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new DataException("Can Not Fetch All Users!");
+        }
         Vector<User> v = new Vector<>();
         while (true) {
             try {
@@ -162,8 +169,13 @@ public class DataProcess {
     }
 
     //ok
-    public static int getLengthOfUserLists() {
-        return connectionUsers.getRow();
+    public static int getLengthOfUserLists() throws DataException {
+        try {
+            return connectionUsers.getRow();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new DataException("Can Not Get Length Of User List!");
+        }
     }
 
     public static void updateUser(String name, String passWord, Role role) throws UserException {
