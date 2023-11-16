@@ -42,6 +42,14 @@ public class MainButtonPanel extends MyPanel {
         setPreferredSize(new Dimension(getWidth(), 48));
     }
 
+    public JButton getConfirmButton() {
+        return confirm;
+    }
+
+    public JButton getCancelButton() {
+        return cancel;
+    }
+
     @Override
     public void confirmTriggered() {
 

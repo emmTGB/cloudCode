@@ -16,12 +16,10 @@ public class ConnectionSQL {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("success");
         user = "root";
         password = "123456";
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/forJavaExperiment?useUnicode=true&characterEncoding=gbk", user, password);
-            System.out.println("success");
             statement = connection.createStatement();
         } catch (SQLException e) {
             throw new RuntimeException(e);

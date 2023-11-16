@@ -78,6 +78,7 @@ public class ChangePassPanel extends MyPanel {
                 }
             }
         });
+        checkShowPass.setFocusTraversalKeysEnabled(false);
 
         labelMsg = new JLabel();
         add(labelMsg);

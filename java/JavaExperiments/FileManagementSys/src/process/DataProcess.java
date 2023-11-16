@@ -127,7 +127,7 @@ public class DataProcess {
     }
 
     //ok
-    public static Role checkUserRole(String name) throws MyException, DataException {
+    public static Role checkUserRole(String name) throws UserException, DataException {
         if (inTable(name)) {
             try {
                 ResultSet resultSet = connectionUsers.fetchRow(new String[]{"name", "role"}, 0, "'" + name + "'");
@@ -186,7 +186,7 @@ public class DataProcess {
     }
 
     // TODO: 11/16/23  
-    public static void updateUser(String name, String passWord, Role role) throws MyException {
+    public static void updateUser(String name, String passWord, Role role) throws UserException {
         User user;
         if (User.passWordNOK(passWord)) {
             throw UserException.PASS_UNSUPPORTED_ERR;
@@ -205,7 +205,7 @@ public class DataProcess {
     }
 
     //ok
-    public static void insertUser(String name, String passWord, Role role) throws MyException, DataException {
+    public static void insertUser(String name, String passWord, Role role) throws UserException, DataException {
         if (inTable(name)) {
             throw UserException.USER_ALREADY_EXISTS_ERR;
         } else if (User.passWordNOK(passWord)) {
@@ -227,7 +227,7 @@ public class DataProcess {
     }
 
     // TODO: 11/16/23
-    public static void deleteUser(String name) throws MyException {
+    public static void deleteUser(String name) throws UserException {
         if (userTable.containsKey(name)) {
             userTable.remove(name);
             updateUserFile();

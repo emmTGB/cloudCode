@@ -11,6 +11,7 @@ import users.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -54,6 +55,13 @@ public class AdminMenuPanel extends MyPanel {
         springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, menuBox, 0, SpringLayout.HORIZONTAL_CENTER, this);
         springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, menuBox, 0, SpringLayout.VERTICAL_CENTER, this);
 
+        labelMsg = new JLabel();
+        labelMsg.setVisible(false);
+        labelMsg.setForeground(GUI_CONST.ERR_COLOR);
+        add(labelMsg);
+        springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, labelMsg, 0, SpringLayout.HORIZONTAL_CENTER, menuBox);
+        springLayout.putConstraint(SpringLayout.NORTH, labelMsg, 10, SpringLayout.SOUTH, menuBox);
+
         for (Component c : menuBox.getComponents()) {
             c.setBackground(GUI_CONST.BG_COLOR);
             c.setForeground(GUI_CONST.FONT_COLOR);
@@ -66,50 +74,16 @@ public class AdminMenuPanel extends MyPanel {
         }
     }
 
-    private void listUsers() {
+    private void listUsers() throws DataException, UserException {
         UserListFrame userListFrame = null;
-        try {
-            userListFrame = new UserListFrame(myFrame);
-        } catch (DataException | UserException e) {
-            throw new RuntimeException(e);// TODO: 11/15/23
-        }
+        userListFrame = new UserListFrame(myFrame);
         myFrame.setVisible(false);
         UserListFrame finalUserListFrame = userListFrame;
-        userListFrame.addWindowListener(new WindowListener() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-
-            }
-
+        userListFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 myFrame.setLocation(finalUserListFrame.getLocationOnScreen());
                 myFrame.setVisible(true);
-            }
-
-            @Override
-            public void windowClosed(WindowEvent e) {
-
-            }
-
-            @Override
-            public void windowIconified(WindowEvent e) {
-
-            }
-
-            @Override
-            public void windowDeiconified(WindowEvent e) {
-
-            }
-
-            @Override
-            public void windowActivated(WindowEvent e) {
-
-            }
-
-            @Override
-            public void windowDeactivated(WindowEvent e) {
-
             }
         });
     }
@@ -122,7 +96,13 @@ public class AdminMenuPanel extends MyPanel {
                     case 1 -> myFrame.replacePanel(new ModifyUserPanel(admin));
                     case 2 -> myFrame.replacePanel(new DeleteUserPanel(admin));
                     case 3 -> myFrame.replacePanel(new CreateUserPanel());
-                    case 4 -> listUsers();
+                    case 4 -> {
+                        try {
+                            listUsers();
+                        } catch (MyException e) {
+                            showMsg(e.getMessage());
+                        }
+                    }
                     case 7 -> myFrame.replacePanel(new ChangePassPanel(admin));
                     case 0 -> myFrame.rollBack();
                 }
