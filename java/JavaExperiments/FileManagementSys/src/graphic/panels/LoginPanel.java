@@ -64,7 +64,6 @@ public class LoginPanel extends MyPanel {
         springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, inputPane, 0, SpringLayout.HORIZONTAL_CENTER, this);
         springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, inputPane, 0, SpringLayout.VERTICAL_CENTER, this);
 
-
         checkShowPass.addItemListener(e -> {
             for (Component c : inputPane.getComponents()) {
                 if (c instanceof MyPasswordField myPasswordField) {
