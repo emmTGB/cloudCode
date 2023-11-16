@@ -1,7 +1,8 @@
 package users;
 
 import consts.Role;
-import process.UserException;
+import exceptions.MyException;
+import exceptions.UserException;
 
 public abstract class User {
     protected final String userName;
@@ -34,7 +35,7 @@ public abstract class User {
         return this.passWord.equals(passWord);
     }
 
-    public void resetPassWord(String passWord) throws UserException {
+    public void resetPassWord(String passWord) throws MyException {
         if (passWordNOK(passWord)) {
             throw UserException.PASS_UNSUPPORTED_ERR;
         }

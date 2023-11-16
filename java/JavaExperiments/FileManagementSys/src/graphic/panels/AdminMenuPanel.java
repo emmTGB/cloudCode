@@ -1,9 +1,11 @@
 package graphic.panels;
 
 import consts.GUI_CONST;
+import exceptions.UserException;
 import graphic.frames.UserListFrame;
 import graphic.utilities.MyTextField;
-import process.UserException;
+import exceptions.DataException;
+import exceptions.MyException;
 import users.Administrator;
 import users.User;
 
@@ -65,8 +67,14 @@ public class AdminMenuPanel extends MyPanel {
     }
 
     private void listUsers() {
-        UserListFrame userListFrame = new UserListFrame(myFrame);
+        UserListFrame userListFrame = null;
+        try {
+            userListFrame = new UserListFrame(myFrame);
+        } catch (DataException | UserException e) {
+            throw new RuntimeException(e);// TODO: 11/15/23
+        }
         myFrame.setVisible(false);
+        UserListFrame finalUserListFrame = userListFrame;
         userListFrame.addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(WindowEvent e) {
@@ -75,7 +83,7 @@ public class AdminMenuPanel extends MyPanel {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                myFrame.setLocation(userListFrame.getLocationOnScreen());
+                myFrame.setLocation(finalUserListFrame.getLocationOnScreen());
                 myFrame.setVisible(true);
             }
 
@@ -160,7 +168,7 @@ class ModifyUserPanel extends CreateUserPanel {
                 bounceUpMsg("Succeeded!");
                 myFrame.rollBack(); //todo
             }
-        } catch (UserException e) {
+        } catch (MyException e) {
             //todo
             showMsg(e.getMessage());
         }
@@ -247,7 +255,7 @@ class DeleteUserPanel extends MyPanel {
             labelMsg.setVisible(false);
             bounceUpMsg("Succeeded");
             myFrame.rollBack();
-        } catch (UserException e) {
+        } catch (MyException e) {
             showMsg(e.getMessage());
         }
     }

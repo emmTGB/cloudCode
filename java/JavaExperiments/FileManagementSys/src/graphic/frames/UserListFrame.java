@@ -1,6 +1,8 @@
 package graphic.frames;
 
 import consts.GUI_CONST;
+import exceptions.DataException;
+import exceptions.UserException;
 import process.DataProcess;
 import users.User;
 
@@ -11,15 +13,16 @@ import java.awt.*;
 import java.util.Enumeration;
 
 public class UserListFrame extends JFrame {
-    final Enumeration<User> listUsers = DataProcess.getAllUsers();
+    final Enumeration<User> listUsers;
     static final String[] columnNames = {"user name", "password", "role"};
     final String[][] contents = new String[DataProcess.getLengthOfUserLists()][3];
 
     final JTable tableUsers;
     final JScrollPane scrollPane;
 
-    public UserListFrame(JFrame fatherFrame) {
+    public UserListFrame(JFrame fatherFrame) throws DataException, UserException {
         super("User list");
+        listUsers = DataProcess.getAllUsers();
         Point loc = fatherFrame.getLocationOnScreen();
         setBounds(loc.x, loc.y, GUI_CONST.WIDTH, GUI_CONST.HEIGHT);
 

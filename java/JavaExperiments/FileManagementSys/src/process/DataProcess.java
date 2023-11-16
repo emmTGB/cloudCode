@@ -3,14 +3,13 @@ package process;
 import connection.ConnectionSQL;
 import consts.FILE_CONST;
 import consts.Role;
+import exceptions.*;
 import users.Administrator;
 import users.Browser;
 import users.Operator;
 import users.User;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DataTruncation;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Enumeration;
@@ -24,12 +23,12 @@ public class DataProcess {
 
     public static final Scanner scanner = new Scanner(System.in);
 
-    public static void init() throws IOException, DataException, UserException {
+    public static void init() throws IOException, DataException, MyException {
         userTable = new Hashtable<>();
         readUsers();
     }
 
-    private static void readUsers() throws IOException, DataException, UserException {
+    private static void readUsers() throws IOException, DataException, MyException {
         boolean flag;
         BufferedReader buff = null;
         do {
@@ -86,13 +85,12 @@ public class DataProcess {
     }
 
     //ok
-    public static User fetchUser(String name, String passWord) throws UserException {
+    public static User fetchUser(String name, String passWord) throws MyException, DataException {
         if (inTable(name)) {
-            ResultSet resultSet = connectionUsers.fetchRow(new String[]{"name", "password", "role"}, 0, "'" + name + "'");
-
             try {
+                ResultSet resultSet = connectionUsers.fetchRow(new String[]{"name", "password", "role"}, 0, "'" + name + "'");
                 if (!resultSet.next())
-                    throw UserException.ROLE_UNEXPECTED_ERR;// TODO: 0015 11/15
+                    throw UserException.ROLE_UNEXPECTED_ERR;
                 String _pass = resultSet.getString("password");
                 String _role = resultSet.getString("role");
                 if (_pass.equals(passWord)) {
@@ -108,35 +106,43 @@ public class DataProcess {
                         }
                         default -> throw UserException.ROLE_UNEXPECTED_ERR;
                     }
-                }
+                } else
+                    throw UserException.PASS_WRONG_ERR;
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                System.err.println(e.getMessage());
+                throw new DataException("Can Not Fetch User!");
             }
         }
         throw UserException.USER_NOT_EXIST_ERR;
     }
 
     //ok
-    public static boolean inTable(String name) {
-        return connectionUsers.inTable("name", "'" + name + "'");
+    public static boolean inTable(String name) throws DataException {
+        try {
+            return connectionUsers.inTable("name", "'" + name + "'");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new DataException("Can Not Determine The User Exists!");
+        }
     }
 
     //ok
-    public static Role checkUserRole(String name) throws UserException {
+    public static Role checkUserRole(String name) throws MyException, DataException {
         if (inTable(name)) {
-            ResultSet resultSet = connectionUsers.fetchRow(new String[]{"name", "role"}, 0, "'" + name + "'");
             try {
+                ResultSet resultSet = connectionUsers.fetchRow(new String[]{"name", "role"}, 0, "'" + name + "'");
                 String _role = resultSet.getString("role");
                 return Role.getRole(_role);
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                System.err.println(e.getMessage());
+                throw new DataException("Can Not Check User's Role!");
             }
         }
         throw UserException.USER_NOT_EXIST_ERR;
     }
 
     //ok
-    public static Enumeration<User> getAllUsers() throws DataException {
+    public static Enumeration<User> getAllUsers() throws DataException, UserException {
         ResultSet resultSet;
         try {
             resultSet = connectionUsers.listRows(new String[]{
@@ -161,8 +167,9 @@ public class DataProcess {
                     default -> throw UserException.ROLE_UNEXPECTED_ERR;
                 }
                 v.add(temp);
-            } catch (SQLException | UserException e) {
-                throw new RuntimeException(e);
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+                throw new DataException("Unexpected SQL Data!");
             }
         }
         return v.elements();
@@ -178,7 +185,8 @@ public class DataProcess {
         }
     }
 
-    public static void updateUser(String name, String passWord, Role role) throws UserException {
+    // TODO: 11/16/23  
+    public static void updateUser(String name, String passWord, Role role) throws MyException {
         User user;
         if (User.passWordNOK(passWord)) {
             throw UserException.PASS_UNSUPPORTED_ERR;
@@ -197,23 +205,29 @@ public class DataProcess {
     }
 
     //ok
-    public static void insertUser(String name, String passWord, Role role) throws UserException {
+    public static void insertUser(String name, String passWord, Role role) throws MyException, DataException {
         if (inTable(name)) {
             throw UserException.USER_ALREADY_EXISTS_ERR;
         } else if (User.passWordNOK(passWord)) {
             throw UserException.PASS_UNSUPPORTED_ERR;
         }
-        connectionUsers.insertRow(
-                new String[]{
-                        "name", "password", "role"
-                },
-                new String[]{
-                        "'" + name + "'", "'" + passWord + "'", "'" + role.toString() + "'",
-                }
-        );
+        try {
+            connectionUsers.insertRow(
+                    new String[]{
+                            "name", "password", "role"
+                    },
+                    new String[]{
+                            "'" + name + "'", "'" + passWord + "'", "'" + role.toString() + "'",
+                    }
+            );
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new DataException("Can Not Insert User!");
+        }
     }
 
-    public static void deleteUser(String name) throws UserException {
+    // TODO: 11/16/23
+    public static void deleteUser(String name) throws MyException {
         if (userTable.containsKey(name)) {
             userTable.remove(name);
             updateUserFile();

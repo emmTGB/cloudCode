@@ -3,7 +3,7 @@ package graphic.panels;
 import consts.GUI_CONST;
 import graphic.utilities.MyPasswordField;
 import graphic.utilities.MyTextField;
-import process.UserException;
+import exceptions.MyException;
 import users.Administrator;
 
 import javax.swing.*;
@@ -121,7 +121,7 @@ public class CreateUserPanel extends MyPanel {
             labelMsg.setVisible(false);
             bounceUpMsg("Succeeded!");
             myFrame.rollBack();  //todo
-        } catch (UserException e) {
+        } catch (MyException e) {
             //todo
             showMsg(e.getMessage());
         }

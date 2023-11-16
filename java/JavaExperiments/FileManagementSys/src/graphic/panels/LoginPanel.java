@@ -4,7 +4,7 @@ import consts.GUI_CONST;
 import graphic.utilities.MyPasswordField;
 import graphic.utilities.MyTextField;
 import process.DataProcess;
-import process.UserException;
+import exceptions.MyException;
 import users.User;
 
 import javax.swing.*;
@@ -118,7 +118,7 @@ public class LoginPanel extends MyPanel {
                 case BROWSER -> myFrame.replacePanel(new BrowserMenuPanel(user));
             }
             labelMsg.setVisible(false);
-        } catch (UserException e) {
+        } catch (MyException e) {
             // TODO
             showMsg(e.getMessage());
         }

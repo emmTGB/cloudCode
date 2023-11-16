@@ -27,8 +27,8 @@ public class MyFrame extends JFrame {
         currentPanel = new MainMenuPanel();
         add(currentPanel, BorderLayout.CENTER);
 
-        setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setVisible(true);
     }
 
     public void replacePanel(MyPanel newPanel) {

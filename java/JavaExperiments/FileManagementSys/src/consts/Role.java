@@ -1,6 +1,7 @@
 package consts;
 
-import process.UserException;
+import exceptions.MyException;
+import exceptions.UserException;
 
 public enum Role {
     ADMINISTRATOR("Administrator"),

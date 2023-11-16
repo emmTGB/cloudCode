@@ -2,7 +2,7 @@ package graphic.panels;
 
 import consts.GUI_CONST;
 import graphic.utilities.MyPasswordField;
-import process.UserException;
+import exceptions.MyException;
 import users.User;
 
 import javax.swing.*;
@@ -133,7 +133,7 @@ public class ChangePassPanel extends MyPanel {
             labelMsg.setVisible(false);
             bounceUpMsg("Succeeded!");
             myFrame.rollBack();
-        } catch (UserException e) {
+        } catch (MyException e) {
             //todo
             showMsg(e.getMessage());
         }
