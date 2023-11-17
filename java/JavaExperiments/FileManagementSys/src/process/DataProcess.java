@@ -3,7 +3,9 @@ package process;
 import connection.ConnectionSQL;
 import consts.FILE_CONST;
 import consts.Role;
-import exceptions.*;
+import exceptions.DataException;
+import exceptions.MyException;
+import exceptions.UserException;
 import users.Administrator;
 import users.Browser;
 import users.Operator;
@@ -23,12 +25,12 @@ public class DataProcess {
 
     public static final Scanner scanner = new Scanner(System.in);
 
-    public static void init() throws IOException, DataException, MyException {
+    public static void init() throws IOException, DataException, UserException {
         userTable = new Hashtable<>();
         readUsers();
     }
 
-    private static void readUsers() throws IOException, DataException, MyException {
+    private static void readUsers() throws IOException, DataException, UserException {
         boolean flag;
         BufferedReader buff = null;
         do {
@@ -85,7 +87,7 @@ public class DataProcess {
     }
 
     //ok
-    public static User fetchUser(String name, String passWord) throws MyException, DataException {
+    public static User fetchUser(String name, String passWord) throws DataException, UserException {
         if (inTable(name)) {
             try {
                 ResultSet resultSet = connectionUsers.fetchRow(new String[]{"name", "password", "role"}, 0, "'" + name + "'");

@@ -1,8 +1,8 @@
 package graphic.panels;
 
 import consts.GUI_CONST;
-import graphic.utilities.MyPasswordField;
 import exceptions.MyException;
+import graphic.utilities.MyPasswordField;
 import users.User;
 
 import javax.swing.*;
@@ -140,8 +140,4 @@ public class ChangePassPanel extends MyPanel {
         }
     }
 
-    @Override
-    public void cancelTriggered() {
-        myFrame.rollBack();
-    }
 }

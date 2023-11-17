@@ -1,90 +1,13 @@
-package graphic.frames;
+package graphic.utilities;
 
 import consts.GUI_CONST;
-import exceptions.DataException;
-import exceptions.UserException;
-import process.DataProcess;
-import users.User;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
-import javax.swing.table.JTableHeader;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.util.Enumeration;
-
-public class UserListFrame extends JFrame {
-    final Enumeration<User> listUsers;
-    static final String[] columnNames = {"user name", "password", "role"};
-    final String[][] contents = new String[DataProcess.getLengthOfUserLists()][3];
-
-    final JTable tableUsers;
-    final JScrollPane scrollPane;
-
-    public UserListFrame(JFrame fatherFrame) throws DataException, UserException {
-        super("User list");
-        listUsers = DataProcess.getAllUsers();
-        Point loc = fatherFrame.getLocationOnScreen();
-        setBounds(loc.x, loc.y, GUI_CONST.WIDTH, GUI_CONST.HEIGHT);
-
-        int i = 0;
-        while (listUsers.hasMoreElements()) {
-            User user = listUsers.nextElement();
-            contents[i][0] = user.getUserName();
-            contents[i][1] = user.getPassWord();
-            contents[i][2] = user.getUserRole().toString();
-            i++;
-        }
-
-        tableUsers = new JTable(contents, columnNames) {
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        tableUsers.setBackground(GUI_CONST.BG_COLOR);
-        tableUsers.setForeground(GUI_CONST.FONT_COLOR);
-        tableUsers.setRowHeight(GUI_CONST.FONT_SIZE * 5 / 4);
-        tableUsers.setFont(GUI_CONST.FONT);
-
-        JTableHeader tableHeaderUsers = tableUsers.getTableHeader();
-        tableHeaderUsers.setBackground(GUI_CONST.ALT_BG_COLOR);
-        tableHeaderUsers.setForeground(GUI_CONST.FONT_COLOR);
-        tableUsers.setRowHeight(GUI_CONST.FONT_SIZE * 5 / 4);
-        tableHeaderUsers.setFont(GUI_CONST.FONT);
-        tableHeaderUsers.setBorder(GUI_CONST.TF_BORDER);
-
-        tableUsers.getColumn(columnNames[0]).setMinWidth(100);
-        tableUsers.getColumn(columnNames[1]).setMinWidth(100);
-        tableUsers.getColumn(columnNames[2]).setMinWidth(100);
-
-        scrollPane = new JScrollPane(tableUsers);
-        scrollPane.setBackground(GUI_CONST.BG_COLOR);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-
-        scrollPane.getVerticalScrollBar().setUI(new DIYScrollBar());
-
-        add(scrollPane);
-        for (Component c : scrollPane.getComponents()) {
-            c.setBackground(GUI_CONST.BG_COLOR);
-        }
-
-        JFrame thisFrame = this;
-        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Cancel");
-        getRootPane().getActionMap().put("Cancel", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispatchEvent(new WindowEvent(thisFrame, WindowEvent.WINDOW_CLOSING));
-            }
-        });
-
-        setVisible(true);
-    }
-}
 
 //自定义滚动条UI
-class DIYScrollBar extends BasicScrollBarUI {
+public class DIYScrollBar extends BasicScrollBarUI {
 
     @Override
     protected void configureScrollBarColors() {
@@ -149,7 +72,6 @@ class DIYScrollBar extends BasicScrollBarUI {
     }
 
     private Graphics2D getGraphics2D(Graphics2D g, Rectangle trackBounds) {
-        Graphics2D g2 = g;
 
         GradientPaint gp = null;
 
@@ -174,8 +96,8 @@ class DIYScrollBar extends BasicScrollBarUI {
         }
 
 
-        g2.setPaint(gp);
-        return g2;
+        g.setPaint(gp);
+        return g;
     }
 
 

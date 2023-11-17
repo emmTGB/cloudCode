@@ -11,28 +11,7 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) {
-        try {
-            DataProcess.init();
-        } catch (IOException e) {
-            System.err.println("Failed to initialize the program.");
-            return;
-        } catch (Throwable e) {
-            System.err.println(e.getMessage());
-            return;
-        }
-        MyFrame mainFrame = new MyFrame("FileManagementSys");
-        mainFrame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-                super.windowClosing(e);
-                try {
-                    DataProcess.writeUsers();
-                } catch (IOException ex) {
-                    //todo
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
+        new MyFrame("FileManagementSys");
 
         DataProcess.scanner.close();
     }

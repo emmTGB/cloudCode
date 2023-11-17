@@ -1,10 +1,10 @@
 package graphic.panels;
 
 import consts.GUI_CONST;
+import exceptions.MyException;
 import graphic.utilities.MyPasswordField;
 import graphic.utilities.MyTextField;
 import process.DataProcess;
-import exceptions.MyException;
 import users.User;
 
 import javax.swing.*;
@@ -125,8 +125,4 @@ public class LoginPanel extends MyPanel {
 
     }
 
-    @Override
-    public void cancelTriggered() {
-        myFrame.rollBack();
-    }
 }

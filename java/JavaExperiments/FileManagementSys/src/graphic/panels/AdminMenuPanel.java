@@ -1,19 +1,13 @@
 package graphic.panels;
 
 import consts.GUI_CONST;
-import exceptions.UserException;
-import graphic.frames.UserListFrame;
-import graphic.utilities.MyTextField;
-import exceptions.DataException;
 import exceptions.MyException;
+import graphic.utilities.MyTextField;
 import users.Administrator;
 import users.User;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 public class AdminMenuPanel extends MyPanel {
     final Administrator admin;
@@ -43,12 +37,12 @@ public class AdminMenuPanel extends MyPanel {
 
         menuBox = Box.createVerticalBox();
         ButtonGroup buttonGroup = new ButtonGroup();
-        for (int i = 0; i < menuRadioButtons.length; i++) {
+        for (int i = 1; i < menuRadioButtons.length; i++) {
             menuRadioButtons[i] = new JRadioButton(optionList[i]);
             menuBox.add(menuRadioButtons[i]);
             buttonGroup.add(menuRadioButtons[i]);
         }
-        menuBox.add(menuRadioButtons[0]);
+        menuRadioButtons[1].setSelected(true);
         menuBox.setAutoscrolls(true);
         add(menuBox);
 
@@ -74,46 +68,21 @@ public class AdminMenuPanel extends MyPanel {
         }
     }
 
-    private void listUsers() throws DataException, UserException {
-        UserListFrame userListFrame = null;
-        userListFrame = new UserListFrame(myFrame);
-        myFrame.setVisible(false);
-        UserListFrame finalUserListFrame = userListFrame;
-        userListFrame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                myFrame.setLocation(finalUserListFrame.getLocationOnScreen());
-                myFrame.setVisible(true);
-            }
-        });
-    }
-
     @Override
     public void confirmTriggered() {
-        for (int i = 0; i < menuRadioButtons.length; i++) {
+        for (int i = 1; i < menuRadioButtons.length; i++) {
             if (menuRadioButtons[i].isSelected()) {
                 switch (i) {
                     case 1 -> myFrame.replacePanel(new ModifyUserPanel(admin));
                     case 2 -> myFrame.replacePanel(new DeleteUserPanel(admin));
                     case 3 -> myFrame.replacePanel(new CreateUserPanel());
-                    case 4 -> {
-                        try {
-                            listUsers();
-                        } catch (MyException e) {
-                            showMsg(e.getMessage());
-                        }
-                    }
+                    case 4 -> myFrame.replacePanel(new ListUserPanel());
                     case 7 -> myFrame.replacePanel(new ChangePassPanel(admin));
-                    case 0 -> myFrame.rollBack();
                 }
             }
         }
     }
 
-    @Override
-    public void cancelTriggered() {
-        myFrame.rollBack();
-    }
 }
 
 class ModifyUserPanel extends CreateUserPanel {
@@ -143,7 +112,7 @@ class ModifyUserPanel extends CreateUserPanel {
                     );
                     return;
                 }
-                admin.modifyUser(textName.getText().trim(), textPass.getText().trim(), textRole.getText().trim());
+                admin.modifyUser(textName.getText().trim(), new String(textPass.getPassword()).trim(), textRole.getText().trim());
                 labelMsg.setVisible(false);
                 bounceUpMsg("Succeeded!");
                 myFrame.rollBack(); //todo
@@ -238,10 +207,5 @@ class DeleteUserPanel extends MyPanel {
         } catch (MyException e) {
             showMsg(e.getMessage());
         }
-    }
-
-    @Override
-    public void cancelTriggered() {
-        myFrame.rollBack();
     }
 }

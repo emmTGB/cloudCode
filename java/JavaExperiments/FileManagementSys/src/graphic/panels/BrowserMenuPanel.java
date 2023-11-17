@@ -72,8 +72,4 @@ public class BrowserMenuPanel extends MyPanel {
         }
     }
 
-    @Override
-    public void cancelTriggered() {
-        myFrame.rollBack();
-    }
 }

@@ -1,6 +1,5 @@
 package consts;
 
-import exceptions.MyException;
 import exceptions.UserException;
 
 public enum Role {

@@ -22,5 +22,11 @@ public abstract class MyPanel extends JPanel implements MessageSlot {
 
     protected MyPanel() {
         setBackground(GUI_CONST.BG_COLOR);
+        prePanel = null;
+    }
+
+    @Override
+    public void cancelTriggered() {
+        myFrame.rollBack();
     }
 }

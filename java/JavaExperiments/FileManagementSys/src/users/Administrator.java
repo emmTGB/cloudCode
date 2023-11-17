@@ -4,7 +4,6 @@ import consts.Role;
 import exceptions.DataException;
 import exceptions.UserException;
 import process.DataProcess;
-import exceptions.MyException;
 
 public class Administrator extends User {
     public static final String[] OPTION_LIST = {

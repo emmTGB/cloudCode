@@ -72,8 +72,4 @@ public class OperatorMenuPanel extends MyPanel {
         }
     }
 
-    @Override
-    public void cancelTriggered() {
-        myFrame.rollBack();
-    }
 }

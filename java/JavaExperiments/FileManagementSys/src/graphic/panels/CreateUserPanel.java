@@ -1,9 +1,9 @@
 package graphic.panels;
 
 import consts.GUI_CONST;
+import exceptions.MyException;
 import graphic.utilities.MyPasswordField;
 import graphic.utilities.MyTextField;
-import exceptions.MyException;
 import users.Administrator;
 
 import javax.swing.*;
@@ -120,15 +120,10 @@ public class CreateUserPanel extends MyPanel {
             Administrator.addUser(textName.getText().trim(), new String(textPass.getPassword()).trim(), textRole.getText().trim());
             labelMsg.setVisible(false);
             bounceUpMsg("Succeeded!");
-            myFrame.rollBack();  //todo
         } catch (MyException e) {
             //todo
             showMsg(e.getMessage());
         }
     }
 
-    @Override
-    public void cancelTriggered() {
-        myFrame.rollBack();
-    }
 }

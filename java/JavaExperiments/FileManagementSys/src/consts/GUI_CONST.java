@@ -5,6 +5,8 @@ import javax.swing.border.Border;
 import java.awt.*;
 
 public interface GUI_CONST {
+    Color THEME_COLOR = new Color(0x3b87c5);
+    Color ALT_THEME_COLOR = new Color(0x3e5e86);
     Color BG_COLOR = new Color(0x262b33);
     Color ALT_BG_COLOR = new Color(0x424b59);
     Color ERR_COLOR = new Color(187, 29, 48);

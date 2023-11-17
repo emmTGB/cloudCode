@@ -1,6 +1,5 @@
 package connection;
 
-import javax.sound.midi.Soundbank;
 import java.sql.*;
 
 public class ConnectionSQL {
