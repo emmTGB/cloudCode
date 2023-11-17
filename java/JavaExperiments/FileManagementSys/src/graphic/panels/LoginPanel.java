@@ -109,7 +109,7 @@ public class LoginPanel extends MyPanel {
                 return;
             }
             User user = DataProcess.fetchUser(textName.getText().trim(), new String(textPass.getPassword()).trim());
-            textPass.setText("");
+            textPass.clear();
 
             switch (user.getUserRole()) {
                 case ADMINISTRATOR -> myFrame.replacePanel(new AdminMenuPanel(user));

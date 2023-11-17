@@ -46,9 +46,11 @@ public class CreateUserPanel extends MyPanel {
 
             GroupLayout.SequentialGroup hGroup = inputLayout.createSequentialGroup();
             hGroup.addGap(5);
-            hGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelName).addComponent(labelPass).addComponent(labelRole));
+            hGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelName).addComponent(labelPass)
+                    .addComponent(labelRole));
             hGroup.addGap(5);
-            hGroup.addGroup(inputLayout.createParallelGroup().addComponent(textName).addComponent(textPass).addComponent(textRole));
+            hGroup.addGroup(inputLayout.createParallelGroup().addComponent(textName).addComponent(textPass)
+                    .addComponent(textRole));
             hGroup.addGap(5);
             hGroup.addGroup(inputLayout.createParallelGroup().addComponent(checkShowPass));
             hGroup.addGap(5);
@@ -59,7 +61,8 @@ public class CreateUserPanel extends MyPanel {
             vGroup.addGap(10);
             vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelName).addComponent(textName));
             vGroup.addGap(10);
-            vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelPass).addComponent(textPass).addComponent(checkShowPass));
+            vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelPass).addComponent(textPass)
+                    .addComponent(checkShowPass));
             vGroup.addGap(10);
             vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelRole).addComponent(textRole));
             vGroup.addGap(10);
@@ -113,15 +116,15 @@ public class CreateUserPanel extends MyPanel {
                                 + (nameNotTyped && passNotTyped ? " and" : "")
                                 + (passNotTyped ? " password" : "")
                                 + ((nameNotTyped || passNotTyped) && roleNotTyped ? " and" : "")
-                                + (roleNotTyped ? " role" : "")
-                );
+                                + (roleNotTyped ? " role" : ""));
                 return;
             }
-            Administrator.addUser(textName.getText().trim(), new String(textPass.getPassword()).trim(), textRole.getText().trim());
+            Administrator.addUser(textName.getText().trim(), new String(textPass.getPassword()).trim(),
+                    textRole.getText().trim());
             labelMsg.setVisible(false);
             bounceUpMsg("Succeeded!");
         } catch (MyException e) {
-            //todo
+            // todo
             showMsg(e.getMessage());
         }
     }

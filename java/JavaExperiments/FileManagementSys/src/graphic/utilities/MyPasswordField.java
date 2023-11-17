@@ -42,6 +42,11 @@ public class MyPasswordField extends JPasswordField {
         isShowed = false;
     }
 
+    public void clear() {
+        this.setText(HINT);
+        setEchoChar('\0');
+    }
+
     public void toggleShowPass(boolean isShowed) {
         this.isShowed = isShowed;
         if (!new String(getPassword()).equals(HINT))
