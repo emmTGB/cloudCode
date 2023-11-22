@@ -4,8 +4,6 @@ import consts.GUI_CONST;
 import graphic.utilities.MyTabbedPaneUI;
 
 import javax.swing.*;
-import javax.swing.plaf.TabbedPaneUI;
-import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import java.awt.*;
 
 public class MainMenuPanel extends MyPanel {

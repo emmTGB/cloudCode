@@ -1,4 +1,4 @@
-package process;
+package client;
 
 import graphic.frames.MyFrame;
 

@@ -3,10 +3,7 @@ package graphic.utilities;
 
 import consts.GUI_CONST;
 
-import javax.swing.*;
-import javax.swing.plaf.UIResource;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
-import javax.swing.text.View;
 import java.awt.*;
 
 /**

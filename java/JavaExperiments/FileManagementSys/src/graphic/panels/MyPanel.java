@@ -1,8 +1,8 @@
 package graphic.panels;
 
 import consts.GUI_CONST;
-import graphic.MessageSlot;
 import graphic.frames.MyFrame;
+import graphic.utilities.MessageSlot;
 
 import javax.swing.*;
 

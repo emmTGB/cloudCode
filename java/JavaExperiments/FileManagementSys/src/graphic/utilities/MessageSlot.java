@@ -1,4 +1,4 @@
-package graphic;
+package graphic.utilities;
 
 public interface MessageSlot {
     void confirmTriggered();
