@@ -1,6 +1,5 @@
 package users;
 
-import consts.Role;
 import exceptions.MyException;
 import exceptions.UserException;
 

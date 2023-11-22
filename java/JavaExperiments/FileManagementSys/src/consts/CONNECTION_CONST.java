@@ -6,4 +6,5 @@ public interface CONNECTION_CONST {
     String SQL_PASS = "123456";
     String DATABASE = "forJavaExperiment";
     String USER_TABLE = "users";
+    String DOC_TABLE = "docs";
 }

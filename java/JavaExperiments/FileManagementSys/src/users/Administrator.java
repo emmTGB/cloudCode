@@ -1,6 +1,5 @@
 package users;
 
-import consts.Role;
 import exceptions.DataException;
 import exceptions.UserException;
 import process.UserProcess;

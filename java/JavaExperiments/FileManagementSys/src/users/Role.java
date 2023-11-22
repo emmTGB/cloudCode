@@ -1,4 +1,4 @@
-package consts;
+package users;
 
 import exceptions.UserException;
 

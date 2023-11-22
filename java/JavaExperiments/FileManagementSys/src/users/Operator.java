@@ -1,7 +1,5 @@
 package users;
 
-import consts.Role;
-
 public class Operator extends User {
     public static final String[] OPTION_LIST = {
             "Exit",

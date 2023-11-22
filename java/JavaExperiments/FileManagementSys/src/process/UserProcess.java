@@ -2,7 +2,7 @@ package process;
 
 import connection.ConnectionSQL;
 import consts.CONNECTION_CONST;
-import consts.Role;
+import users.Role;
 import exceptions.DataException;
 import exceptions.UserException;
 import users.Administrator;
