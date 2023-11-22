@@ -4,7 +4,7 @@ import consts.GUI_CONST;
 import exceptions.MyException;
 import graphic.utilities.MyPasswordField;
 import graphic.utilities.MyTextField;
-import process.DataProcess;
+import process.UserProcess;
 import users.User;
 
 import javax.swing.*;
@@ -108,7 +108,7 @@ public class LoginPanel extends MyPanel {
                 );
                 return;
             }
-            User user = DataProcess.fetchUser(textName.getText().trim(), new String(textPass.getPassword()).trim());
+            User user = UserProcess.fetchUser(textName.getText().trim(), new String(textPass.getPassword()).trim());
             textPass.clear();
 
             switch (user.getUserRole()) {

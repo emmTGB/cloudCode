@@ -1,5 +1,7 @@
 package connection;
 
+import consts.CONNECTION_CONST;
+
 import java.sql.*;
 
 public class ConnectionSQL {
@@ -15,10 +17,17 @@ public class ConnectionSQL {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        user = "byeol";
-        password = "123456";
+        user = CONNECTION_CONST.SQL_USER;
+        password = CONNECTION_CONST.SQL_PASS;
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://10.78.125.241:3306/forJavaExperiment?useUnicode=true&characterEncoding=gbk", user, password);
+            connection = DriverManager.getConnection(
+                    "jdbc:mysql://" +
+                            CONNECTION_CONST.SQL_HOST +
+                            ":3306/" +
+                            CONNECTION_CONST.DATABASE +
+                            "?useUnicode=true&characterEncoding=gbk",
+                    user, password
+            );
             statement = connection.createStatement();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -46,13 +55,13 @@ public class ConnectionSQL {
         return statement.executeQuery(sql).next();
     }
 
-    public ResultSet fetchRow(String[] fields, int ind, String content) throws SQLException {
+    public ResultSet fetchRow(String[] fields, String target, int ind) throws SQLException {
         StringBuilder sql = new StringBuilder("select ");
         for (String f : fields) {
             sql.append(f).append(",");
         }
         sql.deleteCharAt(sql.length() - 1).append(" from ").append(tableName).append(" where ");
-        sql.append(fields[ind]).append("=").append(content).append(";");
+        sql.append(fields[ind]).append("=").append(target).append(";");
         return statement.executeQuery(sql.toString());
     }
 
@@ -77,6 +86,21 @@ public class ConnectionSQL {
             sql.append(c).append(",");
         }
         sql.deleteCharAt(sql.length() - 1).append(");");
+        statement.execute(sql.toString());
+    }
+
+    public void deleteRow(String field, String target) throws SQLException {
+        statement.execute("delete from " + tableName + " where " + field + " = " + target + ";");
+    }
+
+    public void updateRow(String[] fields, String[] contents, String target, int ind) throws SQLException {
+        StringBuilder sql = new StringBuilder("update ");
+        sql.append(tableName).append(" set ");
+        for (int i = 0; i < fields.length; i++) {
+            sql.append(fields[i]).append(" = ").append(contents[i]).append(",");
+        }
+        sql.deleteCharAt(sql.length() - 1).append(" where ")
+                .append(fields[ind]).append(" = ").append(target).append(";");
         statement.execute(sql.toString());
     }
 }

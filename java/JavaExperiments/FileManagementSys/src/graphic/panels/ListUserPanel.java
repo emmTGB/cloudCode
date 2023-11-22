@@ -4,7 +4,7 @@ import consts.GUI_CONST;
 import exceptions.DataException;
 import exceptions.UserException;
 import graphic.utilities.DIYScrollBar;
-import process.DataProcess;
+import process.UserProcess;
 import users.User;
 
 import javax.swing.*;
@@ -22,8 +22,8 @@ public class ListUserPanel extends MyPanel {
     public ListUserPanel() {
         super();
         try {
-            contents = new String[DataProcess.getLengthOfUserLists()][3];
-            listUsers = DataProcess.getAllUsers();
+            contents = new String[UserProcess.getLengthOfUserLists()][3];
+            listUsers = UserProcess.getAllUsers();
         } catch (DataException | UserException e) {
             bounceUpMsg(e.getMessage());
             throw new RuntimeException(e);

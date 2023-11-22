@@ -1,86 +1,74 @@
 package process;
 
 import connection.ConnectionSQL;
-import consts.FILE_CONST;
+import consts.CONNECTION_CONST;
 import consts.Role;
 import exceptions.DataException;
-import exceptions.MyException;
 import exceptions.UserException;
 import users.Administrator;
 import users.Browser;
 import users.Operator;
 import users.User;
 
-import java.io.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Scanner;
 import java.util.Vector;
 
-public class DataProcess {
-    private static Hashtable<String, User> userTable;
-    private static final ConnectionSQL connectionUsers = new ConnectionSQL("users");
+public class UserProcess {
+    private static final ConnectionSQL connectionUsers = new ConnectionSQL(CONNECTION_CONST.USER_TABLE);
 
-    public static final Scanner scanner = new Scanner(System.in);
-
-    public static void init() throws IOException, DataException, UserException {
-        userTable = new Hashtable<>();
-        readUsers();
-    }
-
-    private static void readUsers() throws IOException, DataException, UserException {
-        boolean flag;
-        BufferedReader buff = null;
-        do {
-            try {
-                flag = false;
-                buff = new BufferedReader(new FileReader(FILE_CONST.FILE_PATH));
-            } catch (FileNotFoundException nf) {
-                File file = new File(FILE_CONST.FILE_PATH);
-                file.createNewFile();
-                flag = true;
-            }
-        } while (flag);
-
-        String name, passWord, roleStr;
-        while ((name = buff.readLine()) != null) {
-            passWord = buff.readLine();
-            roleStr = buff.readLine();
-
-            if (passWord == null || roleStr == null) {
-                buff.close();
-                throw DataException.FILE_CONTENT_ERR;
-            }
-
-            User user;
-            switch (Role.getRole(roleStr)) {
-                case ADMINISTRATOR -> user = new Administrator(name, passWord);
-                case OPERATOR -> user = new Operator(name, passWord);
-                case BROWSER -> user = new Browser(name, passWord);
-                default -> throw UserException.ROLE_UNEXPECTED_ERR;
-            }
-            userTable.put(name, user);
-        }
-        buff.close();
-    }
-
-    public static void writeUsers() throws IOException {
-        File userTxt = new File(FILE_CONST.FILE_PATH);
-        if (userTxt.exists())
-            userTxt.delete();
-        userTxt.createNewFile();
-        BufferedWriter buff = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(userTxt)));
-
-        Enumeration<User> e = userTable.elements();
-        User user;
-        while (e.hasMoreElements()) {
-            user = e.nextElement();
-            buff.write(user.toString());
-        }
-        buff.close();
-    }
+//    private static void readUsers() throws IOException, DataException, UserException {
+//        boolean flag;
+//        BufferedReader buff = null;
+//        do {
+//            try {
+//                flag = false;
+//                buff = new BufferedReader(new FileReader(FILE_CONST.FILE_PATH));
+//            } catch (FileNotFoundException nf) {
+//                File file = new File(FILE_CONST.FILE_PATH);
+//                file.createNewFile();
+//                flag = true;
+//            }
+//        } while (flag);
+//
+//        String name, passWord, roleStr;
+//        while ((name = buff.readLine()) != null) {
+//            passWord = buff.readLine();
+//            roleStr = buff.readLine();
+//
+//            if (passWord == null || roleStr == null) {
+//                buff.close();
+//                throw DataException.FILE_CONTENT_ERR;
+//            }
+//
+//            User user;
+//            switch (Role.getRole(roleStr)) {
+//                case ADMINISTRATOR -> user = new Administrator(name, passWord);
+//                case OPERATOR -> user = new Operator(name, passWord);
+//                case BROWSER -> user = new Browser(name, passWord);
+//                default -> throw UserException.ROLE_UNEXPECTED_ERR;
+//            }
+//            userTable.put(name, user);
+//        }
+//        buff.close();
+//    }
+//
+//    public static void writeUsers() throws IOException {
+//        File userTxt = new File(FILE_CONST.FILE_PATH);
+//        if (userTxt.exists())
+//            userTxt.delete();
+//        userTxt.createNewFile();
+//        BufferedWriter buff = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(userTxt)));
+//
+//        Enumeration<User> e = userTable.elements();
+//        User user;
+//        while (e.hasMoreElements()) {
+//            user = e.nextElement();
+//            buff.write(user.toString());
+//        }
+//        buff.close();
+//    }
 
     public static void updateUserFile() {
 
@@ -90,7 +78,7 @@ public class DataProcess {
     public static User fetchUser(String name, String passWord) throws DataException, UserException {
         if (inTable(name)) {
             try {
-                ResultSet resultSet = connectionUsers.fetchRow(new String[]{"name", "password", "role"}, 0, "'" + name + "'");
+                ResultSet resultSet = connectionUsers.fetchRow(new String[]{"name", "password", "role"}, "'" + name + "'", 0);
                 if (!resultSet.next())
                     throw UserException.ROLE_UNEXPECTED_ERR;
                 String _pass = resultSet.getString("password");
@@ -132,9 +120,11 @@ public class DataProcess {
     public static Role checkUserRole(String name) throws UserException, DataException {
         if (inTable(name)) {
             try {
-                ResultSet resultSet = connectionUsers.fetchRow(new String[]{"name", "role"}, 0, "'" + name + "'");
-                String _role = resultSet.getString("role");
-                return Role.getRole(_role);
+                ResultSet resultSet = connectionUsers.fetchRow(new String[]{"name", "role"}, "'" + name + "'", 0);
+                if (resultSet.next()) {
+                    String _role = resultSet.getString("role");
+                    return Role.getRole(_role);
+                }
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
                 throw new DataException("Can Not Check User's Role!");
@@ -187,22 +177,27 @@ public class DataProcess {
         }
     }
 
-    // TODO: 11/16/23  
-    public static void updateUser(String name, String passWord, Role role) throws UserException {
-        User user;
+    public static void updateUser(String name, String passWord, Role role) throws UserException, DataException {
         if (User.passWordNOK(passWord)) {
             throw UserException.PASS_UNSUPPORTED_ERR;
-        } else if (userTable.containsKey(name)) {
-            switch (role) {
-                case ADMINISTRATOR -> user = new Administrator(name, passWord);
-                case OPERATOR -> user = new Operator(name, passWord);
-                case BROWSER -> user = new Browser(name, passWord);
-                default -> throw UserException.PASS_UNSUPPORTED_ERR;
-            }
-            userTable.put(name, user);
-            updateUserFile();
-        } else {
+        }
+        if (!inTable(name)) {
             throw UserException.USER_NOT_EXIST_ERR;
+        }
+        try {
+            connectionUsers.updateRow(
+                    new String[]{
+                            "name", "password", "role"
+                    },
+                    new String[]{
+                            "'" + name + "'", "'" + passWord + "'", "'" + role.toString() + "'",
+                    },
+                    "'" + name + "'",
+                    0
+            );
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new DataException("Can Not Update User!");
         }
     }
 
@@ -210,7 +205,8 @@ public class DataProcess {
     public static void insertUser(String name, String passWord, Role role) throws UserException, DataException {
         if (inTable(name)) {
             throw UserException.USER_ALREADY_EXISTS_ERR;
-        } else if (User.passWordNOK(passWord)) {
+        }
+        if (User.passWordNOK(passWord)) {
             throw UserException.PASS_UNSUPPORTED_ERR;
         }
         try {
@@ -228,13 +224,12 @@ public class DataProcess {
         }
     }
 
-    // TODO: 11/16/23
-    public static void deleteUser(String name) throws UserException {
-        if (userTable.containsKey(name)) {
-            userTable.remove(name);
-            updateUserFile();
-        } else {
-            throw UserException.USER_NOT_EXIST_ERR;
+    public static void deleteUser(String name) throws UserException, DataException {
+        try {
+            connectionUsers.deleteRow("name", "'" + name + "'");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new DataException("Can Not Delete User!");
         }
     }
 }
