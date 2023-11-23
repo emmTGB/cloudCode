@@ -1,0 +1,225 @@
+Index: src/graphic/panels/LoginPanel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package graphic.panels;\r\n\r\nimport consts.GUI_CONST;\r\nimport graphic.utilities.MyPasswordField;\r\nimport graphic.utilities.MyTextField;\r\nimport process.DataProcess;\r\nimport exceptions.MyException;\r\nimport users.User;\r\n\r\nimport javax.swing.*;\r\nimport java.awt.*;\r\nimport java.awt.event.ItemEvent;\r\n\r\npublic class LoginPanel extends MyPanel {\r\n    final SpringLayout springLayout = new SpringLayout();\r\n    final JLabel labelName;\r\n    final JLabel labelPass;\r\n    final MyTextField textName;\r\n    final MyPasswordField textPass;\r\n    final JCheckBox checkShowPass;\r\n    static final String HINT_NAME = \"type user name\";\r\n    static final String HINT_PASS = \"type user pass\";\r\n\r\n    public LoginPanel() {\r\n        super();\r\n        setLayout(springLayout);\r\n        setPreferredSize(new Dimension(GUI_CONST.WIDTH, GUI_CONST.HEIGHT));\r\n\r\n        labelName = new JLabel(\"User name:\");\r\n        labelPass = new JLabel(\"Password:\");\r\n\r\n        textName = new MyTextField(HINT_NAME);\r\n        textPass = new MyPasswordField(HINT_PASS);\r\n\r\n        checkShowPass = new JCheckBox(\"Show Password\");\r\n\r\n        JPanel inputPane = new JPanel();\r\n        {\r\n            GroupLayout inputLayout = new GroupLayout(inputPane);\r\n            inputPane.setLayout(inputLayout);\r\n            inputPane.setBackground(GUI_CONST.BG_COLOR);\r\n\r\n            GroupLayout.SequentialGroup hGroup = inputLayout.createSequentialGroup();\r\n            hGroup.addGap(5);\r\n            hGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelName).addComponent(labelPass));\r\n            hGroup.addGap(5);\r\n            hGroup.addGroup(inputLayout.createParallelGroup().addComponent(textName).addComponent(textPass));\r\n            hGroup.addGap(5);\r\n            hGroup.addGroup(inputLayout.createParallelGroup().addComponent(checkShowPass));\r\n            hGroup.addGap(5);\r\n\r\n            inputLayout.setHorizontalGroup(hGroup);\r\n\r\n            GroupLayout.SequentialGroup vGroup = inputLayout.createSequentialGroup();\r\n            vGroup.addGap(10);\r\n            vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelName).addComponent(textName));\r\n            vGroup.addGap(10);\r\n            vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelPass).addComponent(textPass).addComponent(checkShowPass));\r\n            vGroup.addGap(10);\r\n\r\n            inputLayout.setVerticalGroup(vGroup);\r\n        }\r\n        add(inputPane);\r\n        springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, inputPane, 0, SpringLayout.HORIZONTAL_CENTER, this);\r\n        springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, inputPane, 0, SpringLayout.VERTICAL_CENTER, this);\r\n\r\n\r\n        checkShowPass.addItemListener(e -> {\r\n            for (Component c : inputPane.getComponents()) {\r\n                if (c instanceof MyPasswordField myPasswordField) {\r\n                    myPasswordField.toggleShowPass(e.getStateChange() == ItemEvent.SELECTED);\r\n                }\r\n            }\r\n        });\r\n\r\n        labelMsg = new JLabel();\r\n        add(labelMsg);\r\n        springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, labelMsg, 0, SpringLayout.HORIZONTAL_CENTER, this);\r\n        springLayout.putConstraint(SpringLayout.NORTH, labelMsg, 10, SpringLayout.SOUTH, inputPane);\r\n        labelMsg.setVisible(false);\r\n        labelMsg.setForeground(GUI_CONST.ERR_COLOR);\r\n\r\n        for (Component c : inputPane.getComponents()) {\r\n            c.setBackground(GUI_CONST.BG_COLOR);\r\n            c.setForeground(GUI_CONST.FONT_COLOR);\r\n            c.setFont(GUI_CONST.FONT);\r\n            if (c instanceof JTextField tf) {\r\n                tf.setForeground(GUI_CONST.ALT_FONT_COLOR);\r\n                tf.setFont(GUI_CONST.FONT_ITALIC);\r\n                tf.setBorder(GUI_CONST.TF_BORDER);\r\n            }\r\n            if (c instanceof JCheckBox cb) {\r\n                cb.setFont(GUI_CONST.FONT_SMALL);\r\n            }\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void confirmTriggered() {\r\n        try {\r\n            boolean nameNotTyped = textName.getText().equals(HINT_NAME) || textName.getText().isEmpty();\r\n            boolean passNotTyped = (new String(textPass.getPassword()).equals(HINT_PASS)) || textPass.getPassword().length == 0;\r\n            if (nameNotTyped || passNotTyped) {\r\n                showMsg(\r\n                        \"Please input your\"\r\n                                + (nameNotTyped ? \" user name\" : \"\")\r\n                                + (nameNotTyped && passNotTyped ? \" and\" : \"\")\r\n                                + (passNotTyped ? \" password\" : \"\")\r\n                );\r\n                return;\r\n            }\r\n            User user = DataProcess.fetchUser(textName.getText().trim(), new String(textPass.getPassword()).trim());\r\n            textPass.setText(\"\");\r\n\r\n            switch (user.getUserRole()) {\r\n                case ADMINISTRATOR -> myFrame.replacePanel(new AdminMenuPanel(user));\r\n                case OPERATOR -> myFrame.replacePanel(new OperatorMenuPanel(user));\r\n                case BROWSER -> myFrame.replacePanel(new BrowserMenuPanel(user));\r\n            }\r\n            labelMsg.setVisible(false);\r\n        } catch (MyException e) {\r\n            // TODO\r\n            showMsg(e.getMessage());\r\n        }\r\n\r\n\r\n    }\r\n\r\n    @Override\r\n    public void cancelTriggered() {\r\n        myFrame.rollBack();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/graphic/panels/LoginPanel.java b/src/graphic/panels/LoginPanel.java
+--- a/src/graphic/panels/LoginPanel.java	(revision 52c7e11be404772b2118fad56f12d9189993d1a1)
++++ b/src/graphic/panels/LoginPanel.java	(date 1700147670008)
+@@ -24,7 +24,7 @@
+     public LoginPanel() {
+         super();
+         setLayout(springLayout);
+-        setPreferredSize(new Dimension(GUI_CONST.WIDTH, GUI_CONST.HEIGHT));
++//        setPreferredSize(new Dimension(GUI_CONST.WIDTH, GUI_CONST.HEIGHT));
+ 
+         labelName = new JLabel("User name:");
+         labelPass = new JLabel("Password:");
+@@ -64,7 +64,6 @@
+         springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, inputPane, 0, SpringLayout.HORIZONTAL_CENTER, this);
+         springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, inputPane, 0, SpringLayout.VERTICAL_CENTER, this);
+ 
+-
+         checkShowPass.addItemListener(e -> {
+             for (Component c : inputPane.getComponents()) {
+                 if (c instanceof MyPasswordField myPasswordField) {
+Index: src/graphic/panels/MainMenuPanel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package graphic.panels;\r\n\r\nimport consts.GUI_CONST;\r\n\r\nimport javax.swing.*;\r\nimport java.awt.*;\r\n\r\npublic class MainMenuPanel extends MyPanel {\r\n    final SpringLayout springLayout = new SpringLayout();\r\n    final JRadioButton login = new JRadioButton(\"Login\", true);\r\n    final JRadioButton signUp = new JRadioButton(\"Sign up\");\r\n    final JRadioButton exit = new JRadioButton(\"exit\");\r\n    final ButtonGroup mainMenuGroup = new ButtonGroup();\r\n\r\n    public MainMenuPanel() {\r\n        super();\r\n\r\n        setLayout(springLayout);\r\n        mainMenuGroup.add(login);\r\n        mainMenuGroup.add(signUp);\r\n        mainMenuGroup.add(exit);\r\n\r\n        Box menuBox = Box.createVerticalBox();\r\n        menuBox.add(login);\r\n        menuBox.add(signUp);\r\n        menuBox.add(exit);\r\n        add(menuBox);\r\n\r\n        for (Component c : menuBox.getComponents()) {\r\n            c.setBackground(GUI_CONST.BG_COLOR);\r\n            c.setForeground(GUI_CONST.FONT_COLOR);\r\n            c.setFont(GUI_CONST.FONT);\r\n        }\r\n\r\n        springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, menuBox, 0, SpringLayout.HORIZONTAL_CENTER, this);\r\n        springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, menuBox, 0, SpringLayout.VERTICAL_CENTER, this);\r\n    }\r\n\r\n    @Override\r\n    public void confirmTriggered() {\r\n        if (login.isSelected()) {\r\n            myFrame.replacePanel(new LoginPanel());\r\n        } else if (signUp.isSelected()) {\r\n            myFrame.replacePanel(new CreateUserPanel());\r\n        } else if (exit.isSelected()) {\r\n            myFrame.dispose();\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void cancelTriggered() {\r\n        myFrame.dispose();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/graphic/panels/MainMenuPanel.java b/src/graphic/panels/MainMenuPanel.java
+--- a/src/graphic/panels/MainMenuPanel.java	(revision 52c7e11be404772b2118fad56f12d9189993d1a1)
++++ b/src/graphic/panels/MainMenuPanel.java	(date 1700147747459)
+@@ -6,49 +6,29 @@
+ import java.awt.*;
+ 
+ public class MainMenuPanel extends MyPanel {
+-    final SpringLayout springLayout = new SpringLayout();
+-    final JRadioButton login = new JRadioButton("Login", true);
+-    final JRadioButton signUp = new JRadioButton("Sign up");
+-    final JRadioButton exit = new JRadioButton("exit");
+-    final ButtonGroup mainMenuGroup = new ButtonGroup();
++    final JTabbedPane tabbedPane;
++    LoginPanel loginPanel;
++    CreateUserPanel createUserPanel;
+ 
+     public MainMenuPanel() {
+         super();
+-
+-        setLayout(springLayout);
+-        mainMenuGroup.add(login);
+-        mainMenuGroup.add(signUp);
+-        mainMenuGroup.add(exit);
++        tabbedPane = new JTabbedPane();
++        loginPanel = new LoginPanel();
++        createUserPanel = new CreateUserPanel();
+ 
+-        Box menuBox = Box.createVerticalBox();
+-        menuBox.add(login);
+-        menuBox.add(signUp);
+-        menuBox.add(exit);
+-        add(menuBox);
+-
+-        for (Component c : menuBox.getComponents()) {
+-            c.setBackground(GUI_CONST.BG_COLOR);
+-            c.setForeground(GUI_CONST.FONT_COLOR);
+-            c.setFont(GUI_CONST.FONT);
+-        }
+-
+-        springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, menuBox, 0, SpringLayout.HORIZONTAL_CENTER, this);
+-        springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, menuBox, 0, SpringLayout.VERTICAL_CENTER, this);
++        tabbedPane.setPreferredSize(new Dimension(GUI_CONST.WIDTH, GUI_CONST.HEIGHT));
++        tabbedPane.add(loginPanel);
++        tabbedPane.add(createUserPanel);
++        add(tabbedPane);
+     }
+ 
+     @Override
+     public void confirmTriggered() {
+-        if (login.isSelected()) {
+-            myFrame.replacePanel(new LoginPanel());
+-        } else if (signUp.isSelected()) {
+-            myFrame.replacePanel(new CreateUserPanel());
+-        } else if (exit.isSelected()) {
+-            myFrame.dispose();
+-        }
++        ((MyPanel) (tabbedPane.getComponentAt(tabbedPane.getSelectedIndex()))).confirmTriggered();
+     }
+ 
+     @Override
+     public void cancelTriggered() {
+-        myFrame.dispose();
++        myFrame.rollBack();
+     }
+ }
+Index: src/graphic/panels/CreateUserPanel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package graphic.panels;\r\n\r\nimport consts.GUI_CONST;\r\nimport graphic.utilities.MyPasswordField;\r\nimport graphic.utilities.MyTextField;\r\nimport exceptions.MyException;\r\nimport users.Administrator;\r\n\r\nimport javax.swing.*;\r\nimport java.awt.*;\r\nimport java.awt.event.ItemEvent;\r\n\r\npublic class CreateUserPanel extends MyPanel {\r\n    final SpringLayout springLayout = new SpringLayout();\r\n    final JLabel labelName;\r\n    final JLabel labelPass;\r\n    final JLabel labelRole;\r\n    final MyTextField textName;\r\n    final MyPasswordField textPass;\r\n    final MyTextField textRole;\r\n    final JCheckBox checkShowPass;\r\n    static final String HINT_NAME = \"type user name\";\r\n    static final String HINT_PASS = \"type user pass\";\r\n    static final String HINT_ROLE = \"type user Role\";\r\n\r\n    public CreateUserPanel() {\r\n        super();\r\n        setLayout(springLayout);\r\n        setPreferredSize(new Dimension(GUI_CONST.WIDTH, GUI_CONST.HEIGHT));\r\n\r\n        labelName = new JLabel(\"User name:\");\r\n        labelPass = new JLabel(\"Password:\");\r\n        labelRole = new JLabel(\"Role:\");\r\n\r\n        textName = new MyTextField(HINT_NAME);\r\n        textPass = new MyPasswordField(HINT_PASS);\r\n        textRole = new MyTextField(HINT_ROLE);\r\n\r\n        checkShowPass = new JCheckBox(\"Show Password\");\r\n\r\n        JPanel inputPane = new JPanel();\r\n        {\r\n            GroupLayout inputLayout = new GroupLayout(inputPane);\r\n            inputPane.setLayout(inputLayout);\r\n            inputPane.setBackground(GUI_CONST.BG_COLOR);\r\n\r\n            GroupLayout.SequentialGroup hGroup = inputLayout.createSequentialGroup();\r\n            hGroup.addGap(5);\r\n            hGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelName).addComponent(labelPass).addComponent(labelRole));\r\n            hGroup.addGap(5);\r\n            hGroup.addGroup(inputLayout.createParallelGroup().addComponent(textName).addComponent(textPass).addComponent(textRole));\r\n            hGroup.addGap(5);\r\n            hGroup.addGroup(inputLayout.createParallelGroup().addComponent(checkShowPass));\r\n            hGroup.addGap(5);\r\n\r\n            inputLayout.setHorizontalGroup(hGroup);\r\n\r\n            GroupLayout.SequentialGroup vGroup = inputLayout.createSequentialGroup();\r\n            vGroup.addGap(10);\r\n            vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelName).addComponent(textName));\r\n            vGroup.addGap(10);\r\n            vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelPass).addComponent(textPass).addComponent(checkShowPass));\r\n            vGroup.addGap(10);\r\n            vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelRole).addComponent(textRole));\r\n            vGroup.addGap(10);\r\n\r\n            inputLayout.setVerticalGroup(vGroup);\r\n        }\r\n        add(inputPane);\r\n        springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, inputPane, 0, SpringLayout.HORIZONTAL_CENTER, this);\r\n        springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, inputPane, 0, SpringLayout.VERTICAL_CENTER, this);\r\n\r\n        checkShowPass.addItemListener(e -> {\r\n            for (Component c : inputPane.getComponents()) {\r\n                if (c instanceof MyPasswordField myPasswordField) {\r\n                    myPasswordField.toggleShowPass(e.getStateChange() == ItemEvent.SELECTED);\r\n                }\r\n            }\r\n        });\r\n\r\n        labelMsg = new JLabel();\r\n        add(labelMsg);\r\n        springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, labelMsg, 0, SpringLayout.HORIZONTAL_CENTER, this);\r\n        springLayout.putConstraint(SpringLayout.NORTH, labelMsg, 10, SpringLayout.SOUTH, inputPane);\r\n        labelMsg.setVisible(false);\r\n        labelMsg.setForeground(GUI_CONST.ERR_COLOR);\r\n\r\n        for (Component c : inputPane.getComponents()) {\r\n            c.setBackground(GUI_CONST.BG_COLOR);\r\n            c.setForeground(GUI_CONST.FONT_COLOR);\r\n            c.setFont(GUI_CONST.FONT);\r\n            if (c instanceof JTextField tf) {\r\n                tf.setForeground(GUI_CONST.ALT_FONT_COLOR);\r\n                tf.setFont(GUI_CONST.FONT_ITALIC);\r\n                tf.setBorder(GUI_CONST.TF_BORDER);\r\n            }\r\n            if (c instanceof JCheckBox cb) {\r\n                cb.setFont(GUI_CONST.FONT_SMALL);\r\n            }\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void confirmTriggered() {\r\n        try {\r\n            boolean nameNotTyped = textName.notTyped();\r\n            boolean passNotTyped = textPass.notTyped();\r\n            boolean roleNotTyped = textRole.notTyped();\r\n            if (nameNotTyped || passNotTyped || roleNotTyped) {\r\n                showMsg(\r\n                        \"Please input your\"\r\n                                + (nameNotTyped ? \" user name\" : \"\")\r\n                                + (nameNotTyped && passNotTyped ? \" and\" : \"\")\r\n                                + (passNotTyped ? \" password\" : \"\")\r\n                                + ((nameNotTyped || passNotTyped) && roleNotTyped ? \" and\" : \"\")\r\n                                + (roleNotTyped ? \" role\" : \"\")\r\n                );\r\n                return;\r\n            }\r\n            Administrator.addUser(textName.getText().trim(), new String(textPass.getPassword()).trim(), textRole.getText().trim());\r\n            labelMsg.setVisible(false);\r\n            bounceUpMsg(\"Succeeded!\");\r\n            myFrame.rollBack();  //todo\r\n        } catch (MyException e) {\r\n            //todo\r\n            showMsg(e.getMessage());\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void cancelTriggered() {\r\n        myFrame.rollBack();\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/graphic/panels/CreateUserPanel.java b/src/graphic/panels/CreateUserPanel.java
+--- a/src/graphic/panels/CreateUserPanel.java	(revision 52c7e11be404772b2118fad56f12d9189993d1a1)
++++ b/src/graphic/panels/CreateUserPanel.java	(date 1700147670020)
+@@ -26,7 +26,7 @@
+     public CreateUserPanel() {
+         super();
+         setLayout(springLayout);
+-        setPreferredSize(new Dimension(GUI_CONST.WIDTH, GUI_CONST.HEIGHT));
++//        setPreferredSize(new Dimension(GUI_CONST.WIDTH, GUI_CONST.HEIGHT));
+ 
+         labelName = new JLabel("User name:");
+         labelPass = new JLabel("Password:");
+Index: src/graphic/frames/MyFrame.java
+===================================================================
+diff --git a/src/graphic/frames/MyFrame.java b/src/graphic/frames/MyFrame.java
+deleted file mode 100644
+--- a/src/graphic/frames/MyFrame.java	(revision 52c7e11be404772b2118fad56f12d9189993d1a1)
++++ /dev/null	(revision 52c7e11be404772b2118fad56f12d9189993d1a1)
+@@ -1,63 +0,0 @@
+-package graphic.frames;
+-
+-import consts.GUI_CONST;
+-import graphic.panels.MainButtonPanel;
+-import graphic.panels.MainMenuPanel;
+-import graphic.panels.MyPanel;
+-
+-import javax.swing.*;
+-import java.awt.*;
+-import java.awt.event.ActionEvent;
+-import java.awt.event.KeyEvent;
+-
+-public class MyFrame extends JFrame {
+-    final JPanel root = new JPanel();
+-    final MainButtonPanel mainButtonPanel = new MainButtonPanel();
+-    public MyPanel currentPanel;
+-
+-    public MyFrame(String title) {
+-        super(title);
+-        MyPanel.myFrame = this;
+-        BorderLayout panelLayout = new BorderLayout();
+-        setLayout(panelLayout);
+-        setBounds(0, 0, GUI_CONST.WIDTH, GUI_CONST.HEIGHT);
+-        setLocationRelativeTo(null);
+-
+-        root.setBackground(GUI_CONST.BG_COLOR);
+-        add(root);
+-        add(mainButtonPanel, BorderLayout.SOUTH);
+-        currentPanel = new MainMenuPanel();
+-        add(currentPanel, BorderLayout.CENTER);
+-
+-        getRootPane().setDefaultButton(mainButtonPanel.getConfirmButton());
+-        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Cancel");
+-        getRootPane().getActionMap().put("Cancel", new AbstractAction() {
+-            @Override
+-            public void actionPerformed(ActionEvent e) {
+-                mainButtonPanel.getCancelButton().doClick();
+-            }
+-        });
+-
+-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+-        setVisible(true);
+-    }
+-
+-    public void replacePanel(MyPanel newPanel) {
+-        remove(currentPanel);
+-        newPanel.prePanel = currentPanel;
+-        currentPanel = newPanel;
+-        add(currentPanel);
+-        SwingUtilities.updateComponentTreeUI(this);  // 更新窗口，似乎优于repaint
+-    }
+-
+-    public void rollBack() {
+-        if (currentPanel.prePanel == null) dispose();
+-        else {
+-            remove(currentPanel);
+-            currentPanel = currentPanel.prePanel;
+-            add(currentPanel);
+-            SwingUtilities.updateComponentTreeUI(this);
+-        }
+-    }
+-
+-}
+Index: src/process/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package process;\r\n\r\nimport graphic.frames.MyFrame;\r\n\r\nimport java.awt.event.WindowAdapter;\r\nimport java.awt.event.WindowEvent;\r\nimport java.io.IOException;\r\n\r\n// 按两次 Shift 打开“随处搜索”对话框并输入 `show whitespaces`，\r\n// 然后按 Enter 键。现在，您可以在代码中看到空格字符。\r\npublic class Main {\r\n\r\n    public static void main(String[] args) {\r\n        try {\r\n            DataProcess.init();\r\n        } catch (IOException e) {\r\n            System.err.println(\"Failed to initialize the program.\");\r\n            return;\r\n        } catch (Throwable e) {\r\n            System.err.println(e.getMessage());\r\n            return;\r\n        }\r\n        MyFrame mainFrame = new MyFrame(\"FileManagementSys\");\r\n        mainFrame.addWindowListener(new WindowAdapter() {\r\n            @Override\r\n            public void windowClosed(WindowEvent e) {\r\n                super.windowClosing(e);\r\n                try {\r\n                    DataProcess.writeUsers();\r\n                } catch (IOException ex) {\r\n                    //todo\r\n                    throw new RuntimeException(ex);\r\n                }\r\n            }\r\n        });\r\n\r\n        DataProcess.scanner.close();\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/process/Main.java b/src/process/Main.java
+--- a/src/process/Main.java	(revision 52c7e11be404772b2118fad56f12d9189993d1a1)
++++ b/src/process/Main.java	(date 1700146867936)
+@@ -1,6 +1,6 @@
+ package process;
+ 
+-import graphic.frames.MyFrame;
++import graphic.MyFrame;
+ 
+ import java.awt.event.WindowAdapter;
+ import java.awt.event.WindowEvent;
+Index: src/graphic/panels/MyPanel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package graphic.panels;\r\n\r\nimport consts.GUI_CONST;\r\nimport graphic.MessageSlot;\r\nimport graphic.frames.MyFrame;\r\n\r\nimport javax.swing.*;\r\n\r\npublic abstract class MyPanel extends JPanel implements MessageSlot {\r\n    public static MyFrame myFrame;\r\n    public MyPanel prePanel;\r\n    protected JLabel labelMsg;\r\n\r\n    protected void showMsg(String msg) {\r\n        labelMsg.setText(msg);\r\n        labelMsg.setVisible(true);\r\n    }\r\n\r\n    protected void bounceUpMsg(String msg) {\r\n        JOptionPane.showMessageDialog(myFrame, msg);\r\n    }\r\n\r\n    protected MyPanel() {\r\n        setBackground(GUI_CONST.BG_COLOR);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/graphic/panels/MyPanel.java b/src/graphic/panels/MyPanel.java
+--- a/src/graphic/panels/MyPanel.java	(revision 52c7e11be404772b2118fad56f12d9189993d1a1)
++++ b/src/graphic/panels/MyPanel.java	(date 1700146867958)
+@@ -2,7 +2,7 @@
+ 
+ import consts.GUI_CONST;
+ import graphic.MessageSlot;
+-import graphic.frames.MyFrame;
++import graphic.MyFrame;
+ 
+ import javax.swing.*;
+ 
