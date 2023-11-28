@@ -48,7 +48,12 @@ public class Main {
                         }
                         System.out.println("Please input password:");
                         pass = DataProcess.scanner.nextLine().trim();
-                        Objects.requireNonNull(DataProcess.fetchUser(name, pass)).showMenu();
+                        User _u = DataProcess.fetchUser(name, pass);
+                        if (_u == null) {
+                            System.err.println("wrong key");
+                            break;
+                        }
+                        _u.showMenu();
                         break;
                     case 2:
                         System.out.println("Signup");
@@ -96,6 +101,7 @@ public class Main {
         DataProcess.scanner.close();
         try {
             DataProcess.writeUsers();
+            DataProcess.writeDocs();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

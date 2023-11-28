@@ -13,11 +13,11 @@ public class Operator extends User {
     @Override
     public void showMenu() {
         String tip = new String("Select your operation:");
+        System.out.println("Welcome! Your User type: Operator");
 
         String pass;
         String input = null;
         do {
-            System.out.println("Welcome! Your User type: Operator");
             System.out.println(
                     """
                             ******Operator menu******
@@ -31,8 +31,8 @@ public class Operator extends User {
             System.out.println(tip);
 
             input = DataProcess.scanner.nextLine().trim();
-            if (!(input).matches("[1234]")) {
-                System.err.println(tip);
+            if (!(input).matches("[12345]")) {
+                System.err.println("wrong option!");
             } else {
                 int nextInt = Integer.parseInt(input);
                 switch (nextInt) {
@@ -85,7 +85,7 @@ public class Operator extends User {
         try {
             byte[] buffer = new byte[1024];
             BufferedInputStream infile = new BufferedInputStream(new FileInputStream((tempFile)));
-            BufferedOutputStream targetfile = new BufferedOutputStream(new FileOutputStream(DataProcess.DOC_FILE));
+            BufferedOutputStream targetfile = new BufferedOutputStream(new FileOutputStream("D:/" + filename));
             while (true) {
                 int byteRead = infile.read(buffer);
                 if (byteRead == -1)

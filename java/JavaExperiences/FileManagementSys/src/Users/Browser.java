@@ -11,11 +11,11 @@ public class Browser extends User {
     @Override
     public void showMenu() {
         String tip = new String("Select your operation:");
+        System.out.println("Welcome! Your User type: Browser");
 
         String pass;
         String input = null;
         do {
-            System.out.println("Welcome! Your User type: Browser");
             System.out.println(
                     """
                             *******Browser menu******

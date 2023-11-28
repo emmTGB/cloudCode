@@ -76,10 +76,9 @@ public abstract class User {
         BufferedOutputStream targetfile = null;
         try {
             infile = new BufferedInputStream(new FileInputStream(tempFile));
-            targetfile = new BufferedOutputStream(new FileOutputStream(severPath));
+            targetfile = new BufferedOutputStream(new FileOutputStream("D:/ads/" + doc.getFilename()));
             while (true) {
-                int byteRead = 0;
-                byteRead = infile.read(buffer);
+                int byteRead = infile.read(buffer);
                 if (byteRead == -1)
                     break;
                 targetfile.write(buffer, 0, byteRead);
