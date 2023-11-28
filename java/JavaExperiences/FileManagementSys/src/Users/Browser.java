@@ -35,11 +35,11 @@ public class Browser extends User {
                 switch (nextInt) {
                     case 1:
                         System.out.println("Download File");
-                        //TODO
+                        downloadFile();
                         break;
                     case 2:
                         System.out.println("File List");
-                        //TODO
+                        showFileList();
                         break;
                     case 3:
                         System.out.println("Change Your Password");

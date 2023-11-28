@@ -10,6 +10,15 @@ import java.util.Objects;
 // 然后按 Enter 键。现在，您可以在代码中看到空格字符。
 public class Main {
     public static void mainMenu() {
+        try {
+            DataProcess.init();
+        } catch (IOException e) {
+            System.err.println("wrong with init");
+            ;
+        } catch (DataException e) {
+            System.err.println(e.getMessage());
+        }
+
         menuLoop:
         do {
             System.out.println(
@@ -72,24 +81,23 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        MyFrame mainFrame = new MyFrame("FileManagementSys");
 
-//        try {
-//            DataProcess.init();
-//        } catch (IOException e) {
-//            System.err.println("Failed to initialize the program.");
-//            return;
-//        } catch (DataException e) {
-//            System.err.println(e.getMessage());
-//
-//            return;
-//        }
-//        mainMenu();
-//        DataProcess.scanner.close();
-//        try {
-//            DataProcess.writeUsers();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+        try {
+            DataProcess.init();
+        } catch (IOException e) {
+            System.err.println("Failed to initialize the program.");
+            return;
+        } catch (DataException e) {
+            System.err.println(e.getMessage());
+
+            return;
+        }
+        mainMenu();
+        DataProcess.scanner.close();
+        try {
+            DataProcess.writeUsers();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

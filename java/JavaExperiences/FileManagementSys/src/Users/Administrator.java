@@ -96,15 +96,15 @@ public class Administrator extends User {
                     case 4:
                         System.out.println("----List Users----");
                         listUser();
-                        System.out.println("----List Ending---");
+                        System.out.println("----List Ending----");
                         break;
                     case 5:
                         System.out.println("Download File");
-                        //TODO
+                        downloadFile();
                         break;
                     case 6:
                         System.out.println("File List");
-                        //TODO
+                        showFileList();
                         break;
                     case 7:
                         System.out.println("Change Your Password");
