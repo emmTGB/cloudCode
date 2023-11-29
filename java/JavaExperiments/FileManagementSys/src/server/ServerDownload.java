@@ -57,6 +57,8 @@ public class ServerDownload implements Runnable {
                 sequenceInputStream.close();
                 fileInputStream.close();
 
+                // TODO: 0029 11/29检查文件完整性
+
                 Thread.sleep(200);
                 socket.close();
             }

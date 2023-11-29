@@ -42,7 +42,7 @@ public class Client {
 
         String filePath = FILE_CONST.DOWNLOAD_DIR + fileName;
         File file = new File(filePath);
-        if(!file.exists()){
+        if (!file.exists()) {
             file.createNewFile();
         }
         // todo
@@ -55,5 +55,17 @@ public class Client {
             }
             inputStream.close();
         }
+    }
+
+    public static void upload(String fileID, String filePath) throws IOException {
+
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new RuntimeException();
+            // TODO: 0029 11/29
+        }
+
+        String fileName = file.getName();
+        sendMessage("Upload," + fileID + "," + fileName);//todo
     }
 }
