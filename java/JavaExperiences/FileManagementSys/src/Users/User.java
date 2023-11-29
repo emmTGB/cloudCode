@@ -51,7 +51,7 @@ public abstract class User {
         Doc doc;
         while (e.hasMoreElements()) {
             doc = e.nextElement();
-            System.out.println("ID:" + doc.getID() + "\t Creator:" + doc.getCreator() + "\t Time:" + doc.getTimestamp() + "\t Filename" + doc.getFilename());
+            System.out.println("ID:" + doc.getID() + "\t Creator:" + doc.getCreator() + "\t Time:" + doc.getTimestamp() + "\t Filename:" + doc.getFilename());
             System.out.println("Description: " + doc.getDescription());
         }
     }

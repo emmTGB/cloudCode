@@ -1,5 +1,6 @@
 package Process;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Doc {
@@ -26,9 +27,11 @@ public class Doc {
         return creator;
     }
 
-    public long getTimestamp() {
+    public String getTimestamp() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         Date date = new Date();
-        return date.getTime();
+        date.setTime(timestamp);
+        return format.format(date);
     }
 
     public String getDescription() {
