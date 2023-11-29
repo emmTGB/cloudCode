@@ -1,5 +1,7 @@
 package server;
 
+import consts.FILE_CONST;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.Enumeration;
@@ -26,7 +28,7 @@ public class ServerDownload implements Runnable {
                 {
                     String ID = message[0];
                     String name = message[1];
-                    path = "D:/" + ID + "_" + name;
+                    path = FILE_CONST.SERVER_DIR + ID + "_" + name;
                 }
                 File file = new File(path);
                 if (!file.exists()) {
