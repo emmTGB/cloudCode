@@ -16,7 +16,7 @@ public class DocProcess {
     public static Enumeration<Doc> getAllDocs() {
         ResultSet resultSet;
         try {
-            resultSet = connectionDoc.listRows(new String[]{
+            resultSet = connectionDoc.listRows(new String[] {
                     "ID", "filename", "creator", "createTime", "description"
             });
         } catch (SQLException e) {
@@ -26,17 +26,19 @@ public class DocProcess {
         Vector<Doc> v = new Vector<>();
         while (true) {
             try {
-                if (!resultSet.next()) break;
-                Doc tmp;
+                if (!resultSet.next())
+                    break;
                 String _ID = resultSet.getString("ID");
                 String _filename = resultSet.getString("name");
                 String _creator = resultSet.getString("creator");
                 Timestamp _createTime = resultSet.getTimestamp("createTime");
                 String _description = resultSet.getString("description");
+                v.add(new Doc(_ID, _creator, _createTime, _description, _filename));
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         }
+        return v.elements();
     }
 
 }
