@@ -10,6 +10,7 @@ public class MyTextField extends JTextField {
     final String HINT;
 
     public MyTextField(String HINT) {
+        super();
         this.HINT = HINT;
         setColumns(GUI_CONST.TF_LENGTH);
         setText(HINT);

@@ -11,6 +11,7 @@ public class MyPasswordField extends JPasswordField {
     protected boolean isShowed;
 
     public MyPasswordField(String HINT) {
+        super();
         this.HINT = HINT;
         setColumns(GUI_CONST.TF_LENGTH);
         setEchoChar('\0');

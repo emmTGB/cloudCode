@@ -77,6 +77,7 @@ public class AdminMenuPanel extends MyPanel {
                     case 2 -> myFrame.replacePanel(new DeleteUserPanel(admin));
                     case 3 -> myFrame.replacePanel(new CreateUserPanel());
                     case 4 -> myFrame.replacePanel(new ListUserPanel());
+                    case 6 -> myFrame.replacePanel(new ListDocPanel());
                     case 7 -> myFrame.replacePanel(new ChangePassPanel(admin));
                 }
             }

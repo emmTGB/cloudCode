@@ -1,11 +1,6 @@
 package client;
 
-import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 
 import consts.FILE_CONST;
@@ -46,14 +41,19 @@ public class Client {
         sendMessage("Download," + fileID + "," + fileName);
 
         String filePath = FILE_CONST.DOWNLOAD_DIR + fileName;
-        FileOutputStream fileOutputStream = new FileOutputStream(filePath); // todo
-
-        InputStream inputStream = server.getInputStream();
-        byte[] fileStream = new byte[65560];
-        int len = 0;
-        while ((len = inputStream.read(fileStream)) != -1) {
-            fileOutputStream.write(fileStream, 0, len);
+        File file = new File(filePath);
+        if(!file.exists()){
+            file.createNewFile();
         }
-
+        // todo
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+            InputStream inputStream = server.getInputStream();
+            byte[] fileStream = new byte[65560];
+            int len = 0;
+            while ((len = inputStream.read(fileStream)) != -1) {
+                fileOutputStream.write(fileStream, 0, len);
+            }
+            inputStream.close();
+        }
     }
 }

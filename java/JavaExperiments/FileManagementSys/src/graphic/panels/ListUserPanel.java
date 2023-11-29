@@ -22,10 +22,10 @@ public class ListUserPanel extends MyPanel {
     public ListUserPanel() {
         super();
         try {
-            contents = new String[UserProcess.getLengthOfUserLists()][3];
+            contents = new String[UserProcess.getLengthOfUserList()][columnNames.length];
             listUsers = UserProcess.getAllUsers();
         } catch (DataException | UserException e) {
-            bounceUpMsg(e.getMessage());
+            bounceUpMsg(e.getMessage()); // TODO: 0029 11/29
             throw new RuntimeException(e);
         }
 
@@ -39,6 +39,7 @@ public class ListUserPanel extends MyPanel {
         }
 
         tableUsers = new JTable(contents, columnNames) {
+            @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }

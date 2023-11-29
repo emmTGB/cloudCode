@@ -110,6 +110,9 @@ public class LoginPanel extends MyPanel {
             }
             User user = UserProcess.fetchUser(textName.getText().trim(), new String(textPass.getPassword()).trim());
             textPass.clear();
+            textPass.setForeground(GUI_CONST.ALT_FONT_COLOR);
+            textPass.setFont(GUI_CONST.FONT_ITALIC);
+            textPass.setBorder(GUI_CONST.TF_BORDER);
 
             switch (user.getUserRole()) {
                 case ADMINISTRATOR -> myFrame.replacePanel(new AdminMenuPanel(user));
@@ -121,8 +124,5 @@ public class LoginPanel extends MyPanel {
             // TODO
             showMsg(e.getMessage());
         }
-
-
     }
-
 }

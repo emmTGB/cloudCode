@@ -35,12 +35,12 @@ public class BrowserMenuPanel extends MyPanel {
 
         menuBox = Box.createVerticalBox();
         ButtonGroup buttonGroup = new ButtonGroup();
-        for (int i = 0; i < menuRadioButtons.length; i++) {
+        for (int i = 01; i < menuRadioButtons.length; i++) {
             menuRadioButtons[i] = new JRadioButton(optionList[i]);
             menuBox.add(menuRadioButtons[i]);
             buttonGroup.add(menuRadioButtons[i]);
         }
-        menuBox.add(menuRadioButtons[0]);
+        menuRadioButtons[1].setSelected(true);
         menuBox.setAutoscrolls(true);
         add(menuBox);
 
@@ -61,12 +61,11 @@ public class BrowserMenuPanel extends MyPanel {
 
     @Override
     public void confirmTriggered() {
-        for (int i = 0; i < menuRadioButtons.length; i++) {
+        for (int i = 1; i < menuRadioButtons.length; i++) {
             if (menuRadioButtons[i].isSelected()) {
                 switch (i) {
                     //todo
                     case 3 -> myFrame.replacePanel(new ChangePassPanel(browser));
-                    case 0 -> myFrame.rollBack();
                 }
             }
         }

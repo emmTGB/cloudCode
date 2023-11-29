@@ -168,7 +168,7 @@ public class UserProcess {
     }
 
     //ok
-    public static int getLengthOfUserLists() throws DataException {
+    public static int getLengthOfUserList() throws DataException {
         try {
             return connectionUsers.getRow();
         } catch (SQLException e) {
