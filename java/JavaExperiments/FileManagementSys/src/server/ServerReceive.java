@@ -1,16 +1,13 @@
 package server;
 
 import consts.FILE_CONST;
-import consts.GUI_CONST;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class ServerReceive implements Runnable {
     Socket socket;
-    InputStream is;
-    FileInputStream fileInputStream;
-    BufferedOutputStream bufferedOutputStream;
     String[] message;
     String path;
 
@@ -27,6 +24,7 @@ public class ServerReceive implements Runnable {
                     String ID = message[0];
                     String name = message[1];
                     path = FILE_CONST.SERVER_DIR + ID + "_" + name;
+                    int fileLength = Integer.parseInt(message[2]);
                 }
 
                 InputStream inputStream = socket.getInputStream();
@@ -36,20 +34,16 @@ public class ServerReceive implements Runnable {
                 while ((len = inputStream.read(fileStream)) != -1) {
                     fileOutputStream.write(fileStream, 0, len);
                 }
-
-                bufferedOutputStream.close();
-                fileInputStream.close();
-
                 Thread.sleep(200);
                 socket.close();
-
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e); // TODO: 0029 11/29
-        } catch (IOException e) {
-            throw new RuntimeException(e);  // TODO: 0029 11/29
+        } catch (SocketException ignored) {
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(); // TODO: 0029 11/29  
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(); // TODO: 0029 11/29
+        } catch (IOException e) {
+            throw new RuntimeException(); // TODO: 0029 11/29
         }
     }
 
@@ -66,7 +60,6 @@ public class ServerReceive implements Runnable {
                 throw new RuntimeException(e);  // TODO: 0029 11/29
             }
         }
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-        return fileOutputStream;
+        return new FileOutputStream(file);
     }
 }

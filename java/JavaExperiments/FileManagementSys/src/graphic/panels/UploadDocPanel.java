@@ -2,12 +2,15 @@ package graphic.panels;
 
 import consts.GUI_CONST;
 import graphic.utilities.MyTextField;
+import process.DocProcess;
+import users.User;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
 public class UploadDocPanel extends MyPanel {
+    User user;
     SpringLayout springLayout = new SpringLayout();
     JButton chooseFileButton;
     MyTextField chooseFileField;
@@ -15,8 +18,9 @@ public class UploadDocPanel extends MyPanel {
     JLabel chooseFileLabel;
     JLabel descriptionLabel;
 
-    public UploadDocPanel() {
+    public UploadDocPanel(User user) {
         super();
+        this.user = user;
         setLayout(springLayout);
         setPreferredSize(new Dimension(GUI_CONST.WIDTH, GUI_CONST.HEIGHT));
 
@@ -91,7 +95,6 @@ public class UploadDocPanel extends MyPanel {
         }
     }
 
-
     private static void openFileChooser(JTextField textField) {
         JFileChooser fileChooser = new JFileChooser();
         int returnValue = fileChooser.showOpenDialog(null);
@@ -103,6 +106,8 @@ public class UploadDocPanel extends MyPanel {
 
     @Override
     public void confirmTriggered() {
-
+        String filePath = chooseFileField.getText();
+        String description = descriptionField.getText();
+        DocProcess.uploadDoc(filePath, user.getUserName(), description);
     }
 }

@@ -7,4 +7,6 @@ public interface CONNECTION_CONST {
     String DATABASE = "forJavaExperiment";
     String USER_TABLE = "users";
     String DOC_TABLE = "docs";
+    String ERR_FILE_NOT_FOUND = "FileNotFound";
+    String MSG_READY_TO_DOWNLOAD = "ReadyToDownload";
 }

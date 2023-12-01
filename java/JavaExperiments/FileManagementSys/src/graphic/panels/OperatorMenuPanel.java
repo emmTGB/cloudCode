@@ -65,7 +65,8 @@ public class OperatorMenuPanel extends MyPanel {
             if (menuRadioButtons[i].isSelected()) {
                 switch (i) {
                     //todo
-                    case 2 -> myFrame.replacePanel(new UploadDocPanel());
+                    case 2 -> myFrame.replacePanel(new UploadDocPanel(operator));
+                    case 3 -> myFrame.replacePanel(new ListDocPanel());
                     case 4 -> myFrame.replacePanel(new ChangePassPanel(operator));
                 }
             }

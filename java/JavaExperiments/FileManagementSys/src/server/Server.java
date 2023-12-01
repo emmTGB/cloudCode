@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Vector;
+import java.util.function.ObjIntConsumer;
 
 public class Server {
     public static void main(String[] args) {
@@ -27,20 +28,25 @@ public class Server {
             }
         } catch (IOException e) {
             throw new RuntimeException();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private static Runnable getRunnable(Socket socket) throws IOException {
-        InputStream is = socket.getInputStream();
-        byte[] buf = new byte[1024];
-        int len = is.read(buf);
-        String messageFromClient = new String(buf, 0, len);
+    private static Runnable getRunnable(Socket socket) throws IOException, ClassNotFoundException {
+        ObjectInputStream is = new ObjectInputStream(socket.getInputStream());
+//        byte[] buf = new byte[2048];
+//        int len = is.read(buf);
+        String messageFromClient = (String) is.readObject();
         String[] message = messageFromClient.split(",");
         String[] subMessage = Arrays.copyOfRange(message, 1, message.length);
         Runnable runnable;
         switch (message[0]) {
             case "Download" -> {
                 runnable = new ServerDownload(socket, subMessage);
+            }
+            case "Upload" -> {
+                runnable = new ServerReceive(socket, subMessage);
             }
             default -> {
                 runnable = null;

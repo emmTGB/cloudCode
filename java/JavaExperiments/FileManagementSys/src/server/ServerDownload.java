@@ -1,22 +1,25 @@
 package server;
 
+import consts.CONNECTION_CONST;
 import consts.FILE_CONST;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.Vector;
 
 public class ServerDownload implements Runnable {
     Socket socket;
-    InputStream is;
     FileInputStream fileInputStream;
     SequenceInputStream sequenceInputStream;
     BufferedOutputStream bufferedOutputStream;
+    ObjectOutputStream objectOutputStream;
     String[] message;
     String path;
 
     ServerDownload(Socket socket, String[] message) {
+        System.out.println("start down");
         this.socket = socket;
         this.message = message;
     }
@@ -32,12 +35,14 @@ public class ServerDownload implements Runnable {
                 }
                 File file = new File(path);
                 if (!file.exists()) {
-                    throw new FileNotFoundException();
+                    sendErrorMessage(CONNECTION_CONST.ERR_FILE_NOT_FOUND);
+                    throw new FileNotFoundException();  // TODO: 0029 11/29
                 }
+                sendSuccessMessage(CONNECTION_CONST.MSG_READY_TO_DOWNLOAD);
                 try {
                     fileInputStream = new FileInputStream(file);
                 } catch (IOException e) {
-                    throw new RuntimeException();
+                    throw new RuntimeException();  // TODO: 0029 11/29  
                 }
 
                 Vector<InputStream> vector = new Vector<>();
@@ -62,8 +67,19 @@ public class ServerDownload implements Runnable {
                 Thread.sleep(200);
                 socket.close();
             }
+        } catch (SocketException ignored) {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void sendErrorMessage(String errorMessage) throws IOException {
+        objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        objectOutputStream.writeObject(errorMessage);
+    }
+
+    private void sendSuccessMessage(String successMessage) throws IOException {
+        objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        objectOutputStream.writeObject(successMessage);
     }
 }
