@@ -2,13 +2,16 @@ package graphic.panels;
 
 import consts.GUI_CONST;
 import exceptions.MyException;
+import graphic.utilities.MyComboBox;
 import graphic.utilities.MyPasswordField;
 import graphic.utilities.MyTextField;
 import users.Administrator;
+import users.Role;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.util.Objects;
 
 public class CreateUserPanel extends MyPanel {
     final SpringLayout springLayout = new SpringLayout();
@@ -17,16 +20,19 @@ public class CreateUserPanel extends MyPanel {
     final JLabel labelRole;
     final MyTextField textName;
     final MyPasswordField textPass;
-    final MyTextField textRole;
+    final MyComboBox<Role> comboRole;
     final JCheckBox checkShowPass;
     static final String HINT_NAME = "type user name";
     static final String HINT_PASS = "type user pass";
     static final String HINT_ROLE = "type user Role";
 
+
     public CreateUserPanel() {
         super();
         setLayout(springLayout);
         setPreferredSize(new Dimension(GUI_CONST.WIDTH, GUI_CONST.HEIGHT));
+
+        comboRole = new MyComboBox<>(Role.values());
 
         labelName = new JLabel("User name:");
         labelPass = new JLabel("Password:");
@@ -34,7 +40,6 @@ public class CreateUserPanel extends MyPanel {
 
         textName = new MyTextField(HINT_NAME);
         textPass = new MyPasswordField(HINT_PASS);
-        textRole = new MyTextField(HINT_ROLE);
 
         checkShowPass = new JCheckBox("Show Password");
 
@@ -50,7 +55,7 @@ public class CreateUserPanel extends MyPanel {
                     .addComponent(labelRole));
             hGroup.addGap(5);
             hGroup.addGroup(inputLayout.createParallelGroup().addComponent(textName).addComponent(textPass)
-                    .addComponent(textRole));
+                    .addComponent(comboRole));
             hGroup.addGap(5);
             hGroup.addGroup(inputLayout.createParallelGroup().addComponent(checkShowPass));
             hGroup.addGap(5);
@@ -64,7 +69,7 @@ public class CreateUserPanel extends MyPanel {
             vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelPass).addComponent(textPass)
                     .addComponent(checkShowPass));
             vGroup.addGap(10);
-            vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelRole).addComponent(textRole));
+            vGroup.addGroup(inputLayout.createParallelGroup().addComponent(labelRole).addComponent(comboRole));
             vGroup.addGap(10);
 
             inputLayout.setVerticalGroup(vGroup);
@@ -108,19 +113,16 @@ public class CreateUserPanel extends MyPanel {
         try {
             boolean nameNotTyped = textName.notTyped();
             boolean passNotTyped = textPass.notTyped();
-            boolean roleNotTyped = textRole.notTyped();
-            if (nameNotTyped || passNotTyped || roleNotTyped) {
+            if (nameNotTyped || passNotTyped) {
                 showMsg(
                         "Please input your"
                                 + (nameNotTyped ? " user name" : "")
                                 + (nameNotTyped && passNotTyped ? " and" : "")
-                                + (passNotTyped ? " password" : "")
-                                + ((nameNotTyped || passNotTyped) && roleNotTyped ? " and" : "")
-                                + (roleNotTyped ? " role" : ""));
+                                + (passNotTyped ? " password" : ""));
                 return;
             }
             Administrator.addUser(textName.getText().trim(), new String(textPass.getPassword()).trim(),
-                    textRole.getText().trim());
+                    (Objects.requireNonNull(comboRole.getSelectedItem())).toString().trim());
             labelMsg.setVisible(false);
             bounceUpMsg("Succeeded!");
         } catch (MyException e) {

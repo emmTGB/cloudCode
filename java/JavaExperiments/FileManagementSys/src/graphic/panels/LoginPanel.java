@@ -113,6 +113,7 @@ public class LoginPanel extends MyPanel {
             textPass.setForeground(GUI_CONST.ALT_FONT_COLOR);
             textPass.setFont(GUI_CONST.FONT_ITALIC);
             textPass.setBorder(GUI_CONST.TF_BORDER);
+            textPass.setEchoChar('\0');
             textPass.requestFocus();
 
             switch (user.getUserRole()) {

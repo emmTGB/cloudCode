@@ -8,6 +8,7 @@ import users.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 public class AdminMenuPanel extends MyPanel {
     final Administrator admin;
@@ -101,19 +102,16 @@ class ModifyUserPanel extends CreateUserPanel {
             {
                 boolean nameNotTyped = textName.notTyped();
                 boolean passNotTyped = textPass.notTyped();
-                boolean roleNotTyped = textRole.notTyped();
-                if (nameNotTyped || passNotTyped || roleNotTyped) {
+                if (nameNotTyped || passNotTyped) {
                     showMsg(
                             "Please input your"
                                     + (nameNotTyped ? " user name" : "")
                                     + (nameNotTyped && passNotTyped ? " and" : "")
                                     + (passNotTyped ? " password" : "")
-                                    + ((nameNotTyped || passNotTyped) && roleNotTyped ? " and" : "")
-                                    + (roleNotTyped ? " role" : "")
                     );
                     return;
                 }
-                admin.modifyUser(textName.getText().trim(), new String(textPass.getPassword()).trim(), textRole.getText().trim());
+                admin.modifyUser(textName.getText().trim(), new String(textPass.getPassword()).trim(), (Objects.requireNonNull(comboRole.getSelectedItem())).toString().trim());
                 labelMsg.setVisible(false);
                 bounceUpMsg("Succeeded!");
                 myFrame.rollBack(); //todo

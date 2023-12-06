@@ -15,7 +15,7 @@ public class Client {
     private static Socket server;
 
     public static void connectToServer() throws IOException {
-        server = new Socket("127.0.0.1", 3939);
+        server = new Socket(CONNECTION_CONST.SERVER_HOST, CONNECTION_CONST.SERVER_PORT);
         System.out.println(server.getInetAddress().getHostName());
     }
 

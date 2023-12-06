@@ -1,5 +1,7 @@
 package server;
 
+import consts.CONNECTION_CONST;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -12,7 +14,7 @@ public class Server {
     public static void main(String[] args) {
         ServerSocket server;
         try {
-            server = new ServerSocket(3939);
+            server = new ServerSocket(CONNECTION_CONST.SERVER_PORT);
         } catch (IOException e) {
             throw new RuntimeException();
         }

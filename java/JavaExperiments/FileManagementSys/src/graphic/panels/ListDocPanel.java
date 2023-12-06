@@ -164,7 +164,10 @@ class ButtonEditor extends DefaultCellEditor {
     private void handleButtonClick() {
         String columnName = "id";
         String IDinRow = jTable.getValueAt(row, jTable.getColumn(columnName).getModelIndex()).toString();
-        JOptionPane.showConfirmDialog(jTable, "confirm to download");  // TODO: 0001 12/1
+        int result = JOptionPane.showConfirmDialog(this.getComponent(), "confirm to download");  // TODO: 0001 12/1
+        if (result != JOptionPane.YES_OPTION) {
+            return;
+        }
         try {
             DocProcess.downloadDoc(IDinRow);
         } catch (FileNotFoundException e) {
