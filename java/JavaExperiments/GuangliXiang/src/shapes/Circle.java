@@ -14,7 +14,7 @@ public class Circle extends Shape {
     public void setEdges() {
         Scanner scanner = new Scanner(System.in);
         do {
-            System.out.println("Input radius of the Rectangle.\nSeparated by spaces, all zero to exit:");
+            System.out.println("Input radius of the Circle.\nSeparated by spaces, all zero to exit:");
 
             try {
                 double _radius = scanner.nextDouble();
