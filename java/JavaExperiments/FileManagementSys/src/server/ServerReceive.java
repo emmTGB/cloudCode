@@ -34,6 +34,8 @@ public class ServerReceive implements Runnable {
                 while ((len = inputStream.read(fileStream)) != -1) {
                     fileOutputStream.write(fileStream, 0, len);
                 }
+                inputStream.close();
+                fileOutputStream.close();
                 Thread.sleep(200);
                 socket.close();
             }

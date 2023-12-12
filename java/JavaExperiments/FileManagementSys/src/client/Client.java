@@ -10,6 +10,7 @@ import java.util.Vector;
 import connection.ConnectionSQL;
 import consts.CONNECTION_CONST;
 import consts.FILE_CONST;
+import graphic.frames.ProBarFrame;
 import process.DocProcess;
 
 public class Client {
@@ -102,12 +103,14 @@ public class Client {
 
         BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(server.getOutputStream());
         byte[] buff = new byte[65560];
-        int len = 0;
         int readSize = 0;
+        ProBarFrame proBarFrame = new ProBarFrame("Uploading", fatherComponent);
+        int len;
         while ((len = sequenceInputStream.read(buff)) != -1) {
             readSize += len;
             bufferedOutputStream.write(buff, 0, len);
             percent = (double) readSize / fileLength;
+            proBarFrame.setProgressValue((int) (percent * 100));
         }
 
         sequenceInputStream.close();

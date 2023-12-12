@@ -1,5 +1,6 @@
 package graphic.frames;
 
+import client.Client;
 import consts.GUI_CONST;
 import graphic.panels.MainButtonPanel;
 import graphic.panels.MainMenuPanel;
@@ -17,6 +18,7 @@ public class MyFrame extends JFrame {
     public MyFrame(String title) {
         super(title);
         MyPanel.myFrame = this;
+        Client.fatherComponent = this;
         setBounds(0, 0, GUI_CONST.WIDTH, GUI_CONST.HEIGHT);
         setLocationRelativeTo(null);
 
