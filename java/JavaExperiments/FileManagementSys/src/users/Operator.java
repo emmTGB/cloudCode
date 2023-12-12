@@ -3,7 +3,6 @@ package users;
 public class Operator extends User {
     public static final String[] OPTION_LIST = {
             "Exit",
-            "Download File",
             "Upload File",
             "File List",
             "Change Your Password"

@@ -11,7 +11,6 @@ public class Administrator extends User {
             "Delete User",
             "Add User",
             "List User",
-            "Download File",
             "File List",
             "Change Your Password"
     };

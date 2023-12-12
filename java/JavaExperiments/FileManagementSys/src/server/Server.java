@@ -50,6 +50,9 @@ public class Server {
             case "Upload" -> {
                 runnable = new ServerReceive(socket, subMessage);
             }
+            case "Check" -> {
+                runnable = new ServerCheck(socket, subMessage);
+            }
             default -> {
                 runnable = null;
             }

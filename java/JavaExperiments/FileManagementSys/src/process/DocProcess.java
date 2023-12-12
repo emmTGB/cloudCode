@@ -37,29 +37,31 @@ public class DocProcess {
             throw new RuntimeException(e);
         }
         Vector<Doc> v = new Vector<>();
+        Vector<String> stringVector = new Vector<>();
         while (true) {
             try {
-                // TODO: 0001 12/1 初始化时检查服务端文件是否存在并更新数据库 
                 if (!resultSet.next())
                     break;
-
                 String _ID = resultSet.getString("ID");
                 String _filename = resultSet.getString("filename");
                 String _creator = resultSet.getString("creator");
                 Timestamp _createTime = resultSet.getTimestamp("createTime");
                 String _description = resultSet.getString("description");
 
-                File temp = new File(FILE_CONST.SERVER_DIR + _filename);
-                if (!temp.exists()) {
-                    deleteDoc(_ID);
+                if (!Client.checkOnServer(_ID, _filename)) {
+                    stringVector.add(_ID);
                     continue;
                 }
-
                 v.add(new Doc(_ID, _creator, _createTime, _description, _filename));
             } catch (SQLException e) {
                 // TODO: 12/12/23
                 throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
+        }
+        for (String id : stringVector) {
+            deleteDoc(id);
         }
         return v.elements();
     }

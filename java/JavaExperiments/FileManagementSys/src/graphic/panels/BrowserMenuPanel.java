@@ -64,9 +64,8 @@ public class BrowserMenuPanel extends MyPanel {
         for (int i = 1; i < menuRadioButtons.length; i++) {
             if (menuRadioButtons[i].isSelected()) {
                 switch (i) {
-                    //todo
-                    case 2 -> myFrame.replacePanel(new ListDocPanel());
-                    case 3 -> myFrame.replacePanel(new ChangePassPanel(browser));
+                    case 1 -> myFrame.replacePanel(new ListDocPanel());
+                    case 2 -> myFrame.replacePanel(new ChangePassPanel(browser));
                 }
             }
         }

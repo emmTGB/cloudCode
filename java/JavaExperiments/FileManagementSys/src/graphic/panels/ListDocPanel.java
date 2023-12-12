@@ -33,8 +33,8 @@ public class ListDocPanel extends MyPanel {
     public ListDocPanel() {
         super();
         try {
-            contents = new Object[DocProcess.getLengthOfDocList()][columnNames.length];
             listDocs = DocProcess.getAllDocs();
+            contents = new Object[DocProcess.getLengthOfDocList()][columnNames.length];
         } catch (DataException e) {
             bounceUpMsg(e.getMessage()); // TODO: 0029 11/29
             myFrame.rollBack();

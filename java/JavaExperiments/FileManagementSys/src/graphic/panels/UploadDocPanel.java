@@ -1,6 +1,7 @@
 package graphic.panels;
 
 import consts.GUI_CONST;
+import graphic.frames.ProBarFrame;
 import graphic.utilities.MyTextField;
 import process.DocProcess;
 import users.User;
@@ -108,6 +109,7 @@ public class UploadDocPanel extends MyPanel {
 
     @Override
     public void confirmTriggered() {
+        // TODO: 0012 12/12
         String filePath = chooseFileField.getText();
         String description = descriptionField.getText();
         try {
@@ -116,6 +118,7 @@ public class UploadDocPanel extends MyPanel {
             showMsg(fnf.getMessage());
         } catch (IOException e) {
             bounceUpMsg(e.getMessage());
+            e.printStackTrace();
         }
         // TODO: 12/12/23 DIY it!
     }
