@@ -8,6 +8,20 @@ import java.awt.*;
 public class ProBarFrame extends JFrame {
     private final JProgressBar progressBar;
     private int progressValue;
+    private final ProgressThread progressThread;
+
+    public static void main(String[] args) {
+        ProBarFrame proBarFrame = new ProBarFrame("111", null);
+
+        for (int i = 0; i < 100; i++) {
+            proBarFrame.setProgressValue(i);
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
     public ProBarFrame(String title, Component father) {
         super(title);
@@ -21,16 +35,13 @@ public class ProBarFrame extends JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(father);
         setVisible(true);
-        ProgressThread progressThread = new ProgressThread();
-//        progressThread.start();
-        for (int i = 0; i < 100; i++) {
-            progressBar.setValue(i);
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        progressThread = new ProgressThread();
+        progressThread.start();
+    }
+
+    public void exit() {
+        progressThread.interrupt();
+        dispose();
     }
 
     public void setProgressValue(int value) {

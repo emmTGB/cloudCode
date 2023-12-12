@@ -8,6 +8,8 @@ import users.User;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class UploadDocPanel extends MyPanel {
     User user;
@@ -108,6 +110,13 @@ public class UploadDocPanel extends MyPanel {
     public void confirmTriggered() {
         String filePath = chooseFileField.getText();
         String description = descriptionField.getText();
-        DocProcess.uploadDoc(filePath, user.getUserName(), description);
+        try {
+            DocProcess.uploadDoc(filePath, user.getUserName(), description);
+        } catch (FileNotFoundException fnf) {
+            showMsg(fnf.getMessage());
+        } catch (IOException e) {
+            bounceUpMsg(e.getMessage());
+        }
+        // TODO: 12/12/23 DIY it!
     }
 }

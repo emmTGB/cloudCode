@@ -48,7 +48,6 @@ public class ConnectionSQL {
         }
     }
 
-    //ok
     public boolean inTable(String fieldName, String content) throws SQLException {
         String sql = "select " + fieldName + " from " + tableName
                 + " where " + fieldName + " = " + content + ";";

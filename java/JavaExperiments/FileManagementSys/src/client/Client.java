@@ -3,9 +3,8 @@ package client;
 import java.awt.*;
 import java.io.*;
 import java.net.Socket;
-import java.util.Enumeration;
-import java.util.Objects;
-import java.util.Vector;
+import java.util.*;
+import java.util.List;
 
 import connection.ConnectionSQL;
 import consts.CONNECTION_CONST;
@@ -27,15 +26,15 @@ public class Client {
     }
 
     public static void sendMessage(String message) throws IOException {
-        ObjectOutputStream os = new ObjectOutputStream(server.getOutputStream());
-        os.writeObject(message);
-        System.out.println(message);
-        os.flush();
+        try (ObjectOutputStream os = new ObjectOutputStream(server.getOutputStream());) {
+            os.writeObject(message);
+            System.out.println(message);
+            os.flush();
+        }
     }
 
     private static String receiveMessage() throws IOException {
-        ObjectInputStream is = new ObjectInputStream(server.getInputStream());
-        try {
+        try (ObjectInputStream is = new ObjectInputStream(server.getInputStream());) {
             return (String) is.readObject();
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -43,6 +42,7 @@ public class Client {
     }
 
     public static void download(String fileID, String fileName) throws IOException {
+        // TODO: 12/12/23 stream try with resources
         connectToServer();
         sendMessage("Download," + fileID + "," + fileName);
 
@@ -69,23 +69,21 @@ public class Client {
             file.createNewFile();
         }
         // todo
-        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-            InputStream inputStream = server.getInputStream();
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file);
+             InputStream inputStream = server.getInputStream();
+        ) {
             byte[] fileStream = new byte[65560];
             int len;
             while ((len = inputStream.read(fileStream)) != -1) {
                 fileOutputStream.write(fileStream, 0, len);
             }
-            inputStream.close();
+        } finally {
+            closeConnection();
         }
-
-        closeConnection();
     }
 
     public static void upload(String fileID, String filePath) throws IOException {
         connectToServer();
-
-        double percent = 0;
 
         File file = new File(filePath);
         if (!file.exists()) {
@@ -95,27 +93,30 @@ public class Client {
         String fileName = file.getName();
         int fileLength = (int) file.length();
         sendMessage("Upload," + fileID + "," + fileName + "," + fileLength);
-        FileInputStream fileInputStream = new FileInputStream(file);
-        Vector<InputStream> vector = new Vector<>();
-        vector.addElement(fileInputStream);
-        Enumeration<InputStream> enumeration = vector.elements();
-        SequenceInputStream sequenceInputStream = new SequenceInputStream(enumeration);
 
-        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(server.getOutputStream());
-        byte[] buff = new byte[65560];
-        int readSize = 0;
-        ProBarFrame proBarFrame = new ProBarFrame("Uploading", fatherComponent);
-        int len;
-        while ((len = sequenceInputStream.read(buff)) != -1) {
-            readSize += len;
-            bufferedOutputStream.write(buff, 0, len);
-            percent = (double) readSize / fileLength;
-            proBarFrame.setProgressValue((int) (percent * 100));
+        try (FileInputStream fileInputStream = new FileInputStream(file);
+             SequenceInputStream sequenceInputStream = new SequenceInputStream(Collections.enumeration(List.of(fileInputStream)));
+             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(server.getOutputStream());
+        ) {
+            byte[] buff = new byte[65560];
+            int readSize = 0;
+            ProBarFrame proBarFrame = new ProBarFrame("Uploading", fatherComponent);
+
+            try {
+                int len;
+                double percent;
+                while ((len = sequenceInputStream.read(buff)) != -1) {
+                    readSize += len;
+                    bufferedOutputStream.write(buff, 0, len);
+                    percent = (double) readSize / fileLength;
+                    proBarFrame.setProgressValue((int) (percent * 100));
+                }
+            } catch (IOException e) {
+                proBarFrame.exit();
+                throw e;
+            }
+        } finally {
+            closeConnection();
         }
-
-        sequenceInputStream.close();
-        bufferedOutputStream.close();
-        fileInputStream.close();
-        closeConnection();
     }
 }

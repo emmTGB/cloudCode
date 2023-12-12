@@ -3,6 +3,7 @@ package process;
 import client.Client;
 import connection.ConnectionSQL;
 import consts.CONNECTION_CONST;
+import consts.FILE_CONST;
 import data.Doc;
 import exceptions.DataException;
 import exceptions.UserException;
@@ -11,6 +12,7 @@ import jdk.dynalink.beans.StaticClass;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.sql.DataTruncation;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,13 +42,22 @@ public class DocProcess {
                 // TODO: 0001 12/1 初始化时检查服务端文件是否存在并更新数据库 
                 if (!resultSet.next())
                     break;
+
                 String _ID = resultSet.getString("ID");
                 String _filename = resultSet.getString("filename");
                 String _creator = resultSet.getString("creator");
                 Timestamp _createTime = resultSet.getTimestamp("createTime");
                 String _description = resultSet.getString("description");
+
+                File temp = new File(FILE_CONST.SERVER_DIR + _filename);
+                if (!temp.exists()) {
+                    deleteDoc(_ID);
+                    continue;
+                }
+
                 v.add(new Doc(_ID, _creator, _createTime, _description, _filename));
             } catch (SQLException e) {
+                // TODO: 12/12/23
                 throw new RuntimeException(e);
             }
         }
@@ -94,16 +105,12 @@ public class DocProcess {
         }
     }
 
-    public static void uploadDoc(String filePath, String creator, String description) {
+    public static void uploadDoc(String filePath, String creator, String description) throws IOException {
         Timestamp timestamp = new Timestamp(new Date().getTime());
         File file = new File(filePath);
         String fileName = file.getName();
         String ID = generateID(fileName, timestamp);
-        try {
-            Client.upload(ID, filePath);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Client.upload(ID, filePath);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -117,6 +124,7 @@ public class DocProcess {
                     }
             );
         } catch (SQLException e) {
+            // TODO: 12/12/23
             throw new RuntimeException(e);
         }
     }
