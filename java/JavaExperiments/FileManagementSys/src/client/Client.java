@@ -1,5 +1,6 @@
 package client;
 
+import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.Enumeration;
@@ -13,6 +14,7 @@ import process.DocProcess;
 
 public class Client {
     private static Socket server;
+    public static Component fatherComponent = null;
 
     public static void connectToServer() throws IOException {
         server = new Socket(CONNECTION_CONST.SERVER_HOST, CONNECTION_CONST.SERVER_PORT);
@@ -82,6 +84,8 @@ public class Client {
     public static void upload(String fileID, String filePath) throws IOException {
         connectToServer();
 
+        double percent = 0;
+
         File file = new File(filePath);
         if (!file.exists()) {
             throw new FileNotFoundException();
@@ -99,8 +103,11 @@ public class Client {
         BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(server.getOutputStream());
         byte[] buff = new byte[65560];
         int len = 0;
+        int readSize = 0;
         while ((len = sequenceInputStream.read(buff)) != -1) {
+            readSize += len;
             bufferedOutputStream.write(buff, 0, len);
+            percent = (double) readSize / fileLength;
         }
 
         sequenceInputStream.close();
