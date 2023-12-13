@@ -20,11 +20,10 @@ public class CreateUserPanel extends MyPanel {
     final JLabel labelRole;
     final MyTextField textName;
     final MyPasswordField textPass;
-    final MyComboBox<Role> comboRole;
+    MyComboBox<Role> comboRole = null;
     final JCheckBox checkShowPass;
     static final String HINT_NAME = "type user name";
     static final String HINT_PASS = "type user pass";
-    static final String HINT_ROLE = "type user Role";
 
 
     public CreateUserPanel() {
@@ -32,7 +31,10 @@ public class CreateUserPanel extends MyPanel {
         setLayout(springLayout);
         setPreferredSize(new Dimension(GUI_CONST.WIDTH, GUI_CONST.HEIGHT));
 
-        comboRole = new MyComboBox<>(Role.values());
+        comboRole = new MyComboBox<>(new Role[]{
+                Role.OPERATOR,
+                Role.BROWSER
+        });
 
         labelName = new JLabel("User name:");
         labelPass = new JLabel("Password:");

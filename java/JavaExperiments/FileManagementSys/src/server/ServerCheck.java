@@ -22,6 +22,8 @@ public class ServerCheck implements Runnable {
 
     @Override
     public void run() {
+        String threadMessage = "Thread " + Thread.currentThread().getId() + " on " + socket.getInetAddress() + " checking";
+        Server.addMessage(Thread.currentThread().getId(), threadMessage);
         try {
             while (true) {
                 String ID = message[0];
@@ -43,6 +45,8 @@ public class ServerCheck implements Runnable {
         } catch (SocketException ignored) {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
+        } finally {
+            Server.dropMessage(Thread.currentThread().getId());
         }
     }
 }

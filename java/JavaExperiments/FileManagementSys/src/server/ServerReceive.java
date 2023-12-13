@@ -18,6 +18,8 @@ public class ServerReceive implements Runnable {
 
     @Override
     public void run() {
+        String threadMessage = "Thread " + Thread.currentThread().getId() + " on " + socket.getInetAddress() + " checking";
+        Server.addMessage(Thread.currentThread().getId(), threadMessage);
         try {
             while (true) {
                 {
@@ -40,12 +42,12 @@ public class ServerReceive implements Runnable {
                 socket.close();
             }
         } catch (SocketException ignored) {
-        } catch (InterruptedException e) {
-            throw new RuntimeException(); // TODO: 0029 11/29  
         } catch (FileNotFoundException e) {
             throw new RuntimeException(); // TODO: 0029 11/29
-        } catch (IOException e) {
+        } catch (InterruptedException | IOException e) {
             throw new RuntimeException(); // TODO: 0029 11/29
+        } finally {
+            Server.dropMessage(Thread.currentThread().getId());
         }
     }
 

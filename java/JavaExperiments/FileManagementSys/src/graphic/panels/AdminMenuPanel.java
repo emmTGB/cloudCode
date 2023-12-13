@@ -2,8 +2,10 @@ package graphic.panels;
 
 import consts.GUI_CONST;
 import exceptions.MyException;
+import graphic.utilities.MyComboBox;
 import graphic.utilities.MyTextField;
 import users.Administrator;
+import users.Role;
 import users.User;
 
 import javax.swing.*;
@@ -92,6 +94,7 @@ class ModifyUserPanel extends CreateUserPanel {
 
     public ModifyUserPanel(Administrator admin) {
         super();
+        super.comboRole.setModel(new DefaultComboBoxModel<>(Role.values()));
         this.admin = admin;
     }
 
