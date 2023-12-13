@@ -73,7 +73,6 @@ public class ConnectionSQL {
         return statement.executeQuery(sql.toString());
     }
 
-    //ok
     public void insertRow(String[] fields, String[] contents) throws SQLException {
         StringBuilder sql = new StringBuilder("insert into ");
         sql.append(tableName).append("(");

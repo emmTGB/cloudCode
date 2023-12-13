@@ -17,7 +17,7 @@ public class MyTextField extends JTextField {
         addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (getText().equals(HINT)) {
+                if (getText().isEmpty()) {
                     setText("");
                     setFont(GUI_CONST.FONT);
                 }
@@ -39,5 +39,15 @@ public class MyTextField extends JTextField {
 
     public boolean notTyped() {
         return getText().equals(HINT) || getText().isEmpty();
+    }
+
+    @Override
+    public String getText() {
+        String ret = super.getText();
+        if (ret.equals(HINT)) {
+            return "";
+        } else {
+            return ret;
+        }
     }
 }

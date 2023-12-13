@@ -74,6 +74,7 @@ public class Client {
         }
         String filePath = FILE_CONST.DOWNLOAD_DIR + fileName;
         File file = new File(filePath);
+        System.out.println(filePath);
         if (!file.exists()) {
             file.createNewFile();
         }

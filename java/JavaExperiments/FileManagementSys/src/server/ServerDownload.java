@@ -33,6 +33,7 @@ public class ServerDownload implements Runnable {
                     String name = message[1];
                     path = FILE_CONST.SERVER_DIR + ID + "_" + name;
                 }
+                System.out.println(path);
                 File file = new File(path);
                 if (!file.exists()) {
                     sendErrorMessage(CONNECTION_CONST.ERR_FILE_NOT_FOUND);
