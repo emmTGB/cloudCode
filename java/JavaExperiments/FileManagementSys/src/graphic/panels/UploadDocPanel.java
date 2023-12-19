@@ -112,6 +112,8 @@ public class UploadDocPanel extends MyPanel {
         // TODO: 0012 12/12
         String filePath = chooseFileField.getText();
         String description = descriptionField.getText();
+        if (filePath.isEmpty())
+            showMsg("Please Choose Your File!");
         try {
             DocProcess.uploadDoc(filePath, user.getUserName(), description);
         } catch (FileNotFoundException fnf) {
