@@ -71,5 +71,4 @@ public class OperatorMenuPanel extends MyPanel {
             }
         }
     }
-
 }

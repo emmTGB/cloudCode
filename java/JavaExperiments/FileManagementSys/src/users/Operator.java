@@ -12,9 +12,4 @@ public class Operator extends User {
         super(userName, passWord);
         userRole = Role.OPERATOR;
     }
-
-    //TODO
-    private boolean uploadFile() {
-        return false;
-    }
 }

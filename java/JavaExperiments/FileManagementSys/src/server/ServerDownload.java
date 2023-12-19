@@ -6,16 +6,15 @@ import consts.FILE_CONST;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 public class ServerDownload implements Runnable {
-    Socket socket;
-    FileInputStream fileInputStream;
-    SequenceInputStream sequenceInputStream;
-    BufferedOutputStream bufferedOutputStream;
+    final Socket socket;
     ObjectOutputStream objectOutputStream;
-    String[] message;
+    final String[] message;
     String path;
 
     ServerDownload(Socket socket, String[] message) {
@@ -29,49 +28,34 @@ public class ServerDownload implements Runnable {
         String threadMessage = "Thread " + Thread.currentThread().getId() + " on " + socket.getInetAddress() + " downloading";
         Server.addMessage(Thread.currentThread().getId(), threadMessage);
         try {
-            while (true) {
-                {
-                    String ID = message[0];
-                    String name = message[1];
-                    path = FILE_CONST.SERVER_DIR + ID + "_" + name;
-                }
-                File file = new File(path);
-                if (!file.exists()) {
-                    sendErrorMessage(CONNECTION_CONST.ERR_FILE_NOT_FOUND);
-                    throw new FileNotFoundException();  // TODO: 0029 11/29
-                }
-                sendSuccessMessage(CONNECTION_CONST.MSG_READY_TO_DOWNLOAD + "," + file.length());
-                try {
-                    fileInputStream = new FileInputStream(file);
-                } catch (IOException e) {
-                    throw new RuntimeException();  // TODO: 0029 11/29  
-                }
+            {
+                String ID = message[0];
+                String name = message[1];
+                path = FILE_CONST.SERVER_DIR + ID + "_" + name;
+            }
+            File file = new File(path);
+            if (!file.exists()) {
+                sendErrorMessage(CONNECTION_CONST.ERR_FILE_NOT_FOUND);
+                return;
+            }
+            sendSuccessMessage(CONNECTION_CONST.MSG_READY_TO_DOWNLOAD + "," + file.length());
 
-                Vector<InputStream> vector = new Vector<>();
-                vector.addElement(fileInputStream);
-                Enumeration<InputStream> enumeration = vector.elements();
-                sequenceInputStream = new SequenceInputStream(enumeration);
-
-                {
-                    bufferedOutputStream = new BufferedOutputStream(socket.getOutputStream());
-                    byte[] buf = new byte[65560];
-                    int len;
-                    while ((len = sequenceInputStream.read(buf)) != -1) {
-                        bufferedOutputStream.write(buf, 0, len);
-                    }
+            try (FileInputStream fileInputStream = new FileInputStream(file);
+                 SequenceInputStream sequenceInputStream = new SequenceInputStream(Collections.enumeration(List.of(fileInputStream)));
+                 BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(socket.getOutputStream())
+            ) {
+                byte[] buf = new byte[65560];
+                int len;
+                while ((len = sequenceInputStream.read(buf)) != -1) {
+                    bufferedOutputStream.write(buf, 0, len);
                 }
-                bufferedOutputStream.close();
-                sequenceInputStream.close();
-                fileInputStream.close();
-
-                // TODO: 0029 11/29检查文件完整性
-
-                Thread.sleep(200);
+            } finally {
                 socket.close();
             }
         } catch (SocketException ignored) {
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
+            // TODO: 0020 12/20
         } finally {
             Server.dropMessage(Thread.currentThread().getId());
         }

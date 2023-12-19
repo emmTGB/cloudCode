@@ -22,10 +22,6 @@ public abstract class MyPanel extends JPanel implements MessageSlot {
     }
 
     public static void staticBounceUpMsg(Component fatherComponent, String msg, String title, int type) {
-//        UIManager.put("OptionPane.background", GUI_CONST.BG_COLOR);
-//        UIManager.put("Panel.background", GUI_CONST.BG_COLOR);
-//        JLabel jLabel = new JLabel(msg);
-//        jLabel.setForeground(GUI_CONST.FONT_COLOR);
         JOptionPane.showMessageDialog(fatherComponent, msg, title, type);
     }
 
@@ -34,7 +30,6 @@ public abstract class MyPanel extends JPanel implements MessageSlot {
         prePanel = null;
     }
 
-    @Override
     public void cancelTriggered() {
         myFrame.rollBack();
     }

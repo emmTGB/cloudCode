@@ -38,8 +38,6 @@ public class DIYScrollBar extends BasicScrollBarUI {
     @Override
     public Dimension getPreferredSize(JComponent c) {
 
-        // TODO Auto-generated method stub
-
         c.setPreferredSize(new Dimension(20, 0));
 
         return super.getPreferredSize(c);

@@ -103,11 +103,11 @@ public class ChangePassPanel extends MyPanel {
     }
 
     @Override
-    public void confirmTriggered() {  // TODO
+    public void confirmTriggered() {
         try {
-            boolean curNotTyped = new String(textCur.getPassword()).equals(HINT_CUR) || textCur.getPassword().length == 0;
-            boolean newNotTyped = new String(textNew.getPassword()).equals(HINT_NEW) || textNew.getPassword().length == 0;
-            boolean repNotTyped = new String(textRep.getPassword()).equals(HINT_REP) || textRep.getPassword().length == 0;
+            boolean curNotTyped = textCur.notTyped();
+            boolean newNotTyped = textNew.notTyped();
+            boolean repNotTyped = textRep.notTyped();
             if (curNotTyped || newNotTyped || repNotTyped) {
                 showMsg(
                         "Please"
@@ -135,7 +135,6 @@ public class ChangePassPanel extends MyPanel {
             bounceUpMsg("Succeeded!");
             myFrame.rollBack();
         } catch (MyException e) {
-            //todo
             showMsg(e.getMessage());
         }
     }

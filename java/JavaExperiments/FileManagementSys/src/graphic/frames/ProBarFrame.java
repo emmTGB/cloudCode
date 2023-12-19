@@ -1,7 +1,6 @@
 package graphic.frames;
 
 import consts.GUI_CONST;
-import graphic.panels.MyPanel;
 
 import javax.swing.*;
 import java.awt.*;

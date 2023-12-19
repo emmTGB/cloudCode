@@ -2,13 +2,9 @@ package process;
 
 import connection.ConnectionSQL;
 import consts.CONNECTION_CONST;
-import users.Role;
 import exceptions.DataException;
 import exceptions.UserException;
-import users.Administrator;
-import users.Browser;
-import users.Operator;
-import users.User;
+import users.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,62 +13,6 @@ import java.util.Vector;
 
 public class UserProcess {
     private static final ConnectionSQL connectionUsers = new ConnectionSQL(CONNECTION_CONST.USER_TABLE);
-
-//    private static void readUsers() throws IOException, DataException, UserException {
-//        boolean flag;
-//        BufferedReader buff = null;
-//        do {
-//            try {
-//                flag = false;
-//                buff = new BufferedReader(new FileReader(FILE_CONST.FILE_PATH));
-//            } catch (FileNotFoundException nf) {
-//                File file = new File(FILE_CONST.FILE_PATH);
-//                file.createNewFile();
-//                flag = true;
-//            }
-//        } while (flag);
-//
-//        String name, passWord, roleStr;
-//        while ((name = buff.readLine()) != null) {
-//            passWord = buff.readLine();
-//            roleStr = buff.readLine();
-//
-//            if (passWord == null || roleStr == null) {
-//                buff.close();
-//                throw DataException.FILE_CONTENT_ERR;
-//            }
-//
-//            User user;
-//            switch (Role.getRole(roleStr)) {
-//                case ADMINISTRATOR -> user = new Administrator(name, passWord);
-//                case OPERATOR -> user = new Operator(name, passWord);
-//                case BROWSER -> user = new Browser(name, passWord);
-//                default -> throw UserException.ROLE_UNEXPECTED_ERR;
-//            }
-//            userTable.put(name, user);
-//        }
-//        buff.close();
-//    }
-//
-//    public static void writeUsers() throws IOException {
-//        File userTxt = new File(FILE_CONST.FILE_PATH);
-//        if (userTxt.exists())
-//            userTxt.delete();
-//        userTxt.createNewFile();
-//        BufferedWriter buff = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(userTxt)));
-//
-//        Enumeration<User> e = userTable.elements();
-//        User user;
-//        while (e.hasMoreElements()) {
-//            user = e.nextElement();
-//            buff.write(user.toString());
-//        }
-//        buff.close();
-//    }
-
-    public static void updateUserFile() {
-
-    }
 
     //ok
     public static User fetchUser(String name, String passWord) throws DataException, UserException {
@@ -224,7 +164,7 @@ public class UserProcess {
         }
     }
 
-    public static void deleteUser(String name) throws UserException, DataException {
+    public static void deleteUser(String name) throws DataException {
         try {
             connectionUsers.deleteRow("name", "'" + name + "'");
         } catch (SQLException e) {

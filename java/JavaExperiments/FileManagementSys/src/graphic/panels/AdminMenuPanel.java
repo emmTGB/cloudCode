@@ -2,7 +2,6 @@ package graphic.panels;
 
 import consts.GUI_CONST;
 import exceptions.MyException;
-import graphic.utilities.MyComboBox;
 import graphic.utilities.MyTextField;
 import users.Administrator;
 import users.Role;
@@ -100,7 +99,6 @@ class ModifyUserPanel extends CreateUserPanel {
 
     @Override
     public void confirmTriggered() {
-
         try {
             {
                 boolean nameNotTyped = textName.notTyped();
@@ -117,10 +115,9 @@ class ModifyUserPanel extends CreateUserPanel {
                 admin.modifyUser(textName.getText().trim(), new String(textPass.getPassword()).trim(), (Objects.requireNonNull(comboRole.getSelectedItem())).toString().trim());
                 labelMsg.setVisible(false);
                 bounceUpMsg("Succeeded!");
-                myFrame.rollBack(); //todo
+                myFrame.rollBack();
             }
         } catch (MyException e) {
-            //todo
             showMsg(e.getMessage());
         }
     }

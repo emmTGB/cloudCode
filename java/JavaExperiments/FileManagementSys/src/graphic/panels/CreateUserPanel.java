@@ -20,7 +20,7 @@ public class CreateUserPanel extends MyPanel {
     final JLabel labelRole;
     final MyTextField textName;
     final MyPasswordField textPass;
-    MyComboBox<Role> comboRole = null;
+    MyComboBox<Role> comboRole;
     final JCheckBox checkShowPass;
     static final String HINT_NAME = "type user name";
     static final String HINT_PASS = "type user pass";
@@ -36,7 +36,7 @@ public class CreateUserPanel extends MyPanel {
                 Role.BROWSER
         });
 
-        labelName = new JLabel("Username:");
+        labelName = new JLabel("User name:");
         labelPass = new JLabel("Password:");
         labelRole = new JLabel("Role:");
 
@@ -128,7 +128,6 @@ public class CreateUserPanel extends MyPanel {
             labelMsg.setVisible(false);
             bounceUpMsg("Succeeded!");
         } catch (MyException e) {
-            // todo
             showMsg(e.getMessage());
         }
     }

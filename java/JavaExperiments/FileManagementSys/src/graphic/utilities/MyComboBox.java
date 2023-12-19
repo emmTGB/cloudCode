@@ -6,7 +6,6 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.awt.*;
-import java.awt.geom.GeneralPath;
 
 public class MyComboBox<T> extends JComboBox<T> {
     public MyComboBox(T[] contents) {

@@ -1,14 +1,5 @@
 package client;
 
-import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.*;
-import java.net.Socket;
-import java.util.*;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import consts.CONNECTION_CONST;
 import consts.FILE_CONST;
 import graphic.frames.ProBarFrame;
@@ -16,6 +7,12 @@ import graphic.panels.MyPanel;
 import process.DocProcess;
 
 import javax.swing.*;
+import java.awt.*;
+import java.io.*;
+import java.net.ConnectException;
+import java.net.Socket;
+import java.util.Collections;
+import java.util.List;
 
 public class Client {
     private static Socket server;
@@ -46,33 +43,9 @@ public class Client {
         }
     }
 
-    public static void download(String fileID, String fileName) throws IOException {
-        int[] progress = {0};
+    private static Thread getDownloading(String fileName, int[] progress, long length) {
         Thread downloading = new Thread(() -> {
-            try {// TODO: 12/12/23 stream try with resources
-                connectToServer();
-                sendMessage("Download," + fileID + "," + fileName);
-
-                String[] message = receiveMessage().split(",");
-                String response = message[0];
-                long length = 0;
-                System.out.println(response);
-                if (CONNECTION_CONST.ERR_FILE_NOT_FOUND.equals(response)) {
-                    System.err.println("fnf");
-                    closeConnection();
-                    DocProcess.deleteDoc(fileID);
-                    // TODO: 0001 12/1
-                    throw new FileNotFoundException();
-                } else if (CONNECTION_CONST.MSG_READY_TO_DOWNLOAD.equals(response)) {
-                    System.out.println("ready");
-                    length = Long.parseLong(message[1]);
-                } else {
-                    System.err.println("wtf");
-                    closeConnection();
-                    return;
-                    // TODO: 0001 12/1
-                }
-
+            try {
                 File dir = new File(FILE_CONST.DOWNLOAD_DIR);
                 if (!dir.exists()) {
                     dir.mkdir();
@@ -83,9 +56,8 @@ public class Client {
                 if (!file.exists()) {
                     file.createNewFile();
                 }
-                // todo
                 try (FileOutputStream fileOutputStream = new FileOutputStream(file);
-                     InputStream inputStream = server.getInputStream();
+                     InputStream inputStream = server.getInputStream()
                 ) {
                     byte[] fileStream = new byte[65560];
                     int len;
@@ -107,8 +79,32 @@ public class Client {
                 e.printStackTrace();
             }
         });
-
         downloading.start();
+        return downloading;
+    }
+
+    public static void download(String fileID, String fileName) throws IOException {
+        connectToServer();
+        sendMessage("Download," + fileID + "," + fileName);
+
+        String[] message = receiveMessage().split(",");
+        String response = message[0];
+        long length;
+        System.out.println(response);
+        if (CONNECTION_CONST.ERR_FILE_NOT_FOUND.equals(response)) {
+            closeConnection();
+            DocProcess.deleteDoc(fileID);
+            throw new FileNotFoundException();
+        } else if (CONNECTION_CONST.MSG_READY_TO_DOWNLOAD.equals(response)) {
+            System.out.println("ready");
+            length = Long.parseLong(message[1]);
+        } else {
+            closeConnection();
+            throw new ConnectException("Some Thing Wrong!");
+        }
+
+        int[] progress = {0};
+        Thread downloading = getDownloading(fileName, progress, length);
 
         new Thread(() -> {
             ProBarFrame proBarFrame = new ProBarFrame("Downloading " + fileID, fatherComponent, downloading);
@@ -129,23 +125,12 @@ public class Client {
         }).start();
     }
 
-    public static void upload(String fileID, String filePath) {
-        int[] progress = {0};
+    private static Thread getUploading(File file, int[] progress, int fileLength) {
         Thread uploading = new Thread(() -> {
             try {
-                connectToServer();
-
-                File file = new File(filePath);
-                if (!file.exists()) {
-                    throw new FileNotFoundException();
-                    // TODO: 0029 11/29
-                }
-                String fileName = file.getName();
-                int fileLength = (int) file.length();
-                sendMessage("Upload," + fileID + "," + fileName + "," + fileLength);
                 try (FileInputStream fileInputStream = new FileInputStream(file);
                      SequenceInputStream sequenceInputStream = new SequenceInputStream(Collections.enumeration(List.of(fileInputStream)));
-                     BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(server.getOutputStream());
+                     BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(server.getOutputStream())
                 ) {
                     byte[] buff = new byte[65560];
                     long readSize = 0;
@@ -166,6 +151,22 @@ public class Client {
             }
         });
         uploading.start();
+        return uploading;
+    }
+
+    public static void upload(String fileID, String filePath) throws IOException {
+        connectToServer();
+
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new FileNotFoundException("File Not Found!");
+        }
+        String fileName = file.getName();
+        int fileLength = (int) file.length();
+        sendMessage("Upload," + fileID + "," + fileName + "," + fileLength);
+
+        int[] progress = {0};
+        Thread uploading = getUploading(file, progress, fileLength);
 
         new Thread(() -> {
             ProBarFrame proBarFrame = new ProBarFrame("Uploading " + fileID, fatherComponent, uploading);

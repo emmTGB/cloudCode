@@ -26,7 +26,7 @@ public class LoginPanel extends MyPanel {
         setLayout(springLayout);
         setPreferredSize(new Dimension(GUI_CONST.WIDTH, GUI_CONST.HEIGHT));
 
-        labelName = new JLabel("Username:");
+        labelName = new JLabel("User name:");
         labelPass = new JLabel("Password:");
 
         textName = new MyTextField(HINT_NAME);
@@ -122,7 +122,6 @@ public class LoginPanel extends MyPanel {
             }
             labelMsg.setVisible(false);
         } catch (MyException e) {
-            // TODO
             showMsg(e.getMessage());
         }
     }

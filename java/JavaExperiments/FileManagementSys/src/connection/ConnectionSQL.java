@@ -36,10 +36,6 @@ public class ConnectionSQL {
         }
     }
 
-    public Connection getConnection() {
-        return connection;
-    }
-
     public int getRow() throws SQLException {
         String sql = "select count(*) as countRow from " + tableName + ";";
         ResultSet res = statement.executeQuery(sql);
@@ -50,9 +46,9 @@ public class ConnectionSQL {
         }
     }
 
-    public boolean inTable(String fieldName, String content) throws SQLException {
+    public boolean inTable(String fieldName, String target) throws SQLException {
         String sql = "select " + fieldName + " from " + tableName
-                + " where " + fieldName + " = " + content + ";";
+                + " where " + fieldName + " = " + target + ";";
         return statement.executeQuery(sql).next();
     }
 

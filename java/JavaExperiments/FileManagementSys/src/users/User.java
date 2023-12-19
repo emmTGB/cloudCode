@@ -7,7 +7,6 @@ public abstract class User {
     protected final String userName;
     protected String passWord;
     protected Role userRole;
-    protected final int id = 0;  // TODO: 0015 11/15
 
     protected User(String userName, String passWord) {
         this.userName = userName;
@@ -30,22 +29,11 @@ public abstract class User {
         return passWord;
     }
 
-    public boolean verifyPassWord(String passWord) {
-        return this.passWord.equals(passWord);
-    }
-
     public void resetPassWord(String passWord) throws MyException {
         if (passWordNOK(passWord)) {
             throw UserException.PASS_UNSUPPORTED_ERR;
         }
         this.passWord = passWord;
-    }
-
-    //TODO
-    protected void showFileList() {
-    }
-
-    protected void downloadFile() {
     }
 
     @Override

@@ -35,7 +35,7 @@ public class BrowserMenuPanel extends MyPanel {
 
         menuBox = Box.createVerticalBox();
         ButtonGroup buttonGroup = new ButtonGroup();
-        for (int i = 01; i < menuRadioButtons.length; i++) {
+        for (int i = 1; i < menuRadioButtons.length; i++) {
             menuRadioButtons[i] = new JRadioButton(optionList[i]);
             menuBox.add(menuRadioButtons[i]);
             buttonGroup.add(menuRadioButtons[i]);

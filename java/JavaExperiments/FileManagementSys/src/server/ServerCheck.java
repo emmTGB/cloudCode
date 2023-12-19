@@ -4,15 +4,13 @@ import consts.FILE_CONST;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.MulticastSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
 public class ServerCheck implements Runnable {
-    Socket socket;
-    String[] message;
+    final Socket socket;
+    final String[] message;
     ObjectOutputStream objectOutputStream;
 
     public ServerCheck(Socket socket, String[] message) {

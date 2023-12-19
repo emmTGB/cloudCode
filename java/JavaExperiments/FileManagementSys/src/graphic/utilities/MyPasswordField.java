@@ -25,7 +25,6 @@ public class MyPasswordField extends JPasswordField {
                 setForeground(GUI_CONST.FONT_COLOR);
                 setFont(GUI_CONST.FONT);
                 setBackground(GUI_CONST.ALT_BG_COLOR);
-                //todo
             }
 
             @Override

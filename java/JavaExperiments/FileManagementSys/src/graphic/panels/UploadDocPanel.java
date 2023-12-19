@@ -1,7 +1,6 @@
 package graphic.panels;
 
 import consts.GUI_CONST;
-import graphic.frames.ProBarFrame;
 import graphic.utilities.MyTextField;
 import process.DocProcess;
 import users.User;
@@ -11,15 +10,16 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class UploadDocPanel extends MyPanel {
-    User user;
-    SpringLayout springLayout = new SpringLayout();
-    JButton chooseFileButton;
-    MyTextField chooseFileField;
-    MyTextField descriptionField;
-    JLabel chooseFileLabel;
-    JLabel descriptionLabel;
+    final User user;
+    final SpringLayout springLayout = new SpringLayout();
+    final JButton chooseFileButton;
+    final MyTextField chooseFileField;
+    final MyTextField descriptionField;
+    final JLabel chooseFileLabel;
+    final JLabel descriptionLabel;
 
     public UploadDocPanel(User user) {
         super();
@@ -28,8 +28,8 @@ public class UploadDocPanel extends MyPanel {
         setPreferredSize(new Dimension(GUI_CONST.WIDTH, GUI_CONST.HEIGHT));
 
         chooseFileButton = new JButton("Browse");
-        chooseFileLabel = new JLabel("Choose File");
-        descriptionLabel = new JLabel("Description");
+        chooseFileLabel = new JLabel("Choose File:");
+        descriptionLabel = new JLabel("Description:");
         chooseFileField = new MyTextField("choose your file");
         descriptionField = new MyTextField("input your description");
 
@@ -109,7 +109,6 @@ public class UploadDocPanel extends MyPanel {
 
     @Override
     public void confirmTriggered() {
-        // TODO: 0012 12/12
         String filePath = chooseFileField.getText();
         String description = descriptionField.getText();
         if (filePath.isEmpty()) {
@@ -120,10 +119,9 @@ public class UploadDocPanel extends MyPanel {
             DocProcess.uploadDoc(filePath, user.getUserName(), description);
         } catch (FileNotFoundException fnf) {
             showMsg(fnf.getMessage());
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             bounceUpMsg(e.getMessage());
             e.printStackTrace();
         }
-        // TODO: 12/12/23 DIY it!
     }
 }

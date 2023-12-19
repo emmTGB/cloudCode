@@ -11,9 +11,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Enumeration;
 
 public class ListDocPanel extends MyPanel {
@@ -35,8 +35,8 @@ public class ListDocPanel extends MyPanel {
         try {
             listDocs = DocProcess.getAllDocs();
             contents = new Object[DocProcess.getLengthOfDocList()][columnNames.length];
-        } catch (DataException e) {
-            bounceUpMsg(e.getMessage()); // TODO: 0029 11/29
+        } catch (IOException | SQLException | DataException e) {
+            bounceUpMsg(e.getMessage());
             myFrame.rollBack();
             throw new RuntimeException(e);
         }
@@ -45,11 +45,11 @@ public class ListDocPanel extends MyPanel {
         while (listDocs.hasMoreElements()) {
             Doc doc = listDocs.nextElement();
             contents[i][0] = "Download";
-            contents[i][1] = doc.getFileName();
-            contents[i][2] = doc.getCreator();
-            contents[i][3] = doc.getTimestamp().toString();
-            contents[i][4] = doc.getID();
-            contents[i][5] = doc.getDescription();
+            contents[i][1] = doc.fileName();
+            contents[i][2] = doc.creator();
+            contents[i][3] = doc.timestamp().toString();
+            contents[i][4] = doc.ID();
+            contents[i][5] = doc.description();
             i++;
         }
 
@@ -156,24 +156,21 @@ class ButtonEditor extends DefaultCellEditor {
         return label;
     }
 
-    @Override
-    public boolean stopCellEditing() {
-        return super.stopCellEditing();
-    }
-
     private void handleButtonClick() {
         String columnName = "id";
         String IDinRow = jTable.getValueAt(row, jTable.getColumn(columnName).getModelIndex()).toString();
-        int result = JOptionPane.showConfirmDialog(this.getComponent(), "confirm to download");  // TODO: 0001 12/1
+        int result = JOptionPane.showConfirmDialog(this.getComponent(), "Confirm to download");
         if (result != JOptionPane.YES_OPTION) {
             return;
         }
         try {
             DocProcess.downloadDoc(IDinRow);
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException | DataException e) {
             DefaultTableModel model = (DefaultTableModel) jTable.getModel();
             model.removeRow(row);
             JOptionPane.showMessageDialog(this.getComponent(), "File Not Exist On Server!");
+        } catch (SQLException | IOException e) {
+            JOptionPane.showMessageDialog(this.getComponent(), e.getMessage());
         }
     }
 }

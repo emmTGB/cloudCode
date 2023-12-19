@@ -25,7 +25,7 @@ public class ListUserPanel extends MyPanel {
             contents = new String[UserProcess.getLengthOfUserList()][columnNames.length];
             listUsers = UserProcess.getAllUsers();
         } catch (DataException | UserException e) {
-            bounceUpMsg(e.getMessage()); // TODO: 0029 11/29
+            bounceUpMsg(e.getMessage());
             throw new RuntimeException(e);
         }
 

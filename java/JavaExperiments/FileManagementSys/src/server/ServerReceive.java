@@ -7,8 +7,8 @@ import java.net.Socket;
 import java.net.SocketException;
 
 public class ServerReceive implements Runnable {
-    Socket socket;
-    String[] message;
+    final Socket socket;
+    final String[] message;
     String path;
     long fileLength;
 
@@ -22,28 +22,26 @@ public class ServerReceive implements Runnable {
         String threadMessage = "Thread " + Thread.currentThread().getId() + " on " + socket.getInetAddress() + " uploading";
         Server.addMessage(Thread.currentThread().getId(), threadMessage);
         try {
-            while (true) {
-                {
-                    String ID = message[0];
-                    String name = message[1];
-                    path = FILE_CONST.SERVER_DIR + ID + "_" + name;
-                    fileLength = Integer.parseInt(message[2]);
-                }
+            {
+                String ID = message[0];
+                String name = message[1];
+                path = FILE_CONST.SERVER_DIR + ID + "_" + name;
+                fileLength = Integer.parseInt(message[2]);
+            }
 
 
-                try (InputStream inputStream = socket.getInputStream();
-                     FileOutputStream fileOutputStream = getFileOutputStream()) {
-                    byte[] fileStream = new byte[65560];
-                    int len = 0;
-                    while ((len = inputStream.read(fileStream)) != -1) {
-                        fileOutputStream.write(fileStream, 0, len);
-                    }
+            try (InputStream inputStream = socket.getInputStream();
+                 FileOutputStream fileOutputStream = getFileOutputStream()) {
+                byte[] fileStream = new byte[65560];
+                int len;
+                while ((len = inputStream.read(fileStream)) != -1) {
+                    fileOutputStream.write(fileStream, 0, len);
                 }
-                Thread.sleep(200);
+            } finally {
                 socket.close();
             }
         } catch (SocketException ignored) {
-        } catch (InterruptedException | IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(); // TODO: 0029 11/29
         } finally {
             if (!finished()) {

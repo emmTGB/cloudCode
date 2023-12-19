@@ -67,18 +67,12 @@ public class MyTabbedPaneUI extends BasicTabbedPaneUI {
      * @param isSelected   标签是否被选中
      */
     protected void paintTabBorder(Graphics g, int tabPlacement, int tabIndex,
-                                  int x, int y, int w, int h, boolean isSelected) {//自定义选项卡的边框色
-        //注意：这个方法中的具体实现内容，可以写，也可以不写，根据自己实际情况决定。但这个方法定义必须有。否则会影响最终的显示效果
-//        Color defaultColor = GUI_CONST.ALT_BG_COLOR;
-//        Color selectedColor = GUI_CONST.ALT_THEME_COLOR;
-//        //设置选中时和未被选中时的颜色
-//        g.setColor(!isSelected ? defaultColor : selectedColor);
-//        //绘制边框，即选项卡边框为矩形
-//        g.drawRect(x + 5, y, w, h);
+                                  int x, int y, int w, int h, boolean isSelected) {
+        // 留空
     }
 
     protected void paintFocusIndicator(Graphics g,
-                                       int tabPlacement, Rectangle[] rects,
+                                       int tabPlacement, Rectangle[] rectangles,
                                        int tabIndex, Rectangle iconRect, Rectangle textRect,
                                        boolean isSelected) {//这个方法定义如果没有的话，选项卡在选中时，内测会有虚线。
         //Do nothing
