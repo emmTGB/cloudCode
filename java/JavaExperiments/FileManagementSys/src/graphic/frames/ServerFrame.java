@@ -14,11 +14,15 @@ public class ServerFrame {
     public JList<String> clientList;
 
     public ServerFrame() {
-        startBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Server.start();
+        portTextField.setText(String.valueOf(Server.SERVER_PORT));
+        startBtn.addActionListener(e -> {
+            try {
+                Server.SERVER_PORT = Integer.parseInt(portTextField.getText());
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Wrong port!", "ERROR!", JOptionPane.ERROR_MESSAGE);
+                return;
             }
+            Server.start();
         });
     }
 }

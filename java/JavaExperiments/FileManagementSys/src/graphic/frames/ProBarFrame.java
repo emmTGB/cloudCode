@@ -5,24 +5,13 @@ import graphic.panels.MyPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class ProBarFrame extends JFrame {
     private final JProgressBar progressBar;
 
-    public static void main(String[] args) {
-        ProBarFrame proBarFrame = new ProBarFrame("111", null);
-
-        for (int i = 0; i < 100; i++) {
-            proBarFrame.setProgressValue(i);
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    public ProBarFrame(String title, Component father) {
+    public ProBarFrame(String title, Component father, Thread thread) {
         super(title);
         setLayout(new BorderLayout());
         setSize(GUI_CONST.WIDTH / 3, GUI_CONST.HEIGHT / 5);
@@ -39,6 +28,13 @@ public class ProBarFrame extends JFrame {
         springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, progressBar, 0, SpringLayout.HORIZONTAL_CENTER, jPanel);
         springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, progressBar, 0, SpringLayout.VERTICAL_CENTER, jPanel);
         add(jPanel);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                thread.interrupt();
+            }
+        });
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(father);

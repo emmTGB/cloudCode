@@ -17,10 +17,11 @@ public class Server {
     static ServerFrame serverFrame;
     static DefaultListModel<String> listModel;
     static Hashtable<Long, String> hashList;
+    public static int SERVER_PORT = 3939;
     static Thread serverMain = new Thread(() -> {
         ServerSocket server;
         try {
-            server = new ServerSocket(CONNECTION_CONST.SERVER_PORT);
+            server = new ServerSocket(SERVER_PORT);
         } catch (IOException e) {
             throw new RuntimeException();
         }

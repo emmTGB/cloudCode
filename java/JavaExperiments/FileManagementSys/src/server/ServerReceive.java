@@ -10,6 +10,7 @@ public class ServerReceive implements Runnable {
     Socket socket;
     String[] message;
     String path;
+    long fileLength;
 
     ServerReceive(Socket socket, String[] message) {
         this.socket = socket;
@@ -26,27 +27,28 @@ public class ServerReceive implements Runnable {
                     String ID = message[0];
                     String name = message[1];
                     path = FILE_CONST.SERVER_DIR + ID + "_" + name;
-                    int fileLength = Integer.parseInt(message[2]);
+                    fileLength = Integer.parseInt(message[2]);
                 }
 
-                InputStream inputStream = socket.getInputStream();
-                FileOutputStream fileOutputStream = getFileOutputStream();
-                byte[] fileStream = new byte[65560];
-                int len = 0;
-                while ((len = inputStream.read(fileStream)) != -1) {
-                    fileOutputStream.write(fileStream, 0, len);
+
+                try (InputStream inputStream = socket.getInputStream();
+                     FileOutputStream fileOutputStream = getFileOutputStream()) {
+                    byte[] fileStream = new byte[65560];
+                    int len = 0;
+                    while ((len = inputStream.read(fileStream)) != -1) {
+                        fileOutputStream.write(fileStream, 0, len);
+                    }
                 }
-                inputStream.close();
-                fileOutputStream.close();
                 Thread.sleep(200);
                 socket.close();
             }
         } catch (SocketException ignored) {
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(); // TODO: 0029 11/29
         } catch (InterruptedException | IOException e) {
             throw new RuntimeException(); // TODO: 0029 11/29
         } finally {
+            if (!finished()) {
+                deleteFile();
+            }
             Server.dropMessage(Thread.currentThread().getId());
         }
     }
@@ -65,5 +67,20 @@ public class ServerReceive implements Runnable {
             }
         }
         return new FileOutputStream(file);
+    }
+
+    private void deleteFile() {
+        File file = new File(path);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
+    private boolean finished() {
+        File file = new File(path);
+        if (file.exists()) {
+            return file.length() == fileLength;
+        }
+        return false;
     }
 }

@@ -22,7 +22,7 @@ public class Client {
     public static Component fatherComponent = null;
 
     public static void connectToServer() throws IOException {
-        server = new Socket(CONNECTION_CONST.SERVER_HOST, CONNECTION_CONST.SERVER_PORT);
+        server = new Socket(CONNECTION_CONST.SERVER_HOST, CONNECTION_CONST.CLIENT_PORT);
 //        System.out.println(server.getInetAddress().getHostName());
     }
 
@@ -48,7 +48,7 @@ public class Client {
 
     public static void download(String fileID, String fileName) throws IOException {
         int[] progress = {0};
-        new Thread(() -> {
+        Thread downloading = new Thread(() -> {
             try {// TODO: 12/12/23 stream try with resources
                 connectToServer();
                 sendMessage("Download," + fileID + "," + fileName);
@@ -94,6 +94,11 @@ public class Client {
                         readSize += len;
                         fileOutputStream.write(fileStream, 0, len);
                         progress[0] = (int) (readSize * 100 / length);
+                        if (Thread.interrupted()) {
+                            if (file.exists())
+                                file.delete();
+                            break;
+                        }
                     }
                 } finally {
                     closeConnection();
@@ -101,10 +106,12 @@ public class Client {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }).start();
+        });
+
+        downloading.start();
 
         new Thread(() -> {
-            ProBarFrame proBarFrame = new ProBarFrame("Uploading", fatherComponent);
+            ProBarFrame proBarFrame = new ProBarFrame("Downloading " + fileID, fatherComponent, downloading);
             proBarFrame.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
@@ -128,7 +135,7 @@ public class Client {
 
     public static void upload(String fileID, String filePath) {
         int[] progress = {0};
-        new Thread(() -> {
+        Thread uploading = new Thread(() -> {
             try {
                 connectToServer();
 
@@ -151,6 +158,9 @@ public class Client {
                         readSize += len;
                         bufferedOutputStream.write(buff, 0, len);
                         progress[0] = (int) (readSize * 100 / fileLength);
+                        if (Thread.interrupted()) {
+                            break;
+                        }
                     }
                 } finally {
                     closeConnection();
@@ -158,10 +168,11 @@ public class Client {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }).start();
+        });
+        uploading.start();
 
         new Thread(() -> {
-            ProBarFrame proBarFrame = new ProBarFrame("Downloading", fatherComponent);
+            ProBarFrame proBarFrame = new ProBarFrame("Uploading " + fileID, fatherComponent, uploading);
             proBarFrame.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {

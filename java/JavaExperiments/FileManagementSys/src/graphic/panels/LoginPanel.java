@@ -26,7 +26,7 @@ public class LoginPanel extends MyPanel {
         setLayout(springLayout);
         setPreferredSize(new Dimension(GUI_CONST.WIDTH, GUI_CONST.HEIGHT));
 
-        labelName = new JLabel("User name:");
+        labelName = new JLabel("Username:");
         labelPass = new JLabel("Password:");
 
         textName = new MyTextField(HINT_NAME);
@@ -112,7 +112,6 @@ public class LoginPanel extends MyPanel {
             textPass.clear();
             textPass.setForeground(GUI_CONST.ALT_FONT_COLOR);
             textPass.setFont(GUI_CONST.FONT_ITALIC);
-            textPass.setBorder(GUI_CONST.TF_BORDER);
             textPass.setEchoChar('\0');
             textPass.requestFocus();
 

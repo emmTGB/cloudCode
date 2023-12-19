@@ -36,7 +36,7 @@ public class CreateUserPanel extends MyPanel {
                 Role.BROWSER
         });
 
-        labelName = new JLabel("User name:");
+        labelName = new JLabel("Username:");
         labelPass = new JLabel("Password:");
         labelRole = new JLabel("Role:");
 

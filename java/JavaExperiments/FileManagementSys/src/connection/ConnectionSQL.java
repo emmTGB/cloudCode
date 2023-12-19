@@ -23,7 +23,9 @@ public class ConnectionSQL {
             connection = DriverManager.getConnection(
                     "jdbc:mysql://" +
                             CONNECTION_CONST.SQL_HOST +
-                            ":3306/" +
+                            ":" +
+                            CONNECTION_CONST.SQL_PORT +
+                            "/" +
                             CONNECTION_CONST.DATABASE +
                             "?useUnicode=true&characterEncoding=gbk",
                     user, password

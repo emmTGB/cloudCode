@@ -26,7 +26,7 @@ public class ServerDownload implements Runnable {
 
     @Override
     public void run() {
-        String threadMessage = "Thread " + Thread.currentThread().getId() + " on " + socket.getInetAddress() + " checking";
+        String threadMessage = "Thread " + Thread.currentThread().getId() + " on " + socket.getInetAddress() + " downloading";
         Server.addMessage(Thread.currentThread().getId(), threadMessage);
         try {
             while (true) {
