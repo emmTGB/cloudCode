@@ -91,14 +91,14 @@ public class Client {
                     int len;
                     long readSize = 0;
                     while ((len = inputStream.read(fileStream)) != -1) {
-                        readSize += len;
-                        fileOutputStream.write(fileStream, 0, len);
-                        progress[0] = (int) (readSize * 100 / length);
                         if (Thread.interrupted()) {
                             if (file.exists())
                                 file.delete();
                             break;
                         }
+                        readSize += len;
+                        fileOutputStream.write(fileStream, 0, len);
+                        progress[0] = (int) (readSize * 100 / length);
                     }
                 } finally {
                     closeConnection();
@@ -112,14 +112,10 @@ public class Client {
 
         new Thread(() -> {
             ProBarFrame proBarFrame = new ProBarFrame("Downloading " + fileID, fatherComponent, downloading);
-            proBarFrame.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosing(WindowEvent e) {
-                    // TODO: 0012 12/12
-                }
-            });
 
             while (progress[0] < 100) {
+                if (!proBarFrame.isVisible())
+                    return;
                 proBarFrame.setProgressValue(progress[0]);
                 try {
                     Thread.sleep(20);
@@ -155,12 +151,12 @@ public class Client {
                     long readSize = 0;
                     int len;
                     while ((len = sequenceInputStream.read(buff)) != -1) {
-                        readSize += len;
-                        bufferedOutputStream.write(buff, 0, len);
-                        progress[0] = (int) (readSize * 100 / fileLength);
                         if (Thread.interrupted()) {
                             break;
                         }
+                        readSize += len;
+                        bufferedOutputStream.write(buff, 0, len);
+                        progress[0] = (int) (readSize * 100 / fileLength);
                     }
                 } finally {
                     closeConnection();
@@ -173,14 +169,10 @@ public class Client {
 
         new Thread(() -> {
             ProBarFrame proBarFrame = new ProBarFrame("Uploading " + fileID, fatherComponent, uploading);
-            proBarFrame.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosing(WindowEvent e) {
-                    // TODO: 0012 12/12
-                }
-            });
 
             while (progress[0] < 100) {
+                if (!proBarFrame.isVisible())
+                    return;
                 proBarFrame.setProgressValue(progress[0]);
                 try {
                     Thread.sleep(20);
