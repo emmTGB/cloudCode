@@ -26,6 +26,8 @@ public class ServerDownload implements Runnable {
 
     @Override
     public void run() {
+        String threadMessage = "Thread " + Thread.currentThread().getId() + " on " + socket.getInetAddress() + " checking";
+        Server.addMessage(Thread.currentThread().getId(), threadMessage);
         try {
             while (true) {
                 {
@@ -33,13 +35,12 @@ public class ServerDownload implements Runnable {
                     String name = message[1];
                     path = FILE_CONST.SERVER_DIR + ID + "_" + name;
                 }
-                System.out.println(path);
                 File file = new File(path);
                 if (!file.exists()) {
                     sendErrorMessage(CONNECTION_CONST.ERR_FILE_NOT_FOUND);
                     throw new FileNotFoundException();  // TODO: 0029 11/29
                 }
-                sendSuccessMessage(CONNECTION_CONST.MSG_READY_TO_DOWNLOAD);
+                sendSuccessMessage(CONNECTION_CONST.MSG_READY_TO_DOWNLOAD + "," + file.length());
                 try {
                     fileInputStream = new FileInputStream(file);
                 } catch (IOException e) {
@@ -71,6 +72,8 @@ public class ServerDownload implements Runnable {
         } catch (SocketException ignored) {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
+        } finally {
+            Server.dropMessage(Thread.currentThread().getId());
         }
     }
 
