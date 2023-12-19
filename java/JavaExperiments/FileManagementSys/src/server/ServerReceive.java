@@ -18,7 +18,7 @@ public class ServerReceive implements Runnable {
 
     @Override
     public void run() {
-        String threadMessage = "Thread " + Thread.currentThread().getId() + " on " + socket.getInetAddress() + " checking";
+        String threadMessage = "Thread " + Thread.currentThread().getId() + " on " + socket.getInetAddress() + " uploading";
         Server.addMessage(Thread.currentThread().getId(), threadMessage);
         try {
             while (true) {
