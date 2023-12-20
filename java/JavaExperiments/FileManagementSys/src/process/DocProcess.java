@@ -7,7 +7,6 @@ import data.Doc;
 import exceptions.DataException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,7 +35,7 @@ public class DocProcess {
             Timestamp _createTime = resultSet.getTimestamp("createTime");
             String _description = resultSet.getString("description");
 
-            if (!Client.checkOnServer(_ID, _filename)) {
+            if (!new Client().checkOnServer(_ID, _filename)) {
                 stringVector.add(_ID);
                 continue;
             }
@@ -70,7 +69,7 @@ public class DocProcess {
         if (resultSet.next()) {
             String _ID = resultSet.getString("ID");
             String _filename = resultSet.getString("filename");
-            Client.download(_ID, _filename);
+            new Client().download(_ID, _filename);
         } else {
             throw new DataException("Record Not Found!");
         }
@@ -81,7 +80,7 @@ public class DocProcess {
         File file = new File(filePath);
         String fileName = file.getName();
         String ID = generateID(timestamp);
-        Client.upload(ID, filePath);
+        new Client().upload(ID, filePath);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 

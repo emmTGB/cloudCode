@@ -15,26 +15,26 @@ import java.util.Collections;
 import java.util.List;
 
 public class Client {
-    private static Socket server;
+    private Socket server;
     public static Component fatherComponent = null;
 
-    public static void connectToServer() throws IOException {
+    public void connectToServer() throws IOException {
         server = new Socket(CONNECTION_CONST.SERVER_HOST, CONNECTION_CONST.CLIENT_PORT);
 //        System.out.println(server.getInetAddress().getHostName());
     }
 
-    public static void closeConnection() throws IOException {
+    public void closeConnection() throws IOException {
         server.close();
     }
 
-    public static void sendMessage(String message) throws IOException {
+    public void sendMessage(String message) throws IOException {
         ObjectOutputStream os = new ObjectOutputStream(server.getOutputStream());
         os.writeObject(message);
         System.out.println(message);
         os.flush();
     }
 
-    private static String receiveMessage() throws IOException {
+    private String receiveMessage() throws IOException {
         ObjectInputStream is = new ObjectInputStream(server.getInputStream());
         try {
             return (String) is.readObject();
@@ -43,7 +43,7 @@ public class Client {
         }
     }
 
-    private static Thread getDownloading(String fileName, int[] progress, long length) {
+    private Thread getDownloading(String fileName, int[] progress, long length) {
         Thread downloading = new Thread(() -> {
             try {
                 File dir = new File(FILE_CONST.DOWNLOAD_DIR);
@@ -83,7 +83,7 @@ public class Client {
         return downloading;
     }
 
-    public static void download(String fileID, String fileName) throws IOException {
+    public void download(String fileID, String fileName) throws IOException {
         connectToServer();
         sendMessage("Download," + fileID + "," + fileName);
 
@@ -125,7 +125,7 @@ public class Client {
         }).start();
     }
 
-    private static Thread getUploading(File file, int[] progress, int fileLength) {
+    private Thread getUploading(File file, int[] progress, int fileLength) {
         Thread uploading = new Thread(() -> {
             try {
                 try (FileInputStream fileInputStream = new FileInputStream(file);
@@ -154,7 +154,7 @@ public class Client {
         return uploading;
     }
 
-    public static void upload(String fileID, String filePath) throws IOException {
+    public void upload(String fileID, String filePath) throws IOException {
         connectToServer();
 
         File file = new File(filePath);
@@ -187,7 +187,7 @@ public class Client {
         }).start();
     }
 
-    public static boolean checkOnServer(String ID, String fileName) throws IOException {
+    public boolean checkOnServer(String ID, String fileName) throws IOException {
         connectToServer();
         sendMessage("Check," + ID + "," + fileName);
 

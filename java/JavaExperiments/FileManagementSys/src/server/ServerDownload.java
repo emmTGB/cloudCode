@@ -7,9 +7,7 @@ import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Vector;
 
 public class ServerDownload implements Runnable {
     final Socket socket;
@@ -25,7 +23,7 @@ public class ServerDownload implements Runnable {
 
     @Override
     public void run() {
-        String threadMessage = "Thread " + Thread.currentThread().getId() + " on " + socket.getInetAddress() + " downloading";
+        String threadMessage = "Thread " + Thread.currentThread().getId() + " on " + socket.getInetAddress().getHostAddress() + " downloading";
         Server.addMessage(Thread.currentThread().getId(), threadMessage);
         try {
             {

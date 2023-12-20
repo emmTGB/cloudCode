@@ -91,7 +91,15 @@ public class ListDocPanel extends MyPanel {
 
     @Override
     public void confirmTriggered() {
-        // TODO: 0001 12/1 实现多选下载
+        int[] select = tableDocs.getSelectedRows();
+        for (int i : select) {
+            String ID = tableDocs.getValueAt(i, tableDocs.getColumn("id").getModelIndex()).toString();
+            try {
+                DocProcess.downloadDoc(ID);
+            } catch (Throwable e) {
+                showMsg(e.getMessage());
+            }
+        }
     }
 }
 

@@ -20,6 +20,7 @@ public class ConnectionSQL {
         user = CONNECTION_CONST.SQL_USER;
         password = CONNECTION_CONST.SQL_PASS;
         try {
+            System.out.println("Start SQL Linking");
             connection = DriverManager.getConnection(
                     "jdbc:mysql://" +
                             CONNECTION_CONST.SQL_HOST +
@@ -31,6 +32,7 @@ public class ConnectionSQL {
                     user, password
             );
             statement = connection.createStatement();
+            System.out.println("Success Link To SQL");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
