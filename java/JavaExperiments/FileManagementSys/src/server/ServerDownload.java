@@ -23,7 +23,7 @@ public class ServerDownload implements Runnable {
 
     @Override
     public void run() {
-        String threadMessage = "Thread " + Thread.currentThread().getId() + " on " + socket.getInetAddress().getHostAddress() + " downloading";
+        String threadMessage = "Thread " + Thread.currentThread().getId() + " downloading";
         Server.addMessage(Thread.currentThread().getId(), threadMessage);
         try {
             {

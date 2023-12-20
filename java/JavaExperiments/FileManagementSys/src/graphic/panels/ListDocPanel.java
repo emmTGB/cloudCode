@@ -36,7 +36,7 @@ public class ListDocPanel extends MyPanel {
             listDocs = DocProcess.getAllDocs();
             contents = new Object[DocProcess.getLengthOfDocList()][columnNames.length];
         } catch (IOException | SQLException | DataException e) {
-            bounceUpMsg(e.getMessage());
+            bounceUpMsg(e.getClass() + e.getMessage());
             myFrame.rollBack();
             throw new RuntimeException(e);
         }

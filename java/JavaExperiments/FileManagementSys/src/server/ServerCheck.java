@@ -20,7 +20,7 @@ public class ServerCheck implements Runnable {
 
     @Override
     public void run() {
-        String threadMessage = "Thread " + Thread.currentThread().getId() + " on " + socket.getInetAddress().getHostAddress() + " checking";
+        String threadMessage = "Thread " + Thread.currentThread().getId() + " checking";
         Server.addMessage(Thread.currentThread().getId(), threadMessage);
         try {
             while (true) {
