@@ -17,7 +17,6 @@ public class Server {
     public static int SERVER_PORT = 3939;
     static final Thread serverMain = new Thread(() -> {
         try (ServerSocket server = new ServerSocket(SERVER_PORT)) {
-
             try {
                 while (true) {
                     Socket socket = server.accept();
@@ -43,7 +42,6 @@ public class Server {
         listModel = new DefaultListModel<>();
         hashList = new Hashtable<>();
         serverFrame.clientList.setModel(listModel);
-//        hashList.put(1L, "test");
 
         frame.setContentPane(serverFrame.panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -14,7 +14,7 @@ void euler() {
     for (int i = 0; i < N;i++) {
         y = y + step * func(x, y);
         x += step;
-        cout << y << endl;
+        cout << x << " " << y << endl;
     }
 }
 
