@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="">
+        <div>
+            文本框：<input type="text" placeholder="nihao">
+            <br><br>
+            密码：<input type="password" placeholder="mima">
+            <br><br>
+            单选：
+            <!-- 用 name 分组， checked 默认选中 -->
+            <input type="radio" name="gender" id="gender_01" checked>
+                <label for="gender_01">male</label>
+            <input type="radio" name="gender" id="gender_02">
+                <label for="gender_02">female</label>
+            <br>
+            <label>
+                <input type="radio" name="gen">male
+            </label>
+            <label>
+                <input type="radio" name="gen">female
+            </label>
+        </div>
+        <br><br>
+        多选：<input type="checkbox" name="" id="">
+        <br><br>
+        文件：<input type="file" name="" id="" multiple>
+        <br><br>
+        <input type="button" value="按我啊">
+        <!-- 在 form 体中生效 -->
+        <input type="reset" value="重置">
+        <input type="submit" value="提交">
+    </form>
+    <br><br><br>
+    <form action="">
+        <select name="city" id="">
+            <option value="">beijing</option>
+            <option value="" selected>shanghai</option>
+        </select>
+        <br><br>
+        <textarea name="" id="" cols="30" rows="10">text what you want</textarea>
+        <br><br>
+        <button>nothing</button>
+        <button type="reset">reset</button>
+        <button type="submit">submit</button>
+    </form>
+</body>
+</html>
