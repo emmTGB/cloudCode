@@ -2,3 +2,6 @@
 .vscode/*
 !.vscode/launch.json
 **/__pycache__/**
+cpp/dataStructure/touristMap/.vscode/launch.json
+cpp/dataStructure/touristMap/.vscode/settings.json
+cpp/dataStructure/touristMap/.vscode/tasks.json
