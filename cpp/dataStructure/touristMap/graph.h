@@ -31,6 +31,8 @@ public:
     void dfsTraversal(int vexN, PathList& pList);
     int findShortPath(int vexNStart, int vexNEnd, Edge aPath[]);
     int findMinTree(int nStart, Edge aEdge[]);
+
+    int getVexNum();
 };
 
 typedef struct Path
@@ -38,8 +40,5 @@ typedef struct Path
     int pVex[20];
     Path* next;
 }*PathList;
-
-
-
 
 #endif GRAGH_H

@@ -124,7 +124,7 @@ int TourismGraph::findShortPath(int vexNStart, int vexNEnd, Edge aPath[]) {
             else {
                 tmp = adjMatrix[k][j] + min;
             }
-            if(flag[j] == 0 && tmp < dist[j]){
+            if (flag[j] == 0 && tmp < dist[j]) {
                 dist[j] = tmp;
                 pre[j] = k;
             }
@@ -133,11 +133,55 @@ int TourismGraph::findShortPath(int vexNStart, int vexNEnd, Edge aPath[]) {
 
     int num = 0;
     int i = vexNEnd;
-    while(i != vexNStart){
+    while (i != vexNStart) {
         aPath[num++] = { i, pre[i], adjMatrix[pre[i]][i] };
         i = pre[i];
     }
     return num;
 }
 
+int TourismGraph::findMinTree(int vexNStart, Edge aEdge[]) {
+    int flag[20], closest[20];
+    int lowcost[20];
+    for (int i = 0; i < vexNum; i++) {
+        closest[i] = -1;
+        flag[i] = 0;
+        if (adjMatrix[vexNStart][i] > 0 || i == vexNStart) {
+            lowcost[i] = adjMatrix[vexNStart][i];
+            closest[i] = vexNStart;
+        }
+        else {
+            lowcost[i] = 0x7fff;
+        }
+    }
+    flag[vexNStart] = 1;
 
+    int num = 0;
+    int min, k;
+    for (int i = 1; i < vexNum; i++) {
+        min = 0x7fff;
+        for (int j = 0; j < vexNum; j++) {
+            if (flag[j] == 0 && lowcost[j] < min) {
+                min = lowcost[j];
+                k = j;
+            }
+        }
+        for (int j = 0; j < vexNum; j++) {
+            if (flag[j] == 0 && adjMatrix[k][j] < lowcost[j] && adjMatrix[k][j] != 0) {
+                lowcost[j] = adjMatrix[k][j];
+                closest[j] = k;
+            }
+        }
+        flag[closest[k]] = 1;
+        aEdge[num].vex1 = closest[k];
+        aEdge[num].vex2 = k;
+        aEdge[num].weight = adjMatrix[closest[k]][k];
+        num++;
+    }
+
+    return num;
+}
+
+int TourismGraph::getVexNum() {
+    return vexNum;
+}
