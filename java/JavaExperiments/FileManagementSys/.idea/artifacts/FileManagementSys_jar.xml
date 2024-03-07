@@ -1,9 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="FileManagementSys:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/FileManagementSys_jar</output-path>
-    <root id="archive" name="FileManagementSys.jar">
-      <element id="module-output" name="FileManagementSys" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/src/lib/mysql-connector-j-8.2.0.jar" path-in-jar="/" />
-    </root>
-  </artifact>
-</component>
