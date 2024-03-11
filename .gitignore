@@ -1,4 +1,3 @@
 **/target/**
 **/.vscode/*
 **/__pycache__/**
-*.json
