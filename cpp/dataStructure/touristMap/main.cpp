@@ -17,7 +17,6 @@ int main() {
 
         switch (choice) {
         case 1:
-            system("cls");
             createGraph();
             break;
         case 2:

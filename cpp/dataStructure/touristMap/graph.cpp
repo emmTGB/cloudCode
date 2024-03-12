@@ -60,7 +60,7 @@ void TourismGraph::dfs(int vexN, bool beVisited[], int& nIndex, PathList& pList)
         if (beVisited[i]) tVexNum++;
     }
     if (tVexNum == vexNum) {
-        pList->next = (PathList)malloc(sizeof(PathList));
+        pList->next = (PathList)malloc(sizeof(Path));
         for (int i = 0; i < vexNum; i++) {
             pList->next->pVex[i] = pList->pVex[i];
         }
