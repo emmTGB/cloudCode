@@ -1,5 +1,4 @@
 #include<iostream>
-#include"graph.h"
 #include"tourism.h"
 
 using namespace std;
@@ -26,10 +25,10 @@ int main() {
             travelPath();
             break;
         case 4:
-            findShortPath();
+            // findShortPath();
             break;
         case 5:
-            designPath();
+            // designPath();
             break;
         case 6:
             exit(0);
