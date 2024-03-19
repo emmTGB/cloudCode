@@ -11,4 +11,4 @@ elif a in range(0, 3):
 elif a in range(3, 7):
     ans = math.pow(a, a - 2)
 
-print(ans)
+print(int(ans))
