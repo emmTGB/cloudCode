@@ -12,8 +12,9 @@ void TourismGraph::init() {
         strcpy(aVexs[i].name, "");
         strcpy(aVexs[i].desc, "");
         for (int j = 0; j < 20; j++) {
-            adjMatrix[i][j] = 0;
+            adjMatrix[i][j] = 0x7fff;
         }
+        adjMatrix[i][i] = 0;
     }
 }
 
@@ -140,46 +141,119 @@ int TourismGraph::findShortPath(int vexNStart, int vexNEnd, Edge aPath[]) {
     return num;
 }
 
-int TourismGraph::findMinTree(int vexNStart, Edge aEdge[]) {
-    int flag[20], closest[20];
+// int TourismGraph::findMinTree(int vexNStart, Edge aEdge[]) {
+//     int dist[20] = { 0x7fff }, pre[20] = { 0 }, res = 0;
+//     bool flag[20] = { false };
+//     dist[vexNStart] = 0;
+//     flag[vexNStart] = true;
+//     for (int i = 1; i < vexNum; ++i)
+//         if (adjMatrix[0][i] > 0) dist[i] = min(dist[i], adjMatrix[0][i]);
+//     for (int i = 1; i < vexNum; ++i) {
+//         int tmp = 0x7fff;
+//         int t = -1;
+//         cout << i << endl;
+//         for (int j = 1; j < vexNum; ++j) {
+//             if (!flag[j] && dist[j] < tmp) {
+//                 cout << i << j << endl;
+//                 tmp = dist[j];
+//                 pre[j] = i;
+//                 t = j;
+//             }
+//         }
+//         if (t == -1) { return 0x7fff; }
+//         flag[i] = true;
+//         res += dist[t];
+//         for (int j = 1; j < vexNum; ++j)
+//             if (adjMatrix[t][j] > 0) dist[j] = min(dist[j], adjMatrix[t][j]);
+//     }
+//     for (int i = 1; i < vexNum; ++i) {
+//         aEdge[i - 1].vex1 = i;
+//         aEdge[i - 1].vex2 = pre[i];
+//         aEdge[i - 1].weight = dist[i];
+//     }
+//     return res;
+//     // int flag[20], closest[20];
+//     // int lowcost[20];
+//     // for (int i = 0; i < vexNum; i++) {
+//     //     closest[i] = -1;
+//     //     flag[i] = 0;
+//     //     if (adjMatrix[vexNStart][i] > 0 || i == vexNStart) {
+//     //         lowcost[i] = adjMatrix[vexNStart][i];
+//     //         closest[i] = vexNStart;
+//     //     }
+//     //     else {
+//     //         lowcost[i] = 0x7fff;
+//     //     }
+//     // }
+//     // flag[vexNStart] = 1;
+
+//     // int num = 0;
+//     // int min, k;
+//     // for (int i = 1; i < vexNum; i++) {
+//     //     min = 0x7fff;
+//     //     for (int j = 0; j < vexNum; j++) {
+//     //         if (flag[j] == 0 && lowcost[j] < min) {
+//     //             min = lowcost[j];
+//     //             k = j;
+//     //         }
+//     //     }
+//     //     for (int j = 0; j < vexNum; j++) {
+//     //         if (flag[j] == 0 && adjMatrix[k][j] < lowcost[j] && adjMatrix[k][j] != 0) {
+//     //             lowcost[j] = adjMatrix[k][j];
+//     //             closest[j] = k;
+//     //         }
+//     //     }
+//     //     flag[closest[k]] = 1;
+//     //     aEdge[num].vex1 = closest[k];
+//     //     aEdge[num].vex2 = k;
+//     //     aEdge[num].weight = adjMatrix[closest[k]][k];
+//     //     num++;
+//     // }
+
+//     // return num;
+// }
+
+int TourismGraph::findMinTree(Edge aEdge[]) {
+    int flag[20];
+    int closest[20];
     int lowcost[20];
     for (int i = 0; i < vexNum; i++) {
         closest[i] = -1;
         flag[i] = 0;
-        if (adjMatrix[vexNStart][i] > 0 || i == vexNStart) {
-            lowcost[i] = adjMatrix[vexNStart][i];
-            closest[i] = vexNStart;
+        if (adjMatrix[0][i] > 0 || i == 0) {
+            lowcost[i] = adjMatrix[0][i];
+            closest[i] = 0;
         }
         else {
             lowcost[i] = 0x7fff;
         }
     }
-    flag[vexNStart] = 1;
-
-    int num = 0;
+    flag[0] = 1;
+    int Num = 0;
     int min, k;
     for (int i = 1; i < vexNum; i++) {
         min = 0x7fff;
-        for (int j = 0; j < vexNum; j++) {
+        for (int j = 0; j < vexNum;j++) {
             if (flag[j] == 0 && lowcost[j] < min) {
                 min = lowcost[j];
                 k = j;
             }
         }
+        flag[k] = 1;
         for (int j = 0; j < vexNum; j++) {
             if (flag[j] == 0 && adjMatrix[k][j] < lowcost[j] && adjMatrix[k][j] != 0) {
                 lowcost[j] = adjMatrix[k][j];
                 closest[j] = k;
             }
         }
+        //存储各边信息至aEdge数组中
         flag[closest[k]] = 1;
-        aEdge[num].vex1 = closest[k];
-        aEdge[num].vex2 = k;
-        aEdge[num].weight = adjMatrix[closest[k]][k];
-        num++;
+        aEdge[Num].vex1 = closest[k];
+        aEdge[Num].vex2 = k;
+        aEdge[Num].weight = adjMatrix[closest[k]][k];
+        Num++;
     }
-
-    return num;
+    return Num;
 }
 
 int TourismGraph::getVexNum() {

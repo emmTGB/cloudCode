@@ -36,7 +36,7 @@ public:
     void dfs(int vexN, bool beVisited[], int& nIndex, PathList& pList);
     void dfsTraversal(int vexN, PathList& pList);
     int findShortPath(int vexNStart, int vexNEnd, Edge aPath[]);
-    int findMinTree(int nStart, Edge aEdge[]);
+    int findMinTree(Edge aEdge[]);
 
     int getVexNum();
 };

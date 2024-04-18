@@ -40,7 +40,7 @@ void createGraph() {
 void getSpotInfo() {
     int vexNum = tg.getVexNum();
     if (vexNum == 0) {
-        cout << "No data!" << endl;
+        cout << "无数据！" << endl;
         return;
     }
     for (int i = 0; i < vexNum; i++) {
@@ -49,7 +49,7 @@ void getSpotInfo() {
     int num;
     cin >> num;
     if (num >= vexNum) {
-        cout << "No data!" << endl;
+        cout << "无数据！" << endl;
         return;
     }
     Vex vex = tg.getVex(num);
@@ -67,7 +67,7 @@ void getSpotInfo() {
 void travelPath() {
     int vexNum = tg.getVexNum();
     if (vexNum == 0) {
-        cout << "No data!" << endl;
+        cout << "无数据！" << endl;
         return;
     }
     for (int i = 0; i < vexNum; i++) {
@@ -76,7 +76,7 @@ void travelPath() {
     int num;
     cin >> num;
     if (num < 0 || num >= vexNum) {
-        cout << "No data!" << endl;
+        cout << "无数据！" << endl;
         return;
     }
 
@@ -89,7 +89,7 @@ void travelPath() {
     pList = pList->next;
     int i = 1;
     while (pList != NULL) {
-        cout << i << "th path:" << endl;
+        cout << "第" << i << "条路径：" << endl;
         for (int j = 0; j < vexNum; j++) {
             cout << tg.getVex(pList->pVex[j]).name << " ";
         }
@@ -107,13 +107,16 @@ void travelPath() {
 void findShortPath() {
     int vexNum = tg.getVexNum();
     if (vexNum == 0) {
-        cout << "No data!" << endl;
+        cout << "无数据！" << endl;
         return;
+    }
+    for (int i = 0; i < vexNum; i++) {
+        cout << tg.getVex(i).num << "-" << tg.getVex(i).name << endl;
     }
     int nStart, nEnd;
     cin >> nStart >> nEnd;
     if (nStart > nEnd || nStart < 0 || nStart >= vexNum || nEnd < 0 || nEnd >= vexNum) {
-        cout << "No data!" << endl;
+        cout << "无数据！" << endl;
         return;
     }
     if (nStart == nEnd) {
@@ -125,8 +128,8 @@ void findShortPath() {
     int num = tg.findShortPath(nStart, nEnd, aPath);
     int path = 0;
     for (int i = num - 1; i >= 0; i--) {
-        cout << tg.getVex(aPath[i].vex1).name
-            << "->" << tg.getVex(aPath[i].vex2).name << endl;
+        cout << tg.getVex(aPath[i].vex2).name
+            << "->" << tg.getVex(aPath[i].vex1).name << endl;
         path += aPath[i].weight;
     }
     cout << path << endl;
@@ -135,19 +138,12 @@ void findShortPath() {
 void designPath() {
     int vexNum = tg.getVexNum();
     if (vexNum == 0) {
-        cout << "No data!" << endl;
-        return;
-    }
-    int n = vexNum - 1;
-    int nStart;
-    cin >> nStart;
-    if (nStart != 0 && nStart != n) {
-        cout << "No data!" << endl;
+        cout << "无数据！" << endl;
         return;
     }
 
     Edge aEdge[20];
-    int num = tg.findMinTree(nStart, aEdge);
+    int num = tg.findMinTree(aEdge);
     int path = 0;
 
     for (int i = 0; i < num; i++) {

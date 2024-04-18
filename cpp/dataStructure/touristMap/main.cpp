@@ -1,16 +1,17 @@
 #include<iostream>
+#include<stdlib.h>
 #include"tourism.h"
 
 using namespace std;
 
 int main() {
     while (true) {
-        cout << "1. create graph" << endl;
-        cout << "2. get spot info" << endl;
-        cout << "3. travel path" << endl;
-        cout << "4. find shortest path" << endl;
-        cout << "5. design path" << endl;
-        cout << "6. exit" << endl;
+        cout << "1. 初始化地图" << endl;
+        cout << "2. 获取景点信息" << endl;
+        cout << "3. 旅行规划" << endl;
+        cout << "4. 查找最短路径" << endl;
+        cout << "5. 电路铺设规划" << endl;
+        cout << "6. 退出" << endl;
         int choice;
         cin >> choice;
 
@@ -25,10 +26,10 @@ int main() {
             travelPath();
             break;
         case 4:
-            // findShortPath();
+            findShortPath();
             break;
         case 5:
-            // designPath();
+            designPath();
             break;
         case 6:
             exit(0);

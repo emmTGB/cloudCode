@@ -10,7 +10,7 @@ const int SIZE = 256;
 int compress(const char* pFilename) {
 	/**************************************************/
 	//�򿪲�ɨ���ļ�
-	std::cout << "���ڶ�ȡ�ļ�����" << std::endl;
+	std::cout << "开始读取！" << std::endl;
 	int weight[256] = { 0 };  //���ļ�����ȡȨ��
 	FILE* in = fopen(pFilename, "rb");
 	int tempch;
@@ -21,7 +21,7 @@ int compress(const char* pFilename) {
 	//if (TestWeight(weight))
 	//	cout << "������ϣ�����" << endl << endl;
 
-	std::cout << "�ļ���ȡ��ϣ�\n" << std::endl;
+	std::cout << "读取完成！\n" << std::endl;
 	fclose(in);
 
 	/**************************************************/
