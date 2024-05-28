@@ -1,18 +1,28 @@
-n = int(input())
+def fopen():  
+    '''本函数不允许修改，功能说明：
+    fopen()读取文件并返回二维列表l,数据格式为：    
+    [['Rank', 'Name', 'Pay', 'Salary/Winnings', 'Endorsements', 'Sport', 'Year'],
+     ['1', 'Lionel Messi', '$127 M', '$92 M', '$35 M', 'Soccer', '2019']
+     ['2', 'Cristiano Ronaldo', '$109 M', '$65 M', '$44 M', 'Soccer', '2019'], ...]
+    '''
+    l=[]
+    with open('step7/2012-19sport.csv','r',encoding='UTF-8') as f:
+        for i in f.readlines():
+            l.append(i.strip().strip('#').split(','))
+    return l
 
-ans = 0
-tmp1 = 1
-tmp2 = 1
+i = input()
+fl = fopen()
+l = []
+for it in fl:
+    if it[6] == i:
+        if it[5] not in l:
+            l.append(it[5])
 
-if n == 1:
-    print(1)
-elif n == 2:
-    print(1)
+l.sort()
+ls = list(enumerate(l))
+if len(ls) <= 0:
+    print('No Record of '+ i)
 else:
-    for i in range(3, n+1):
-        ans = tmp1 + tmp2
-        tmp1 = tmp2
-        tmp2 = ans
-        print(ans)
-
-print(ans)
+    for it in ls:
+        print('' + str(it[0] + 1) + ' ' + it[1])
