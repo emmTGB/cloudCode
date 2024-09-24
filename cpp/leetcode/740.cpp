@@ -4,15 +4,20 @@ using namespace std;
 class Solution {
 public:
     int deleteAndEarn(vector<int>& nums) {
-        sort(nums.begin(), nums.end());
-        int tmp = -1;
-        int first = 0, second = 0;
-        for(int n : nums){
-            if(tmp != n){
-                tmp = n;
-                second = max
-                first = second;
-            }
+        int max_val = 0;
+        for(auto n : nums){
+            max_val =max(n,max_val);
         }
+        vector<int> sum(max_val+1,0);
+        for(auto n: nums){
+            sum[n]+=n;
+        }
+        int first=sum[0], second=max(sum[0],sum[1]);
+        for(int i = 2 ; i <= max_val;++i){
+            int tmp = second;
+            second = max(sum[i]+first,second);
+            first = tmp;
+        }
+        return second;
     }
 };
