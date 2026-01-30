@@ -5,12 +5,12 @@ import server.Server;
 import javax.swing.*;
 
 public class ServerFrame {
-    private JLabel jLabel;
-    public JPanel panel1;
-    private JTextField portTextField;
-    private JButton startBtn;
-    public JList<String> clientList;
-    private JScrollPane scrollPanel;
+    private final JLabel jLabel = new JLabel();
+    public JPanel panel1 = new JPanel();
+    private JTextField portTextField = new JTextField();
+    private JButton startBtn = new JButton();
+    public JList<String> clientList = new JList<>();
+    private JScrollPane scrollPanel = new JScrollPane();
 
     public ServerFrame() {
         jLabel.setText("Port:");
